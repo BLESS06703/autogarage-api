@@ -4,39 +4,12 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 
-class GarageViewSet(viewsets.ModelViewSet):
-    queryset = Garage.objects.all()
-    serializer_class = GarageSerializer
-
-class CustomerViewSet(viewsets.ModelViewSet):
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
-
-class VehicleViewSet(viewsets.ModelViewSet):
-    queryset = Vehicle.objects.all()
-    serializer_class = VehicleSerializer
-
-class WorkOrderViewSet(viewsets.ModelViewSet):
-    queryset = WorkOrder.objects.all()
-    serializer_class = WorkOrderSerializer
-
-class InventoryViewSet(viewsets.ModelViewSet):
-    queryset = InventoryItem.objects.all()
-    serializer_class = InventorySerializer
-
-class PaymentViewSet(viewsets.ModelViewSet):
-    queryset = Payment.objects.all()
-    serializer_class = PaymentSerializer
-
-class AppointmentViewSet(viewsets.ModelViewSet):
-    queryset = Appointment.objects.all()
-    serializer_class = AppointmentSerializer
+class GarageVS(viewsets.ModelViewSet): queryset = Garage.objects.all(); serializer_class = GarageSerializer
+class CustomerVS(viewsets.ModelViewSet): queryset = Customer.objects.all(); serializer_class = CustomerSerializer
+class WorkOrderVS(viewsets.ModelViewSet): queryset = WorkOrder.objects.all(); serializer_class = WorkOrderSerializer
+class InventoryVS(viewsets.ModelViewSet): queryset = InventoryItem.objects.all(); serializer_class = InventorySerializer
+class PaymentVS(viewsets.ModelViewSet): queryset = Payment.objects.all(); serializer_class = PaymentSerializer
 
 @api_view(['GET'])
-def dashboard(request):
-    return Response({
-        'total_garages': Garage.objects.count(),
-        'total_customers': Customer.objects.count(),
-        'active_jobs': WorkOrder.objects.filter(status__in=['In Progress','Awaiting Parts']).count(),
-        'total_revenue': sum(p.amount for p in Payment.objects.all()),
-    })
+def dashboard(r):
+    return Response({'customers':Customer.objects.count(),'active':WorkOrder.objects.filter(status='In Progress').count(),'revenue':sum(float(p.amount) for p in Payment.objects.all())})
