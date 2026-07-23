@@ -3,16 +3,23 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
+import json
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
-    data = request.data
-    if User.objects.filter(username=data['username']).exists():
+    # Accept both JSON and form data
+    if request.content_type == 'application/json':
+        data = request.data
+    else:
+        data = request.POST
+    
+    if User.objects.filter(username=data.get('username', '')).exists():
         return Response({'error': 'Username exists'}, status=400)
+    
     user = User.objects.create_user(
-        username=data['username'],
-        password=data['password'],
+        username=data.get('username', ''),
+        password=data.get('password', ''),
         email=data.get('email', ''),
         first_name=data.get('full_name', '')
     )
@@ -29,8 +36,16 @@ def register(request):
 @permission_classes([AllowAny])
 def login(request):
     from django.contrib.auth import authenticate
-    data = request.data
-    user = authenticate(username=data['username'], password=data['password'])
+    
+    if request.content_type == 'application/json':
+        data = request.data
+    else:
+        data = request.POST
+    
+    username = data.get('username', '')
+    password = data.get('password', '')
+    
+    user = authenticate(username=username, password=password)
     if user:
         refresh = RefreshToken.for_user(user)
         return Response({
