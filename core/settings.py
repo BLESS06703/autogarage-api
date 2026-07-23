@@ -6,7 +6,7 @@ SECRET_KEY = 'blessgarage-django-secret-key-2024'
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["autogarage-api-wwj4.onrender.com", "localhost", "127.0.0.1"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -54,5 +54,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 # Allow Railway domain
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["autogarage-api-wwj4.onrender.com", "localhost", "127.0.0.1"]
 CSRF_TRUSTED_ORIGINS = ['https://*.railway.app', 'https://*.up.railway.app']
