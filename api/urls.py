@@ -20,10 +20,3 @@ urlpatterns = [
     path('reports/revenue/', report_views.revenue_report),
     path('reports/jobs/', report_views.jobs_report),
 ]
-
-# JWT endpoints
-from rest_framework_simplejwt.views import TokenRefreshView
-urlpatterns += [
-    path('auth/refresh/', TokenRefreshView.as_view()),
-    path('auth/profile/', auth_views.profile),
-]

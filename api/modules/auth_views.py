@@ -1,44 +1,48 @@
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
+@csrf_exempt
 def register(request):
-    data = request.data or request.POST
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST only'}, status=405)
+    
+    try:
+        data = json.loads(request.body)
+    except:
+        data = request.POST.dict()
+    
     username = data.get('username', '')
     password = data.get('password', '')
     
     if not username or not password:
-        return Response({'error': 'Username and password required', 'received': str(data)}, status=400)
+        return JsonResponse({'error': 'Username and password required'}, status=400)
     
     if User.objects.filter(username=username).exists():
-        return Response({'error': 'Username exists'}, status=400)
+        return JsonResponse({'error': 'Username exists'}, status=400)
     
-    user = User.objects.create_user(username=username, password=password, email=data.get('email',''), first_name=data.get('full_name',''))
+    user = User.objects.create_user(username=username, password=password)
     refresh = RefreshToken.for_user(user)
-    return Response({'message': 'Registered', 'user_id': user.id, 'username': user.username, 'access': str(refresh.access_token)})
+    return JsonResponse({'message': 'Registered', 'access': str(refresh.access_token)})
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
+@csrf_exempt
 def login(request):
-    data = request.data or request.POST
-    from django.contrib.auth import authenticate
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST only'}, status=405)
+    
+    try:
+        data = json.loads(request.body)
+    except:
+        data = request.POST.dict()
     
     username = data.get('username', '')
     password = data.get('password', '')
-    
-    if not username or not password:
-        return Response({'error': 'Username and password required'}, status=400)
     
     user = authenticate(username=username, password=password)
     if user:
         refresh = RefreshToken.for_user(user)
-        return Response({'user_id': user.id, 'username': user.username, 'access': str(refresh.access_token)})
-    return Response({'error': 'Invalid credentials'}, status=401)
-
-@api_view(['GET'])
-def profile(request):
-    return Response({'id': request.user.id, 'username': request.user.username})
+        return JsonResponse({'access': str(refresh.access_token), 'username': user.username})
+    return JsonResponse({'error': 'Invalid credentials'}, status=401)
