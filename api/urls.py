@@ -16,6 +16,8 @@ urlpatterns = [
     path('', include(router.urls)),
     path('auth/register/', auth_views.register),
     path('auth/login/', auth_views.login),
+    path('auth/login-page/', auth_views.login_page),
+    path('auth/register-page/', auth_views.register_page),
     path('dashboard/', dashboard_views.dashboard),
     path('reports/revenue/', report_views.revenue_report),
     path('reports/jobs/', report_views.jobs_report),

@@ -46,3 +46,11 @@ def login(request):
         refresh = RefreshToken.for_user(user)
         return JsonResponse({'access': str(refresh.access_token), 'username': user.username})
     return JsonResponse({'error': 'Invalid credentials'}, status=401)
+
+from django.shortcuts import render
+
+def login_page(request):
+    return render(request, 'login.html')
+
+def register_page(request):
+    return render(request, 'login.html')

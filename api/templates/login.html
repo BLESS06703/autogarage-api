@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BlessGarage - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0D0D0D; font-family: Arial; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .card { background: #1A1A1A; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; }
+        h1 { color: #FF6F00; font-size: 24px; margin-bottom: 8px; }
+        p { color: #888; font-size: 13px; margin-bottom: 24px; }
+        input { width: 100%; padding: 14px; margin-bottom: 12px; background: #0A0A0A; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 14px; }
+        button { width: 100%; padding: 14px; background: #FF6F00; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        .error { color: #EF4444; font-size: 13px; margin-bottom: 12px; }
+        .success { color: #00E676; font-size: 13px; margin-bottom: 12px; }
+        .link { color: #00E5FF; font-size: 13px; text-align: center; margin-top: 16px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>BlessGarage</h1>
+        <p>Workshop Management System</p>
+        <div id="error" class="error" style="display:none"></div>
+        <div id="success" class="success" style="display:none"></div>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <div class="link"><a href="/api/auth/register-page/" style="color:#00E5FF">Register new account</a></div>
+    </div>
+    <script>
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const res = await fetch('/api/auth/login/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
+            });
+            const data = await res.json();
+            if (data.access) {
+                document.getElementById('success').style.display = 'block';
+                document.getElementById('success').innerText = 'Login successful! Token: ' + data.access.substring(0, 30) + '...';
+                localStorage.setItem('token', data.access);
+            } else {
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').innerText = data.error || 'Login failed';
+            }
+        }
+    </script>
+</body>
+</html>
