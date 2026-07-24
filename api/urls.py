@@ -27,6 +27,7 @@ urlpatterns = [
     path('auth/login-page/', auth_views.login_page),
     path('auth/register-page/', auth_views.register_page),
     path('dashboard/', dashboard_views.dashboard),
+    path('dashboard-page/', dashboard_views.dashboard_page),
     path('reports/revenue/', report_views.revenue_report),
     path('reports/jobs/', report_views.jobs_report),
 ]

@@ -12,3 +12,8 @@ def dashboard(request):
         'total_revenue': sum(float(p.amount) for p in Payment.objects.all()),
         'low_stock': InventoryItem.objects.filter(quantity__lt=models.F('min_threshold')).count(),
     })
+
+from django.shortcuts import render
+
+def dashboard_page(request):
+    return render(request, 'dashboard.html')
