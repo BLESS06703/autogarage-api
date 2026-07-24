@@ -127,10 +127,11 @@
                 <i class="fas fa-user"></i>
                 <input type="text" id="username" placeholder="Enter your username" autocomplete="username">
             </div>
-            <div class="form-group">
+            <div class="form-group" style="position:relative;">
                 <label>Password</label>
                 <i class="fas fa-lock"></i>
                 <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+                <i class="fas fa-eye" id="togglePass" style="position:absolute;right:12px;top:38px;cursor:pointer;color:var(--text2);z-index:1;" onclick="togglePassword()"></i>
             </div>
             <button class="btn-signin" onclick="login()">
                 <i class="fas fa-sign-in-alt"></i> Sign In
@@ -179,6 +180,17 @@ async function login() {
         msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Connection error. Please try again.';
     }
 }
+function togglePassword() {
+        const input = document.getElementById('password');
+        const icon = document.getElementById('togglePass');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'fas fa-eye-slash';
+        } else {
+            input.type = 'password';
+            icon.className = 'fas fa-eye';
+        }
+    }
 </script>
 </body>
 </html>
