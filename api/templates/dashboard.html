@@ -511,6 +511,7 @@
         main.innerHTML = '<div class="loading"><div class="loading-spinner"></div><div>Loading...</div></div>';
 
         try {
+            clearTimeout(timeout);
             switch(section) {
                 case 'dashboard': await loadDashboard(); break;
                 case 'workorders': await loadWorkOrders(); break;
@@ -535,14 +536,17 @@
 
     // ==================== DASHBOARD ====================
     async function loadDashboard() {
-        const [orders, inventory, appointments, customers, mechanics, payments] = await Promise.all([
-            api('/work-orders/').catch(() => []),
-            api('/inventory/').catch(() => []),
-            api('/appointments/').catch(() => []),
-            api('/customers/').catch(() => []),
-            api('/mechanics/').catch(() => []),
-            api('/payments/').catch(() => [])
-        ]);
+        const timeout = setTimeout(() => {
+            if (document.getElementById('main-content').querySelector('.loading-spinner')) {
+                document.getElementById('main-content').innerHTML = '<div class="card" style="text-align:center;padding:60px;"><h2>Server is waking up</h2><p style="color:var(--text2);margin-top:8px;">Free tier spins down after inactivity. Please wait...</p><button class="btn btn-primary" style="margin-top:16px;" onclick="loadSection(\'dashboard\')">Retry</button></div>';
+            }
+        }, 10000);
+        const orders = await api('/work-orders/').catch(() => []);
+        const inventory = await api('/inventory/').catch(() => []);
+        const appointments = await api('/appointments/').catch(() => []);
+        const customers = await api('/customers/').catch(() => []);
+        const mechanics = await api('/mechanics/').catch(() => []);
+        const payments = await api('/payments/').catch(() => []);
 
         const woList = extractList(orders);
         const invList = extractList(inventory);
@@ -693,6 +697,7 @@
     async function updateWOStatus(id, status) {
         if (!status) return;
         try {
+            clearTimeout(timeout);
             await api(`/work-orders/${id}/`, 'PATCH', { status });
             loadSection('workorders');
         } catch(e) { alert('Failed to update: ' + e.message); }
@@ -726,6 +731,7 @@
         const cost = document.getElementById('woCost').value || '0';
         if (!vehicle || !customer) { alert('Vehicle and customer are required'); return; }
         try {
+            clearTimeout(timeout);
             await api('/work-orders/', 'POST', { vehicle_info: vehicle, customer_name: customer, issue_description: issue, cost_estimate: parseFloat(cost) });
             document.querySelector('.modal-overlay').remove();
             loadSection('workorders');
@@ -1027,6 +1033,7 @@
     // ==================== SETTINGS ====================
     async function loadReports() {
         try {
+            clearTimeout(timeout);
             const [orders, payments, customers, mechanics] = await Promise.all([
                 api("/work-orders/").catch(() => []),
                 api("/payments/").catch(() => []),
@@ -1123,6 +1130,7 @@ async function loadSettings() {
         const el = document.getElementById("apiTestResult");
         el.innerHTML = "<div class=047loading-spinner047></div> Testing...";
         try {
+            clearTimeout(timeout);
             const start = Date.now();
             const data = await api("/dashboard/");
             const ms = Date.now() - start;
@@ -1142,6 +1150,7 @@ async function loadSettings() {
     // ==================== AI ASSISTANT ====================
     async function loadAI() {
         try {
+            clearTimeout(timeout);
             const codesData = await api("/ai/codes/").catch(() => ({}));
             const supportedCodes = codesData.supported_codes || [];
 
@@ -1194,6 +1203,7 @@ async function loadSettings() {
         if (!code) { resultDiv.innerHTML = "<p style=047color:var(--red);047>Please enter a fault code</p>"; return; }
         resultDiv.innerHTML = "<div class=047loading-spinner047></div> Analyzing...";
         try {
+            clearTimeout(timeout);
             const data = await api("/ai/diagnose/", "POST", { code, vehicle });
             const severityColors = { Critical: "var(--red)", High: "var(--orange)", Medium: "var(--amber)", Low: "var(--green)" };
             resultDiv.innerHTML = `
@@ -1214,6 +1224,7 @@ async function loadSettings() {
     // ==================== NOTIFICATIONS ====================
     async function loadNotifications() {
         try {
+            clearTimeout(timeout);
             const data = await api("/notifications/").catch(() => []);
             const list = extractList(data);
             const unread = list.filter(n => !n.is_read).length;
@@ -1249,14 +1260,16 @@ async function loadSettings() {
     }
 
     async function markRead(id) {
-        try { await api(`/notifications/${id}/`, "PATCH", { is_read: true }); loadSection("notifications"); } catch(e) {}
+        try {
+            clearTimeout(timeout); await api(`/notifications/${id}/`, "PATCH", { is_read: true }); loadSection("notifications"); } catch(e) {}
     }
 
     async function markAllRead() {
         const list = window._notifList || [];
         for (const n of list) {
             if (!n.is_read) {
-                try { await api(`/notifications/${n.id}/`, "PATCH", { is_read: true }); } catch(e) {}
+                try {
+            clearTimeout(timeout); await api(`/notifications/${n.id}/`, "PATCH", { is_read: true }); } catch(e) {}
             }
         }
         loadSection("notifications");
@@ -1264,6 +1277,7 @@ async function loadSettings() {
 
     async function updateNotifBadge() {
         try {
+            clearTimeout(timeout);
             const data = await api("/notifications/").catch(() => []);
             const list = extractList(data);
             const count = list.filter(n => !n.is_read).length;
