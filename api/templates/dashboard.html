@@ -30,9 +30,8 @@
             min-height: 100vh;
         }
 
-        /* SIDEBAR */
         .sidebar {
-            width: 260px;
+            width: 240px;
             background: var(--surface);
             border-right: 1px solid var(--border);
             padding: 20px;
@@ -45,16 +44,16 @@
         }
 
         .sidebar-brand {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             color: var(--orange);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .sidebar-version {
             font-size: 10px;
             color: var(--text2);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             letter-spacing: 1.5px;
             text-transform: uppercase;
         }
@@ -63,14 +62,13 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px 12px;
-            border-radius: 8px;
+            padding: 9px 12px;
+            border-radius: 7px;
             color: var(--text2);
             cursor: pointer;
             font-size: 13px;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
             transition: all 0.15s;
-            text-decoration: none;
             border: none;
             background: none;
             width: 100%;
@@ -80,90 +78,101 @@
         .nav-item:hover { background: var(--surface2); color: var(--text); }
         .nav-item.active { background: var(--orange); color: #fff; font-weight: 600; }
 
-        .nav-icon {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
         .nav-section {
             font-size: 10px;
             color: var(--text2);
             letter-spacing: 1.5px;
-            margin: 20px 0 8px 12px;
+            margin: 18px 0 8px 12px;
             text-transform: uppercase;
             font-weight: 600;
         }
 
-        /* MAIN */
         .main {
-            margin-left: 260px;
+            margin-left: 240px;
             flex: 1;
-            padding: 28px;
+            padding: 24px;
         }
 
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 28px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .header-title {
-            font-size: 22px;
+            font-size: 21px;
             font-weight: 700;
             color: var(--text);
         }
 
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 9px 16px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: 0.15s;
+        }
+
+        .btn-primary { background: var(--orange); color: #fff; }
+        .btn-primary:hover { background: #E65100; }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-outline:hover { background: var(--surface2); }
+        .btn-danger { background: var(--red); color: #fff; }
+        .btn-danger:hover { background: #DC2626; }
+
         .status-badge {
             background: rgba(34, 197, 94, 0.15);
             color: var(--green);
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 20px;
             font-size: 11px;
             font-weight: 600;
-            letter-spacing: 0.5px;
         }
 
         .status-dot {
             display: inline-block;
-            width: 7px;
-            height: 7px;
+            width: 6px; height: 6px;
             border-radius: 50%;
             background: var(--green);
             margin-right: 6px;
         }
 
-        /* KPIs */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-            margin-bottom: 28px;
+            gap: 12px;
+            margin-bottom: 22px;
         }
 
         .kpi-card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 20px;
+            padding: 18px;
         }
 
         .kpi-label {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text2);
             letter-spacing: 1px;
             text-transform: uppercase;
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .kpi-value {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
         }
@@ -171,7 +180,7 @@
         .kpi-sub {
             font-size: 11px;
             color: var(--text2);
-            margin-top: 4px;
+            margin-top: 3px;
         }
 
         .kpi-green { color: var(--green); }
@@ -179,26 +188,25 @@
         .kpi-blue { color: var(--blue); }
         .kpi-purple { color: var(--purple); }
 
-        /* GRID */
         .content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-bottom: 28px;
+            gap: 12px;
+            margin-bottom: 22px;
         }
 
         .card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 20px;
+            padding: 18px;
         }
 
         .card-title {
             font-size: 12px;
             font-weight: 600;
             color: var(--text);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
@@ -210,12 +218,11 @@
             padding: 20px 0;
         }
 
-        /* PROGRESS BARS */
         .progress-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
         .progress-label {
@@ -243,12 +250,11 @@
             font-size: 12px;
             font-weight: 600;
             font-family: 'SF Mono', 'Consolas', monospace;
-            width: 28px;
+            width: 26px;
             text-align: right;
             flex-shrink: 0;
         }
 
-        /* TABLE */
         .table-wrapper {
             overflow-x: auto;
         }
@@ -268,22 +274,23 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 1px solid var(--border);
+            white-space: nowrap;
         }
 
         td {
             padding: 10px 12px;
             border-bottom: 1px solid var(--border);
             color: var(--text);
+            white-space: nowrap;
         }
 
         tr:hover td { background: rgba(255,255,255,0.02); }
 
-        /* STATUS TAGS */
         .tag {
             display: inline-block;
             padding: 3px 10px;
             border-radius: 12px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             letter-spacing: 0.3px;
         }
@@ -293,7 +300,6 @@
         .tag-invoice { background: rgba(59,130,246,0.15); color: var(--blue); }
         .tag-done { background: rgba(34,197,94,0.15); color: var(--green); }
 
-        /* ACTIVITY */
         .activity-item {
             display: flex;
             align-items: center;
@@ -306,12 +312,12 @@
         .activity-item:last-child { border-bottom: none; }
 
         .activity-marker {
-            width: 24px; height: 24px;
+            width: 22px; height: 22px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             flex-shrink: 0;
         }
@@ -320,15 +326,110 @@
         .marker-progress { background: var(--orange); color: #fff; }
         .marker-info { background: var(--blue); color: #fff; }
 
-        /* FULL WIDTH */
         .full-width { grid-column: 1 / -1; }
 
-        /* MOBILE */
+        .search-input {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            color: var(--text);
+            font-size: 13px;
+            outline: none;
+            margin-bottom: 14px;
+        }
+
+        .search-input:focus { border-color: var(--orange); }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text2);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 28px; height: 28px;
+            border: 3px solid var(--surface2);
+            border-top-color: var(--orange);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text2);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            color: var(--text);
+            font-size: 13px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--orange); }
+
+        .form-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+
+        .text-mono { font-family: 'SF Mono', 'Consolas', monospace; }
+
         @media (max-width: 768px) {
             .sidebar { display: none; }
-            .main { margin-left: 0; padding: 16px; }
+            .main { margin-left: 0; padding: 14px; }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); }
             .content-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -338,262 +439,757 @@
     <div class="sidebar-brand">AutoGarage Pro</div>
     <div class="sidebar-version">Management Console v2.0</div>
 
-    <button class="nav-item active" onclick="showSection('dashboard')">
-        <span class="nav-icon">&#9632;</span> Dashboard
-    </button>
-    <button class="nav-item" onclick="showSection('garages')">
-        <span class="nav-icon">&#9632;</span> Garages
-    </button>
-    <button class="nav-item" onclick="showSection('customers')">
-        <span class="nav-icon">&#9632;</span> Customers
-    </button>
-    <button class="nav-item" onclick="showSection('vehicles')">
-        <span class="nav-icon">&#9632;</span> Vehicles
-    </button>
-    <button class="nav-item" onclick="showSection('appointments')">
-        <span class="nav-icon">&#9632;</span> Appointments
-    </button>
+    <button class="nav-item active" data-section="dashboard">Dashboard</button>
+    <button class="nav-item" data-section="garages">Garages</button>
+    <button class="nav-item" data-section="customers">Customers</button>
+    <button class="nav-item" data-section="vehicles">Vehicles</button>
+    <button class="nav-item" data-section="appointments">Appointments</button>
 
     <div class="nav-section">Operations</div>
-    <button class="nav-item" onclick="showSection('workorders')">
-        <span class="nav-icon">&#9632;</span> Work Orders
-    </button>
-    <button class="nav-item" onclick="showSection('mechanics')">
-        <span class="nav-icon">&#9632;</span> Mechanics
-    </button>
-    <button class="nav-item" onclick="showSection('inventory')">
-        <span class="nav-icon">&#9632;</span> Inventory
-    </button>
+    <button class="nav-item" data-section="workorders">Work Orders</button>
+    <button class="nav-item" data-section="mechanics">Mechanics</button>
+    <button class="nav-item" data-section="inventory">Inventory</button>
 
     <div class="nav-section">Finance</div>
-    <button class="nav-item" onclick="showSection('payments')">
-        <span class="nav-icon">&#9632;</span> Payments
-    </button>
-    <button class="nav-item" onclick="showSection('invoices')">
-        <span class="nav-icon">&#9632;</span> Invoices
-    </button>
-    <button class="nav-item" onclick="showSection('reports')">
-        <span class="nav-icon">&#9632;</span> Reports
-    </button>
+    <button class="nav-item" data-section="payments">Payments</button>
+    <button class="nav-item" data-section="invoices">Invoices</button>
+    <button class="nav-item" data-section="reports">Reports</button>
 
     <div class="nav-section">System</div>
-    <button class="nav-item" onclick="showSection('settings')">
-        <span class="nav-icon">&#9632;</span> Settings
-    </button>
+    <button class="nav-item" data-section="settings">Settings</button>
 
     <div style="margin-top: auto; padding-top: 20px;">
-        <button class="nav-item" onclick="logout()" style="color: var(--red);">
-            <span class="nav-icon">&#9632;</span> Sign Out
-        </button>
+        <button class="nav-item" onclick="logout()" style="color: var(--red);">Sign Out</button>
     </div>
 </aside>
 
-<main class="main" id="main-content"></main>
+<main class="main" id="main-content">
+    <div class="loading">
+        <div class="loading-spinner"></div>
+        <div>Loading dashboard...</div>
+    </div>
+</main>
 
 <script>
     const API = '/api';
     const token = localStorage.getItem('token');
 
-    if (!token) {
-        window.location.href = '/api/auth/login-page/';
-    }
+    if (!token) { window.location.href = '/api/auth/login-page/'; }
 
-    async function api(path) {
-        const res = await fetch(`${API}${path}`, {
+    async function api(path, method = 'GET', body = null) {
+        const opts = {
+            method,
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-        });
+        };
+        if (body) opts.body = JSON.stringify(body);
+        const res = await fetch(`${API}${path}`, opts);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
     }
 
-    async function loadDashboard() {
+    function extractList(data) {
+        if (Array.isArray(data)) return data;
+        if (data && data.results) return data.results;
+        return [];
+    }
+
+    // ==================== NAVIGATION ====================
+    document.querySelectorAll('.nav-item[data-section]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            this.classList.add('active');
+            loadSection(this.dataset.section);
+        });
+    });
+
+    async function loadSection(section) {
+        const main = document.getElementById('main-content');
+        main.innerHTML = '<div class="loading"><div class="loading-spinner"></div><div>Loading...</div></div>';
+
         try {
-            const [orders, inventory, appointments, customers, mechanics, payments] = await Promise.all([
-                api('/work-orders/').catch(() => []),
-                api('/inventory/').catch(() => []),
-                api('/appointments/').catch(() => []),
-                api('/customers/').catch(() => []),
-                api('/mechanics/').catch(() => []),
-                api('/payments/').catch(() => [])
-            ]);
-
-            const woList = Array.isArray(orders) ? orders : (orders.results || []);
-            const invList = Array.isArray(inventory) ? inventory : (inventory.results || []);
-            const apptList = Array.isArray(appointments) ? appointments : (appointments.results || []);
-            const custList = Array.isArray(customers) ? customers : (customers.results || []);
-            const mechList = Array.isArray(mechanics) ? mechanics : (mechanics.results || []);
-            const payList = Array.isArray(payments) ? payments : (payments.results || []);
-
-            const activeJobs = woList.filter(w => w.status === 'In Progress' || w.status === 'Awaiting Parts').length;
-            const pendingInvoice = woList.filter(w => w.status === 'Ready (Pending Invoice)').length;
-            const completedJobs = woList.filter(w => w.status === 'Completed').length;
-            const totalRevenue = payList.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
-
-            const inProgress = woList.filter(w => w.status === 'In Progress').length;
-            const awaitingParts = woList.filter(w => w.status === 'Awaiting Parts').length;
-            const readyInvoice = woList.filter(w => w.status === 'Ready (Pending Invoice)').length;
-            const completed = completedJobs;
-            const maxJobs = Math.max(inProgress, awaitingParts, readyInvoice, completed, 1);
-
-            const lowStockItems = invList.filter(i => i.quantity < i.min_threshold);
-            const availableMechanics = mechList.filter(m => m.is_available).length;
-
-            document.getElementById('main-content').innerHTML = `
-                <div class="header">
-                    <h1 class="header-title">Dashboard</h1>
-                    <span class="status-badge"><span class="status-dot"></span>System Active</span>
-                </div>
-
-                <div class="kpi-grid">
-                    <div class="kpi-card">
-                        <div class="kpi-label">Customers</div>
-                        <div class="kpi-value kpi-blue">${custList.length}</div>
-                        <div class="kpi-sub">Registered accounts</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Active Jobs</div>
-                        <div class="kpi-value kpi-orange">${activeJobs}</div>
-                        <div class="kpi-sub">${pendingInvoice} pending invoice</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Revenue</div>
-                        <div class="kpi-value kpi-green">MWK ${totalRevenue.toLocaleString()}</div>
-                        <div class="kpi-sub">${completedJobs} jobs completed</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Mechanics</div>
-                        <div class="kpi-value kpi-purple">${mechList.length}</div>
-                        <div class="kpi-sub">${availableMechanics} available today</div>
-                    </div>
-                </div>
-
-                <div class="content-grid">
-                    <div class="card">
-                        <div class="card-title">Work Order Status</div>
-                        <div class="progress-item">
-                            <span class="progress-label">In Progress</span>
-                            <div class="progress-bar"><div class="progress-fill" style="width:${(inProgress/maxJobs*100)}%;background:var(--orange);"></div></div>
-                            <span class="progress-count">${inProgress}</span>
-                        </div>
-                        <div class="progress-item">
-                            <span class="progress-label">Awaiting Parts</span>
-                            <div class="progress-bar"><div class="progress-fill" style="width:${(awaitingParts/maxJobs*100)}%;background:var(--amber);"></div></div>
-                            <span class="progress-count">${awaitingParts}</span>
-                        </div>
-                        <div class="progress-item">
-                            <span class="progress-label">Pending Invoice</span>
-                            <div class="progress-bar"><div class="progress-fill" style="width:${(readyInvoice/maxJobs*100)}%;background:var(--blue);"></div></div>
-                            <span class="progress-count">${readyInvoice}</span>
-                        </div>
-                        <div class="progress-item">
-                            <span class="progress-label">Completed</span>
-                            <div class="progress-bar"><div class="progress-fill" style="width:${(completed/maxJobs*100)}%;background:var(--green);"></div></div>
-                            <span class="progress-count">${completed}</span>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">Appointments</div>
-                        ${apptList.slice(0, 5).length > 0 ? `
-                            <div class="table-wrapper">
-                                <table>
-                                    <thead><tr><th>Time</th><th>Customer</th><th>Reason</th></tr></thead>
-                                    <tbody>
-                                        ${apptList.slice(0, 5).map(a => `
-                                            <tr>
-                                                <td style="color:var(--orange);font-family:monospace;">${a.time || '--:--'}</td>
-                                                <td>${a.customer_name || a.customer || '--'}</td>
-                                                <td style="color:var(--text2);">${a.reason || '--'}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ` : '<div class="card-empty">No appointments scheduled</div>'}
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">Low Stock Alerts</div>
-                        ${lowStockItems.length > 0 ? `
-                            <div class="table-wrapper">
-                                <table>
-                                    <thead><tr><th>Part</th><th>Qty</th><th>Min</th><th>Status</th></tr></thead>
-                                    <tbody>
-                                        ${lowStockItems.slice(0, 5).map(i => `
-                                            <tr>
-                                                <td>${i.part_name}</td>
-                                                <td style="color:var(--red);font-weight:600;font-family:monospace;">${i.quantity}</td>
-                                                <td>${i.min_threshold}</td>
-                                                <td><span class="tag tag-parts">Reorder</span></td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ` : '<div class="card-empty" style="color:var(--green);">All parts adequately stocked</div>'}
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">Recent Activity</div>
-                        ${woList.slice(0, 5).length > 0 ? woList.slice(0, 5).map(w => `
-                            <div class="activity-item">
-                                <span class="activity-marker marker-${w.status === 'Completed' ? 'done' : w.status === 'In Progress' ? 'progress' : 'info'}">
-                                    ${w.status === 'Completed' ? 'OK' : w.status === 'In Progress' ? 'W' : 'I'}
-                                </span>
-                                <span style="flex:1;">${w.vehicle_info || w.vehicle || 'Work Order'} #${w.id}</span>
-                                <span class="tag tag-${w.status === 'Completed' ? 'done' : w.status === 'In Progress' ? 'progress' : w.status === 'Awaiting Parts' ? 'parts' : 'invoice'}">${w.status}</span>
-                            </div>
-                        `).join('') : '<div class="card-empty">No recent activity</div>'}
-                    </div>
-                </div>
-            `;
+            switch(section) {
+                case 'dashboard': await loadDashboard(); break;
+                case 'workorders': await loadWorkOrders(); break;
+                case 'customers': await loadCustomers(); break;
+                case 'vehicles': await loadVehicles(); break;
+                case 'mechanics': await loadMechanics(); break;
+                case 'inventory': await loadInventory(); break;
+                case 'appointments': await loadAppointments(); break;
+                case 'payments': await loadPayments(); break;
+                case 'invoices': await loadInvoices(); break;
+                case 'garages': await loadGarages(); break;
+                case 'reports': await loadReports(); break;
+                case 'settings': await loadSettings(); break;
+                default: loadPlaceholder(section);
+            }
         } catch (e) {
-            document.getElementById('main-content').innerHTML = `
-                <div class="card" style="text-align:center;padding:60px;">
-                    <h2>Connection Error</h2>
-                    <p style="color:var(--text2);margin-top:10px;">Unable to load dashboard data. Please check your connection.</p>
-                    <p style="color:var(--text2);font-size:12px;margin-top:4px;">${e.message}</p>
-                </div>
-            `;
+            main.innerHTML = `<div class="card" style="text-align:center;padding:60px;"><h2>Error Loading Data</h2><p style="color:var(--text2);margin-top:8px;">${e.message}</p><button class="btn btn-outline" style="margin-top:16px;" onclick="loadSection('${section}')">Retry</button></div>`;
         }
     }
 
-    function showSection(section) {
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        if (event && event.target) {
-            event.target.closest('.nav-item').classList.add('active');
-        }
+    // ==================== DASHBOARD ====================
+    async function loadDashboard() {
+        const [orders, inventory, appointments, customers, mechanics, payments] = await Promise.all([
+            api('/work-orders/').catch(() => []),
+            api('/inventory/').catch(() => []),
+            api('/appointments/').catch(() => []),
+            api('/customers/').catch(() => []),
+            api('/mechanics/').catch(() => []),
+            api('/payments/').catch(() => [])
+        ]);
 
-        const main = document.getElementById('main-content');
-        const sections = {
-            dashboard: { title: 'Dashboard', desc: null },
-            garages: { title: 'Garages', desc: 'Manage workshop locations and branches' },
-            customers: { title: 'Customers', desc: 'Customer database, history and contact records' },
-            vehicles: { title: 'Vehicles', desc: 'Vehicle registry, service history and documentation' },
-            appointments: { title: 'Appointments', desc: 'Schedule and manage customer appointments' },
-            workorders: { title: 'Work Orders', desc: 'Active and completed repair job management' },
-            mechanics: { title: 'Mechanics', desc: 'Team profiles, skills tracking and availability' },
-            inventory: { title: 'Inventory', desc: 'Parts, supplies and stock level monitoring' },
-            payments: { title: 'Payments', desc: 'Transaction records and payment processing' },
-            invoices: { title: 'Invoices', desc: 'Invoice generation, tracking and history' },
-            reports: { title: 'Reports', desc: 'Revenue analysis, performance metrics and exports' },
-            settings: { title: 'Settings', desc: 'System configuration and user preferences' }
+        const woList = extractList(orders);
+        const invList = extractList(inventory);
+        const apptList = extractList(appointments);
+        const custList = extractList(customers);
+        const mechList = extractList(mechanics);
+        const payList = extractList(payments);
+
+        const activeJobs = woList.filter(w => w.status === 'In Progress' || w.status === 'Awaiting Parts').length;
+        const pendingInvoice = woList.filter(w => w.status === 'Ready (Pending Invoice)').length;
+        const completedJobs = woList.filter(w => w.status === 'Completed').length;
+        const totalRevenue = payList.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+
+        const inProgress = woList.filter(w => w.status === 'In Progress').length;
+        const awaitingParts = woList.filter(w => w.status === 'Awaiting Parts').length;
+        const readyInvoice = woList.filter(w => w.status === 'Ready (Pending Invoice)').length;
+        const maxJobs = Math.max(inProgress, awaitingParts, readyInvoice, completedJobs, 1);
+
+        const lowStockItems = invList.filter(i => i.quantity < i.min_threshold);
+        const availableMechanics = mechList.filter(m => m.is_available).length;
+
+        document.getElementById('main-content').innerHTML = `
+            <div class="header">
+                <h1 class="header-title">Dashboard</h1>
+                <span class="status-badge"><span class="status-dot"></span>System Active</span>
+            </div>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Customers</div>
+                    <div class="kpi-value kpi-blue">${custList.length}</div>
+                    <div class="kpi-sub">Registered accounts</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Active Jobs</div>
+                    <div class="kpi-value kpi-orange">${activeJobs}</div>
+                    <div class="kpi-sub">${pendingInvoice} pending invoice</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Revenue</div>
+                    <div class="kpi-value kpi-green">MWK ${totalRevenue.toLocaleString()}</div>
+                    <div class="kpi-sub">${completedJobs} completed</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Mechanics</div>
+                    <div class="kpi-value kpi-purple">${mechList.length}</div>
+                    <div class="kpi-sub">${availableMechanics} available</div>
+                </div>
+            </div>
+            <div class="content-grid">
+                <div class="card">
+                    <div class="card-title">Work Order Status</div>
+                    ${['In Progress', 'Awaiting Parts', 'Pending Invoice', 'Completed'].map((label, i) => {
+                        const vals = [inProgress, awaitingParts, readyInvoice, completedJobs];
+                        const colors = ['var(--orange)', 'var(--amber)', 'var(--blue)', 'var(--green)'];
+                        return `<div class="progress-item"><span class="progress-label">${label}</span><div class="progress-bar"><div class="progress-fill" style="width:${vals[i]/maxJobs*100}%;background:${colors[i]};"></div></div><span class="progress-count">${vals[i]}</span></div>`;
+                    }).join('')}
+                </div>
+                <div class="card">
+                    <div class="card-title">Appointments</div>
+                    ${apptList.slice(0, 5).length > 0 ? `<div class="table-wrapper"><table><thead><tr><th>Time</th><th>Customer</th><th>Reason</th></tr></thead><tbody>${apptList.slice(0,5).map(a => `<tr><td class="text-mono" style="color:var(--orange);">${a.time||'--:--'}</td><td>${a.customer_name||a.customer||'--'}</td><td style="color:var(--text2);">${a.reason||'--'}</td></tr>`).join('')}</tbody></table></div>` : '<div class="card-empty">No appointments scheduled</div>'}
+                </div>
+                <div class="card">
+                    <div class="card-title">Low Stock Alerts</div>
+                    ${lowStockItems.length > 0 ? `<div class="table-wrapper"><table><thead><tr><th>Part</th><th>Qty</th><th>Min</th></tr></thead><tbody>${lowStockItems.slice(0,5).map(i => `<tr><td>${i.part_name}</td><td style="color:var(--red);font-weight:600;" class="text-mono">${i.quantity}</td><td>${i.min_threshold}</td></tr>`).join('')}</tbody></table></div>` : '<div class="card-empty" style="color:var(--green);">All parts adequately stocked</div>'}
+                </div>
+                <div class="card">
+                    <div class="card-title">Recent Activity</div>
+                    ${woList.slice(0,5).length > 0 ? woList.slice(0,5).map(w => {
+                        const markerClass = w.status === 'Completed' ? 'marker-done' : w.status === 'In Progress' ? 'marker-progress' : 'marker-info';
+                        const markerText = w.status === 'Completed' ? 'OK' : w.status === 'In Progress' ? 'W' : 'I';
+                        const tagClass = w.status === 'Completed' ? 'tag-done' : w.status === 'In Progress' ? 'tag-progress' : w.status === 'Awaiting Parts' ? 'tag-parts' : 'tag-invoice';
+                        return `<div class="activity-item"><span class="activity-marker ${markerClass}">${markerText}</span><span style="flex:1;">${w.vehicle_info||w.vehicle||'WO'} #${w.id}</span><span class="tag ${tagClass}">${w.status}</span></div>`;
+                    }).join('') : '<div class="card-empty">No recent activity</div>'}
+                </div>
+            </div>
+        `;
+    }
+
+    // ==================== WORK ORDERS ====================
+    async function loadWorkOrders() {
+        const [orders, vehicles, mechanics] = await Promise.all([
+            api('/work-orders/').catch(() => []),
+            api('/vehicles/').catch(() => []),
+            api('/mechanics/').catch(() => [])
+        ]);
+        const woList = extractList(orders);
+        const vehList = extractList(vehicles);
+        const mechList = extractList(mechanics);
+
+        const statusColors = {
+            'In Progress': 'tag-progress',
+            'Awaiting Parts': 'tag-parts',
+            'Ready (Pending Invoice)': 'tag-invoice',
+            'Completed': 'tag-done'
         };
 
-        const s = sections[section] || { title: section, desc: 'Section under development' };
+        window._woData = { woList, vehList, mechList };
 
-        if (section === 'dashboard') {
-            loadDashboard();
-        } else {
-            main.innerHTML = `
-                <div class="header">
-                    <h1 class="header-title">${s.title}</h1>
+        document.getElementById('main-content').innerHTML = `
+            <div class="header">
+                <h1 class="header-title">Work Orders</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="showWOModal()">+ New Work Order</button>
+                    <button class="btn btn-outline" onclick="loadSection('workorders')">Refresh</button>
                 </div>
-                <div class="card" style="text-align:center;padding:80px;">
-                    <h2 style="color:var(--text2);font-weight:500;">${s.desc}</h2>
-                    <p style="color:var(--text2);margin-top:8px;font-size:13px;">This module is currently in development.</p>
+            </div>
+            <div class="card">
+                <input class="search-input" id="woSearch" placeholder="Search work orders by vehicle, customer or status..." oninput="filterWOTable()">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>SRN</th><th>Vehicle</th><th>Customer</th><th>Status</th><th>Cost (MWK)</th><th>Date</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="woTableBody">
+                            ${woList.length > 0 ? woList.map(w => `
+                                <tr data-search="${w.srn||''} ${w.vehicle_info||w.vehicle||''} ${w.customer_name||''} ${w.status||''}">
+                                    <td class="text-mono">${w.srn||'BG-'+w.id}</td>
+                                    <td>${w.vehicle_info||w.vehicle||'--'}</td>
+                                    <td>${w.customer_name||'--'}</td>
+                                    <td><span class="tag ${statusColors[w.status]||'tag-progress'}">${w.status||'In Progress'}</span></td>
+                                    <td class="text-mono">${parseFloat(w.cost_estimate||0).toLocaleString()}</td>
+                                    <td>${w.created_at ? w.created_at.substring(0,10) : '--'}</td>
+                                    <td>
+                                        <select onchange="updateWOStatus(${w.id}, this.value)" style="padding:4px 8px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:4px;font-size:11px;">
+                                            <option value="">Change...</option>
+                                            <option value="In Progress">In Progress</option>
+                                            <option value="Awaiting Parts">Awaiting Parts</option>
+                                            <option value="Ready (Pending Invoice)">Pending Invoice</option>
+                                            <option value="Completed">Completed</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            `).join('') : '<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:30px;">No work orders found</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    function filterWOTable() {
+        const q = document.getElementById('woSearch').value.toLowerCase();
+        document.querySelectorAll('#woTableBody tr').forEach(row => {
+            row.style.display = row.dataset.search && row.dataset.search.toLowerCase().includes(q) ? '' : 'none';
+        });
+    }
+
+    async function updateWOStatus(id, status) {
+        if (!status) return;
+        try {
+            await api(`/work-orders/${id}/`, 'PATCH', { status });
+            loadSection('workorders');
+        } catch(e) { alert('Failed to update: ' + e.message); }
+    }
+
+    function showWOModal() {
+        const { vehList } = window._woData || { vehList: [] };
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay';
+        overlay.innerHTML = `
+            <div class="modal">
+                <div class="modal-title">New Work Order</div>
+                <div class="form-group"><label>Vehicle</label><input id="woVehicle" placeholder="e.g. Toyota Hilux"></div>
+                <div class="form-group"><label>Customer Name</label><input id="woCustomer" placeholder="Customer name"></div>
+                <div class="form-group"><label>Issue Description</label><textarea id="woIssue" placeholder="Describe the problem..."></textarea></div>
+                <div class="form-group"><label>Cost Estimate (MWK)</label><input id="woCost" type="number" placeholder="0"></div>
+                <div class="form-actions">
+                    <button class="btn btn-outline" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                    <button class="btn btn-primary" onclick="createWorkOrder()">Create</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+    }
+
+    async function createWorkOrder() {
+        const vehicle = document.getElementById('woVehicle').value;
+        const customer = document.getElementById('woCustomer').value;
+        const issue = document.getElementById('woIssue').value;
+        const cost = document.getElementById('woCost').value || '0';
+        if (!vehicle || !customer) { alert('Vehicle and customer are required'); return; }
+        try {
+            await api('/work-orders/', 'POST', { vehicle_info: vehicle, customer_name: customer, issue_description: issue, cost_estimate: parseFloat(cost) });
+            document.querySelector('.modal-overlay').remove();
+            loadSection('workorders');
+        } catch(e) { alert('Failed to create: ' + e.message); }
+    }
+
+    // ==================== CUSTOMERS ====================
+    async function loadCustomers() {
+        const data = await api('/customers/').catch(() => []);
+        const list = extractList(data);
+
+        document.getElementById('main-content').innerHTML = `
+            <div class="header">
+                <h1 class="header-title">Customers</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="loadSection('customers')">Refresh</button>
+                </div>
+            </div>
+            <div class="card">
+                <input class="search-input" id="custSearch" placeholder="Search by name, phone or email..." oninput="filterTable('custSearch','custTableBody')">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Ref #</th><th>Full Name</th><th>Phone</th><th>Email</th><th>Registered</th></tr></thead>
+                        <tbody id="custTableBody">
+                            ${list.length > 0 ? list.map(c => `
+                                <tr>
+                                    <td class="text-mono">${c.reference_number||'--'}</td>
+                                    <td>${c.full_name||'--'}</td>
+                                    <td>${c.phone||'--'}</td>
+                                    <td>${c.email||'--'}</td>
+                                    <td>${c.created_at ? c.created_at.substring(0,10) : '--'}</td>
+                                </tr>
+                            `).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:30px;">No customers registered</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    // ==================== VEHICLES ====================
+    async function loadVehicles() {
+        const data = await api('/vehicles/').catch(() => []);
+        const list = extractList(data);
+
+        document.getElementById('main-content').innerHTML = `
+            <div class="header">
+                <h1 class="header-title">Vehicles</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="loadSection('vehicles')">Refresh</button>
+                </div>
+            </div>
+            <div class="card">
+                <input class="search-input" id="vehSearch" placeholder="Search by plate, make, model or VIN..." oninput="filterTable('vehSearch','vehTableBody')">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Plate</th><th>Make</th><th>Model</th><th>Year</th><th>VIN</th><th>Mileage</th></tr></thead>
+                        <tbody id="vehTableBody">
+                            ${list.length > 0 ? list.map(v => `
+                                <tr>
+                                    <td class="text-mono" style="color:var(--orange);">${v.plate||'--'}</td>
+                                    <td>${v.make||'--'}</td>
+                                    <td>${v.model_name||'--'}</td>
+                                    <td>${v.year||'--'}</td>
+                                    <td class="text-mono">${v.vin||'--'}</td>
+                                    <td>${(v.mileage||0).toLocaleString()} km</td>
+                                </tr>
+                            `).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:30px;">No vehicles registered</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    // ==================== MECHANICS ====================
+    async function loadMechanics() {
+        const data = await api('/mechanics/').catch(() => []);
+        const list = extractList(data);
+
+        document.getElementById('main-content').innerHTML = `
+            <div class="header">
+                <h1 class="header-title">Mechanics</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="loadSection('mechanics')">Refresh</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Name</th><th>Skills</th><th>Phone</th><th>Status</th><th>Hire Date</th></tr></thead>
+                        <tbody>
+                            ${list.length > 0 ? list.map(m => `
+                                <tr>
+                                    <td>${m.full_name||m.username||'--'}</td>
+                                    <td>${m.skills||'Not specified'}</td>
+                                    <td>${m.phone||'--'}</td>
+                                    <td><span class="tag ${m.is_available ? 'tag-done' : 'tag-progress'}">${m.is_available ? 'Available' : 'Busy'}</span></td>
+                                    <td>${m.hire_date||'--'}</td>
+                                </tr>
+                            `).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:30px;">No mechanics registered</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    // ==================== INVENTORY ====================
+    async function loadInventory() {
+        const data = await api('/inventory/').catch(() => []);
+        const list = extractList(data);
+
+        document.getElementById('main-content').innerHTML = `
+            <div class="header">
+                <h1 class="header-title">Inventory</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="loadSection('inventory')">Refresh</button>
+                </div>
+            </div>
+            <div class="card">
+                <input class="search-input" id="invSearch" placeholder="Search parts..." oninput="filterTable('invSearch','invTableBody')">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Part Name</th><th>Quantity</th><th>Min Threshold</th><th>Unit Price (MWK)</th><th>Status</th></tr></thead>
+                        <tbody id="invTableBody">
+                            ${list.length > 0 ? list.map(i => {
+                                const isLow = i.quantity < i.min_threshold;
+                                return `
+                                <tr>
+                                    <td>${i.part_name}</td>
+                                    <td class="text-mono" style="color:${isLow ? 'var(--red)' : 'var(--green)'};font-weight:600;">${i.quantity}</td>
+                                    <td>${i.min_threshold}</td>
+                                    <td class="text-mono">${parseFloat(i.unit_price||0).toLocaleString()}</td>
+                                    <td><span class="tag ${isLow ? 'tag-parts' : 'tag-done'}">${isLow ? 'Low Stock' : 'OK'}</span></td>
+                                </tr>`;
+                            }).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:30px;">No inventory items</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    // ==================== APPOINTMENTS ====================
+    async function loadAppointments() {
+        const data = await api('/appointments/').catch(() => []);
+        const list = extractList(data);
+
+        document.getElementById('main-content').innerHTML = `
+            <div class="header">
+                <h1 class="header-title">Appointments</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="loadSection('appointments')">Refresh</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Date</th><th>Time</th><th>Customer</th><th>Reason</th></tr></thead>
+                        <tbody>
+                            ${list.length > 0 ? list.map(a => `
+                                <tr>
+                                    <td>${a.date||'--'}</td>
+                                    <td class="text-mono" style="color:var(--orange);">${a.time||'--:--'}</td>
+                                    <td>${a.customer_name||a.customer||'--'}</td>
+                                    <td style="color:var(--text2);">${a.reason||'--'}</td>
+                                </tr>
+                            `).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--text2);padding:30px;">No appointments scheduled</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    // ==================== PAYMENTS ====================
+    async function loadPayments() {
+        const data = await api('/payments/').catch(() => []);
+        const list = extractList(data);
+
+        document.getElementById('main-content').innerHTML = `
+            <div class="header">
+                <h1 class="header-title">Payments</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="loadSection('payments')">Refresh</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Transaction Ref</th><th>Amount (MWK)</th><th>Method</th><th>Date</th></tr></thead>
+                        <tbody>
+                            ${list.length > 0 ? list.map(p => `
+                                <tr>
+                                    <td class="text-mono">${p.transaction_ref||'--'}</td>
+                                    <td class="text-mono" style="color:var(--green);font-weight:600;">${parseFloat(p.amount||0).toLocaleString()}</td>
+                                    <td>${p.payment_method||'--'}</td>
+                                    <td>${p.created_at ? p.created_at.substring(0,10) : '--'}</td>
+                                </tr>
+                            `).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--text2);padding:30px;">No payments recorded</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    // ==================== INVOICES ====================
+    async function loadInvoices() {
+        const data = await api('/invoices/').catch(() => []);
+        const list = extractList(data);
+
+        const statusColors = {
+            'paid': 'tag-done',
+            'sent': 'tag-invoice',
+            'draft': 'tag-parts',
+            'cancelled': 'tag-progress'
+        };
+
+        document.getElementById('main-content').innerHTML = `
+            <div class="header">
+                <h1 class="header-title">Invoices</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="loadSection('invoices')">Refresh</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Invoice #</th><th>Customer</th><th>Total (MWK)</th><th>Status</th><th>Date</th></tr></thead>
+                        <tbody>
+                            ${list.length > 0 ? list.map(inv => `
+                                <tr>
+                                    <td class="text-mono">${inv.invoice_number||'INV-'+inv.id}</td>
+                                    <td>${inv.customer_name||'--'}</td>
+                                    <td class="text-mono" style="color:var(--green);font-weight:600;">${parseFloat(inv.total_amount||0).toLocaleString()}</td>
+                                    <td><span class="tag ${statusColors[inv.status]||'tag-progress'}">${(inv.status||'draft').toUpperCase()}</span></td>
+                                    <td>${inv.issued_date||'--'}</td>
+                                </tr>
+                            `).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:30px;">No invoices found</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    // ==================== GARAGES ====================
+    async function loadGarages() {
+        const data = await api('/garages/').catch(() => []);
+        const list = extractList(data);
+
+        document.getElementById('main-content').innerHTML = `
+            <div class="header">
+                <h1 class="header-title">Garages</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="loadSection('garages')">Refresh</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Name</th><th>Phone</th><th>Address</th><th>Status</th><th>Created</th></tr></thead>
+                        <tbody>
+                            ${list.length > 0 ? list.map(g => `
+                                <tr>
+                                    <td>${g.name||'--'}</td>
+                                    <td>${g.phone||'--'}</td>
+                                    <td>${g.address||'--'}</td>
+                                    <td><span class="tag ${g.is_active ? 'tag-done' : 'tag-progress'}">${g.is_active ? 'Active' : 'Inactive'}</span></td>
+                                    <td>${g.created_at ? g.created_at.substring(0,10) : '--'}</td>
+                                </tr>
+                            `).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:30px;">No garages registered</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    // ==================== HELPERS ====================
+
+    // ==================== REPORTS ====================
+    async function loadReports() {
+        try {
+            const [orders, payments, customers] = await Promise.all([
+                api("/work-orders/").catch(() => []),
+                api("/payments/").catch(() => []),
+                api("/customers/").catch(() => [])
+            ]);
+            const woList = extractList(orders);
+            const payList = extractList(payments);
+            const custList = extractList(customers);
+
+            const totalRevenue = payList.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+            const completedJobs = woList.filter(w => w.status === "Completed").length;
+            const activeJobs = woList.filter(w => w.status === "In Progress" || w.status === "Awaiting Parts").length;
+            const avgJobValue = completedJobs > 0 ? Math.round(totalRevenue / Math.max(completedJobs, 1)) : 0;
+
+            const methodCounts = {};
+            payList.forEach(p => { const m = p.payment_method || "Other"; methodCounts[m] = (methodCounts[m] || 0) + parseFloat(p.amount || 0); });
+            const maxMethod = Math.max(...Object.values(methodCounts), 1);
+
+            document.getElementById("main-content").innerHTML = `
+                <div class="header">
+                    <h1 class="header-title">Reports & Analytics</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-outline" onclick="loadSection(047reports047)">Refresh</button>
+                        <button class="btn btn-outline" onclick="exportCSV()">Export CSV</button>
+                    </div>
+                </div>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Total Revenue</div>
+                        <div class="kpi-value kpi-green">MWK ${totalRevenue.toLocaleString()}</div>
+                        <div class="kpi-sub">All time</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Completed Jobs</div>
+                        <div class="kpi-value kpi-blue">${completedJobs}</div>
+                        <div class="kpi-sub">${activeJobs} active</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Avg Job Value</div>
+                        <div class="kpi-value kpi-orange">MWK ${avgJobValue.toLocaleString()}</div>
+                        <div class="kpi-sub">Per completed job</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Total Customers</div>
+                        <div class="kpi-value kpi-purple">${custList.length}</div>
+                        <div class="kpi-sub">Registered</div>
+                    </div>
+                </div>
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-title">Revenue by Payment Method</div>
+                        ${Object.entries(methodCounts).map(([method, amount]) => `
+                            <div class="progress-item">
+                                <span class="progress-label">${method}</span>
+                                <div class="progress-bar"><div class="progress-fill" style="width:${(amount/maxMethod*100)}%;background:var(--orange);"></div></div>
+                                <span class="progress-count" style="width:auto;">MWK ${amount.toLocaleString()}</span>
+                            </div>
+                        `).join("") || "<div class=047card-empty047>No payment data</div>"}
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Job Status Distribution</div>
+                        ${(() => {
+                            const statuses = ["In Progress", "Awaiting Parts", "Ready (Pending Invoice)", "Completed"];
+                            const colors = ["var(--orange)", "var(--amber)", "var(--blue)", "var(--green)"];
+                            const counts = statuses.map(s => woList.filter(w => w.status === s).length);
+                            const max = Math.max(...counts, 1);
+                            return statuses.map((s, i) => `
+                                <div class="progress-item">
+                                    <span class="progress-label">${s}</span>
+                                    <div class="progress-bar"><div class="progress-fill" style="width:${counts[i]/max*100}%;background:${colors[i]};"></div></div>
+                                    <span class="progress-count">${counts[i]}</span>
+                                </div>
+                            `).join("");
+                        })()}
+                    </div>
+                    <div class="card full-width">
+                        <div class="card-title">Recent Transactions</div>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead><tr><th>Date</th><th>Transaction Ref</th><th>Method</th><th>Amount (MWK)</th></tr></thead>
+                                <tbody>
+                                    ${payList.slice(0, 10).map(p => `
+                                        <tr>
+                                            <td>${p.created_at ? p.created_at.substring(0,10) : "--"}</td>
+                                            <td class="text-mono">${p.transaction_ref||"--"}</td>
+                                            <td>${p.payment_method||"--"}</td>
+                                            <td class="text-mono" style="color:var(--green);font-weight:600;">${parseFloat(p.amount||0).toLocaleString()}</td>
+                                        </tr>
+                                    `).join("") || "<tr><td colspan=0474047 style=047text-align:center;color:var(--text2);padding:30px;047>No transactions recorded</td></tr>"}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             `;
+
+            window._reportData = { woList, payList, custList };
+        } catch(e) {
+            document.getElementById("main-content").innerHTML = `<div class="card" style="text-align:center;padding:60px;"><h2>Error Loading Reports</h2><p style="color:var(--text2);margin-top:8px;">${e.message}</p></div>`;
         }
+    }
+
+    function exportCSV() {
+        const data = window._reportData;
+        if (!data || !data.payList) return alert("No data to export");
+        let csv = "Date,Transaction Ref,Method,Amount\n";
+        data.payList.forEach(p => {
+            csv += `${p.created_at?.substring(0,10)||""},${p.transaction_ref||""},${p.payment_method||""},${p.amount||0}\n`;
+        });
+        const blob = new Blob([csv], {type: "text/csv"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url; a.download = "autogarage_report.csv";
+        a.click(); URL.revokeObjectURL(url);
+    }
+
+
+    // ==================== SETTINGS ====================
+    async function loadSettings() {
+        document.getElementById("main-content").innerHTML = `
+            <div class="header">
+                <h1 class="header-title">Settings</h1>
+            </div>
+            <div class="content-grid">
+                <div class="card">
+                    <div class="card-title">System Information</div>
+                    <table style="width:100%;">
+                        <tr><td style="padding:8px 0;color:var(--text2);">Platform</td><td style="padding:8px 0;">AutoGarage Pro v2.0</td></tr>
+                        <tr><td style="padding:8px 0;color:var(--text2);">API Base</td><td class="text-mono" style="padding:8px 0;">${API}</td></tr>
+                        <tr><td style="padding:8px 0;color:var(--text2);">Status</td><td style="padding:8px 0;color:var(--green);">Connected</td></tr>
+                        <tr><td style="padding:8px 0;color:var(--text2);">Auth Token</td><td class="text-mono" style="padding:8px 0;">${token ? token.substring(0,20)+"..." : "None"}</td></tr>
+                    </table>
+                </div>
+                <div class="card">
+                    <div class="card-title">Quick Actions</div>
+                    <button class="btn btn-outline" style="width:100%;margin-bottom:8px;" onclick="clearCache()">Clear Local Cache</button>
+                    <button class="btn btn-outline" style="width:100%;margin-bottom:8px;" onclick="testConnection()">Test API Connection</button>
+                    <button class="btn btn-danger" style="width:100%;" onclick="logout()">Sign Out</button>
+                </div>
+                <div class="card full-width">
+                    <div class="card-title">API Status</div>
+                    <div id="apiTestResult" style="font-size:13px;color:var(--text2);">Click "Test API Connection" to check...</div>
+                </div>
+            </div>
+        `;
+    }
+
+    async function testConnection() {
+        const el = document.getElementById("apiTestResult");
+        el.innerHTML = "<div class=047loading-spinner047></div> Testing...";
+        try {
+            const start = Date.now();
+            const data = await api("/dashboard/");
+            const ms = Date.now() - start;
+            el.innerHTML = `<span style="color:var(--green);">Connected</span> — Response time: ${ms}ms — Dashboard data loaded successfully.`;
+        } catch(e) {
+            el.innerHTML = `<span style="color:var(--red);">Connection failed</span> — ${e.message}`;
+        }
+    }
+
+    function clearCache() {
+        localStorage.clear();
+        alert("Local cache cleared. Token removed. You will be redirected to login.");
+        window.location.href = "/api/auth/login-page/";
+    }
+
+    function loadPlaceholder(section) {
+        const titles = {
+            reports: 'Reports', settings: 'Settings'
+        };
+        document.getElementById('main-content').innerHTML = `
+            <div class="header"><h1 class="header-title">${titles[section]||section}</h1></div>
+            <div class="card" style="text-align:center;padding:80px;">
+                <h2 style="color:var(--text2);font-weight:500;">This module is currently in development</h2>
+                <p style="color:var(--text2);margin-top:8px;font-size:13px;">Coming in the next update.</p>
+            </div>
+        `;
+    }
+
+    function filterTable(searchId, tbodyId) {
+        const q = document.getElementById(searchId).value.toLowerCase();
+        document.querySelectorAll(`#${tbodyId} tr`).forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
     }
 
     function logout() {
@@ -601,7 +1197,8 @@
         window.location.href = '/api/auth/login-page/';
     }
 
-    loadDashboard();
+    // Initial load
+    loadSection('dashboard');
 </script>
 
 </body>
