@@ -3,155 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoGarage Pro - Workshop Management Platform</title>
+    <title>AutoGarage Pro — Workshop Management Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #0D0D0D;
-            color: #E0E0E0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            min-height: 100vh;
+        :root {
+            --bg: #0D0D0D;
+            --surface: #1A1A1A;
+            --border: #2A2A2A;
+            --text: #E0E0E0;
+            --text2: #888;
+            --orange: #FF6F00;
+            --green: #22C55E;
+            --blue: #3B82F6;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* NAV */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 40px;
-            background: #121212;
-            border-bottom: 1px solid #222;
+            padding: 14px 6%;
+            background: rgba(18,18,18,0.95);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
         }
-        nav .logo { font-size: 18px; font-weight: 700; color: #FF6F00; }
+        nav .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--orange);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        nav .logo i { font-size: 22px; }
+        nav .links { display: flex; gap: 20px; align-items: center; }
         nav a {
-            color: #E0E0E0;
+            color: var(--text);
             text-decoration: none;
-            margin-left: 24px;
             font-size: 14px;
             font-weight: 500;
+            transition: color 0.2s;
         }
-        nav a.primary {
-            background: #FF6F00;
-            padding: 8px 18px;
-            border-radius: 7px;
+        nav a:hover { color: var(--orange); }
+        nav .btn-signin {
+            background: var(--orange);
             color: #fff;
+            padding: 9px 20px;
+            border-radius: 7px;
+            font-weight: 600;
         }
+        nav .btn-signin:hover { background: #E65100; color: #fff; }
+        .mobile-menu { display: none; background: none; border: none; color: var(--text); font-size: 22px; cursor: pointer; }
+
+        /* HERO */
         .hero {
+            padding: 80px 6% 60px;
             text-align: center;
-            padding: 80px 20px 60px;
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
         }
-        .hero h1 {
-            font-size: 42px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            line-height: 1.2;
+        .hero .badge {
+            display: inline-block;
+            background: rgba(255,111,0,0.1);
+            color: var(--orange);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
         }
-        .hero h1 span { color: #FF6F00; }
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+        .hero h1 span { color: var(--orange); }
         .hero p {
             font-size: 18px;
-            color: #888;
+            color: var(--text2);
             margin-bottom: 32px;
-            line-height: 1.6;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        .hero .cta {
-            display: inline-block;
-            background: #FF6F00;
-            color: #fff;
-            padding: 14px 32px;
+        .hero .cta-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-cta {
+            padding: 14px 28px;
             border-radius: 8px;
             font-size: 15px;
             font-weight: 600;
             text-decoration: none;
-            margin: 0 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
         }
-        .hero .cta-outline {
-            display: inline-block;
-            background: transparent;
-            color: #E0E0E0;
-            padding: 14px 32px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            text-decoration: none;
-            border: 1px solid #444;
-            margin: 0 6px;
+        .btn-primary { background: var(--orange); color: #fff; }
+        .btn-primary:hover { background: #E65100; transform: translateY(-1px); }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+
+        /* FEATURES */
+        .section { padding: 60px 6%; }
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
         }
-        .features {
+        .section-sub {
+            text-align: center;
+            color: var(--text2);
+            margin-bottom: 48px;
+            font-size: 16px;
+        }
+        .features-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            max-width: 960px;
-            margin: 40px auto;
-            padding: 0 20px;
+            max-width: 1000px;
+            margin: 0 auto;
         }
         .feature-card {
-            background: #1A1A1A;
-            border: 1px solid #2A2A2A;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px 22px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .feature-card:hover { transform: translateY(-4px); border-color: var(--orange); }
+        .feature-card .icon-circle {
+            width: 48px; height: 48px;
             border-radius: 12px;
-            padding: 24px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 16px;
         }
-        .feature-card h3 { font-size: 16px; margin-bottom: 8px; color: #FF6F00; }
-        .feature-card p { font-size: 13px; color: #888; line-height: 1.5; }
-        .footer {
+        .feature-card h3 { font-size: 16px; margin-bottom: 8px; }
+        .feature-card p { font-size: 13px; color: var(--text2); }
+
+        .icon-orange { background: rgba(255,111,0,0.15); color: var(--orange); }
+        .icon-blue { background: rgba(59,130,246,0.15); color: var(--blue); }
+        .icon-green { background: rgba(34,197,94,0.15); color: var(--green); }
+        .icon-purple { background: rgba(139,92,246,0.15); color: #8B5CF6; }
+        .icon-amber { background: rgba(245,158,11,0.15); color: #F59E0B; }
+        .icon-red { background: rgba(239,68,68,0.15); color: #EF4444; }
+
+        /* STATS */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            padding: 40px 6%;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin: 20px 0;
+        }
+        .stat-item { text-align: center; }
+        .stat-num { font-size: 36px; font-weight: 800; font-family: monospace; }
+        .stat-label { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+        /* HOW IT WORKS */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .step {
             text-align: center;
-            padding: 40px;
-            color: #555;
+            padding: 20px;
+        }
+        .step-num {
+            width: 40px; height: 40px;
+            background: var(--orange);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .step h4 { font-size: 14px; margin-bottom: 6px; }
+        .step p { font-size: 12px; color: var(--text2); }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 40px 6%;
+            color: var(--text2);
             font-size: 12px;
+            border-top: 1px solid var(--border);
         }
+        footer a { color: var(--orange); text-decoration: none; }
+
+        /* ANIMATIONS */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.6s ease-out; }
+
+        /* MOBILE */
         @media (max-width: 768px) {
-            .features { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 28px; }
-            nav { padding: 12px 20px; }
+            .features-grid, .steps { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 30px; }
+            .stats { gap: 30px; }
+            nav .links { display: none; }
+            .mobile-menu { display: block; }
+            nav .links.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--surface);
+                padding: 20px;
+                border-bottom: 1px solid var(--border);
+            }
         }
     </style>
 </head>
 <body>
-    <nav>
-        <span class="logo">AutoGarage Pro</span>
-        <div>
-            <a href="/api/dashboard-page/">Dashboard</a>
-            <a href="/api/auth/login-page/" class="primary">Sign In</a>
-        </div>
-    </nav>
 
-    <div class="hero">
-        <h1>Manage Your <span>Garage</span> Like a Pro</h1>
-        <p>Work orders, inventory, customers, payments, and AI diagnostics — all in one platform. Built for African workshops.</p>
-        <a href="/api/auth/register-page/" class="cta">Get Started Free</a>
-        <a href="/api/dashboard-page/" class="cta-outline">Live Demo</a>
+<nav>
+    <div class="logo"><i class="fas fa-wrench"></i> AutoGarage Pro</div>
+    <button class="mobile-menu" onclick="document.querySelector('nav .links').classList.toggle('active')">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="links">
+        <a href="#features">Features</a>
+        <a href="#how">How It Works</a>
+        <a href="/api/dashboard-page/">Dashboard</a>
+        <a href="/api/auth/login-page/" class="btn-signin">Sign In</a>
     </div>
+</nav>
 
-    <div class="features">
+<section class="hero fade-up">
+    <div class="badge"><i class="fas fa-circle" style="font-size:6px;color:var(--green);"></i> Live in Malawi</div>
+    <h1>Manage Your <span>Garage</span> Like a Pro</h1>
+    <p>Work orders, inventory, customers, payments, and AI diagnostics — one platform built for African auto workshops.</p>
+    <div class="cta-group">
+        <a href="/api/auth/register-page/" class="btn-cta btn-primary"><i class="fas fa-rocket"></i> Get Started Free</a>
+        <a href="/api/dashboard-page/" class="btn-cta btn-outline"><i class="fas fa-play"></i> View Demo</a>
+    </div>
+</section>
+
+<div class="stats">
+    <div class="stat-item">
+        <div class="stat-num" style="color:var(--orange);">15</div>
+        <div class="stat-label">API Endpoints</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num" style="color:var(--blue);">12</div>
+        <div class="stat-label">Dashboard Sections</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num" style="color:var(--green);">7</div>
+        <div class="stat-label">AI Fault Codes</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num" style="color:#8B5CF6;">24/7</div>
+        <div class="stat-label">Uptime</div>
+    </div>
+</div>
+
+<section class="section" id="features">
+    <h2 class="section-title">Everything Your Garage Needs</h2>
+    <p class="section-sub">One platform to run your entire workshop</p>
+    <div class="features-grid">
         <div class="feature-card">
+            <div class="icon-circle icon-orange"><i class="fas fa-clipboard-list"></i></div>
             <h3>Work Orders</h3>
-            <p>Track repairs from intake to completion. Assign mechanics, track status, and generate invoices.</p>
+            <p>Track every repair job from intake to completion. Assign mechanics and update status in real-time.</p>
         </div>
         <div class="feature-card">
-            <h3>Inventory Management</h3>
-            <p>Monitor stock levels in real-time. Get alerts when parts run low. Never miss a sale.</p>
+            <div class="icon-circle icon-blue"><i class="fas fa-boxes"></i></div>
+            <h3>Inventory</h3>
+            <p>Monitor stock levels with automatic low-stock alerts. Never run out of critical parts.</p>
         </div>
         <div class="feature-card">
-            <h3>Customer Records</h3>
-            <p>Build your customer database. Track vehicle history, service records, and appointments.</p>
+            <div class="icon-circle icon-green"><i class="fas fa-users"></i></div>
+            <h3>Customers</h3>
+            <p>Build your customer database with full vehicle service history and contact records.</p>
         </div>
         <div class="feature-card">
+            <div class="icon-circle icon-purple"><i class="fas fa-brain"></i></div>
             <h3>AI Diagnostics</h3>
-            <p>Enter an OBD-II fault code and get instant diagnostic steps, severity ratings, and cost estimates.</p>
+            <p>Enter any OBD-II fault code and get instant diagnosis, severity rating, and cost estimate.</p>
         </div>
         <div class="feature-card">
-            <h3>Dashboard & Reports</h3>
-            <p>See revenue, active jobs, and mechanic performance at a glance. Export reports with one click.</p>
+            <div class="icon-circle icon-amber"><i class="fas fa-chart-bar"></i></div>
+            <h3>Reports & Analytics</h3>
+            <p>Revenue trends, job distribution, mechanic performance — all in interactive charts.</p>
         </div>
         <div class="feature-card">
-            <h3>Multi-Tenant Ready</h3>
-            <p>Each garage's data is completely isolated. Scale from one workshop to a network of branches.</p>
+            <div class="icon-circle icon-red"><i class="fas fa-shield-alt"></i></div>
+            <h3>Multi-Tenant Security</h3>
+            <p>Each garage's data is completely isolated. Your information stays private.</p>
         </div>
     </div>
+</section>
 
-    <div class="footer">
-        AutoGarage Pro &copy; 2026 — Built in Malawi. <a href="https://github.com" style="color:#888;">GitHub</a>
+<section class="section" id="how">
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">Get started in minutes, not days</p>
+    <div class="steps">
+        <div class="step">
+            <div class="step-num">1</div>
+            <h4>Sign Up</h4>
+            <p>Create your garage account in 30 seconds</p>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <h4>Add Customers</h4>
+            <p>Register customers and their vehicles</p>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <h4>Create Work Orders</h4>
+            <p>Track repairs and assign mechanics</p>
+        </div>
+        <div class="step">
+            <div class="step-num">4</div>
+            <h4>Get Paid</h4>
+            <p>Generate invoices and track revenue</p>
+        </div>
     </div>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/api/templates/sw.js");}</script>
+</section>
+
+<footer>
+    <p>AutoGarage Pro &copy; 2026 — Built in Malawi</p>
+    <p><a href="https://github.com/BLESS-LAB/AutoGarage-Platform">GitHub</a> &middot; <a href="/api/offline/">Offline Mode</a></p>
+</footer>
+
 </body>
 </html>

@@ -1,149 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>AutoGarage Pro - Sign In</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In — AutoGarage Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        :root {
+            --bg: #0D0D0D; --surface: #1A1A1A; --border: #2A2A2A;
+            --text: #E0E0E0; --text2: #888; --orange: #FF6F00;
+            --green: #22C55E; --red: #EF4444; --blue: #3B82F6;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: #0D0D0D;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
         }
-        .card {
-            background: #1A1A1A;
+        .split { display: flex; width: 100%; }
+        
+        /* LEFT PANEL */
+        .left {
+            flex: 1;
+            background: linear-gradient(160deg, #1A1A1A 0%, #0A0A0A 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 40px;
-            border-radius: 12px;
+            display: none;
+        }
+        .left-content { text-align: center; max-width: 380px; }
+        .left-content .logo-img { width: 80px; height: 80px; border-radius: 18px; margin-bottom: 20px; }
+        .left-content h2 { font-size: 22px; margin-bottom: 10px; color: var(--text); }
+        .left-content p { color: var(--text2); font-size: 13px; line-height: 1.6; margin-bottom: 24px; }
+        .left-content .features { text-align: left; }
+        .left-content .feat { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; font-size: 13px; color: var(--text2); }
+        .left-content .feat i { font-size: 14px; color: var(--green); width: 18px; text-align: center; }
+
+        /* RIGHT PANEL */
+        .right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+        .form-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px 32px;
             width: 100%;
             max-width: 400px;
-            border: 1px solid #2A2A2A;
         }
-        .brand {
-            font-size: 22px;
-            font-weight: 700;
-            color: #FF6F00;
-            margin-bottom: 4px;
-            text-align: center;
+        .form-card .logo-area { text-align: center; margin-bottom: 20px; }
+        .form-card .logo-area img { width: 56px; height: 56px; border-radius: 14px; }
+        .form-card .logo-area h3 { font-size: 18px; color: var(--orange); margin-top: 10px; font-weight: 700; }
+        .form-card .logo-area span { font-size: 11px; color: var(--text2); letter-spacing: 1px; display: block; }
+        
+        .form-group { margin-bottom: 14px; position: relative; }
+        .form-group i { position: absolute; left: 14px; top: 38px; color: var(--text2); font-size: 14px; }
+        .form-group label { display: block; font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; font-weight: 500; }
+        .form-group input {
+            width: 100%; padding: 12px 14px 12px 38px;
+            background: #0A0A0A; border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text); font-size: 14px;
+            outline: none; transition: border-color 0.2s;
         }
-        .subtitle {
-            color: #888;
-            font-size: 12px;
-            margin-bottom: 28px;
-            text-align: center;
-            letter-spacing: 0.5px;
+        .form-group input:focus { border-color: var(--orange); }
+        
+        .btn-signin {
+            width: 100%; padding: 13px;
+            background: var(--orange); color: #fff;
+            border: none; border-radius: 8px;
+            font-size: 14px; font-weight: 600;
+            cursor: pointer; margin-top: 8px;
+            transition: 0.2s; display: flex;
+            align-items: center; justify-content: center; gap: 8px;
         }
-        input {
-            width: 100%;
-            padding: 13px 14px;
-            margin-bottom: 10px;
-            background: #0A0A0A;
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: #E0E0E0;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        input:focus { border-color: #FF6F00; }
-        button {
-            width: 100%;
-            padding: 13px;
-            background: #FF6F00;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 4px;
-        }
-        button:hover { background: #E65100; }
+        .btn-signin:hover { background: #E65100; }
+        
         .message {
-            font-size: 12px;
-            margin-bottom: 10px;
-            display: none;
-            text-align: center;
-            padding: 8px;
-            border-radius: 6px;
+            font-size: 12px; padding: 10px; border-radius: 6px;
+            margin-bottom: 12px; display: none;
         }
-        .message-error {
-            display: block;
-            background: rgba(239,68,68,0.1);
-            color: #EF4444;
-            border: 1px solid rgba(239,68,68,0.2);
-        }
-        .message-success {
-            display: block;
-            background: rgba(34,197,94,0.1);
-            color: #22C55E;
-            border: 1px solid rgba(34,197,94,0.2);
-        }
-        .footer {
-            color: #888;
-            font-size: 12px;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .footer a {
-            color: #3B82F6;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .footer a:hover { text-decoration: underline; }
+        .msg-error { display: block; background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+        .msg-success { display: block; background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+        
+        .footer-link { text-align: center; margin-top: 16px; font-size: 13px; color: var(--text2); }
+        .footer-link a { color: var(--orange); text-decoration: none; font-weight: 500; }
+        .footer-link a:hover { text-decoration: underline; }
+        
+        .divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; color: var(--text2); font-size: 11px; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        @media (min-width: 768px) { .left { display: flex; } }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="brand">AutoGarage Pro</div>
-        <div class="subtitle">WORKSHOP MANAGEMENT SYSTEM</div>
-        <div id="message" class="message"></div>
-        <input type="text" id="username" placeholder="Username" autocomplete="username">
-        <input type="password" id="password" placeholder="Password" autocomplete="current-password">
-        <button onclick="login()">Sign In</button>
-        <div class="footer">
-            <a href="/api/auth/register-page/">Create an account</a>
+<div class="split">
+    <div class="left">
+        <div class="left-content">
+            <img src="/api/templates/logo.png" alt="BlessGarage" class="logo-img" onerror="this.style.display='none'">
+            <h2>Welcome Back</h2>
+            <p>Sign in to access your workshop dashboard, manage work orders, and grow your garage business.</p>
+            <div class="features">
+                <div class="feat"><i class="fas fa-check-circle"></i> Track work orders in real-time</div>
+                <div class="feat"><i class="fas fa-check-circle"></i> AI-powered fault diagnostics</div>
+                <div class="feat"><i class="fas fa-check-circle"></i> Inventory & stock alerts</div>
+                <div class="feat"><i class="fas fa-check-circle"></i> Revenue reports & analytics</div>
+            </div>
         </div>
     </div>
-    <script>
-        async function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const msg = document.getElementById('message');
-            msg.className = 'message';
-            msg.style.display = 'none';
+    <div class="right">
+        <div class="form-card">
+            <div class="logo-area">
+                <img src="/api/templates/logo.png" alt="Logo" onerror="this.style.display='none'">
+                <h3>AutoGarage Pro</h3>
+                <span>SIGN IN TO CONTINUE</span>
+            </div>
+            <div id="message" class="message"></div>
+            <div class="form-group">
+                <label>Username</label>
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" placeholder="Enter your username" autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+            </div>
+            <button class="btn-signin" onclick="login()">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+            <div class="divider">or</div>
+            <div class="footer-link">
+                Don't have an account? <a href="/api/auth/register-page/">Create one</a>
+            </div>
+            <div class="footer-link" style="margin-top:6px;">
+                <a href="/"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+async function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const msg = document.getElementById('message');
+    msg.className = 'message'; msg.style.display = 'none';
 
-            if (!username || !password) {
-                msg.className = 'message message-error';
-                msg.innerText = 'Please enter username and password';
-                return;
-            }
-
-            try {
-                const res = await fetch('/api/auth/login/', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({username, password})
-                });
-                const data = await res.json();
-                if (data.access) {
-                    msg.className = 'message message-success';
-                    msg.innerText = 'Signed in successfully. Redirecting...';
-                    localStorage.setItem('token', data.access);
-                    setTimeout(() => { window.location.href = '/api/dashboard-page/'; }, 600);
-                } else {
-                    msg.className = 'message message-error';
-                    msg.innerText = data.error || 'Invalid credentials';
-                }
-            } catch (e) {
-                msg.className = 'message message-error';
-                msg.innerText = 'Connection error. Please try again.';
-            }
+    if (!username || !password) {
+        msg.className = 'message msg-error';
+        msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter username and password';
+        return;
+    }
+    try {
+        const res = await fetch('/api/auth/login/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username, password})
+        });
+        const data = await res.json();
+        if (data.access) {
+            msg.className = 'message msg-success';
+            msg.innerHTML = '<i class="fas fa-check-circle"></i> Signed in. Redirecting...';
+            localStorage.setItem('token', data.access);
+            localStorage.setItem('user', JSON.stringify(data));
+            setTimeout(() => { window.location.href = '/api/dashboard-page/'; }, 800);
+        } else {
+            msg.className = 'message msg-error';
+            msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + (data.error || 'Invalid credentials');
         }
-    </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/api/templates/sw.js");}</script>
+    } catch (e) {
+        msg.className = 'message msg-error';
+        msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Connection error. Please try again.';
+    }
+}
+</script>
 </body>
 </html>

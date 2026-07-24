@@ -29,3 +29,8 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
+
+import os
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'api', 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
