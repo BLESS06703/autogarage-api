@@ -29,6 +29,7 @@ urlpatterns = [
     path('auth/register-page/', auth_views.register_page),
     path('dashboard/', dashboard_views.dashboard),
     path('dashboard-page/', dashboard_views.dashboard_page),
+    path('offline/', dashboard_views.offline_page),
     path('reports/revenue/', report_views.revenue_report),
     path('reports/jobs/', report_views.jobs_report),
     path('ai/diagnose/', ai_views.ai_diagnose),
