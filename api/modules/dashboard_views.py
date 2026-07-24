@@ -32,3 +32,6 @@ from django.shortcuts import render
 
 def dashboard_page(request):
     return render(request, 'dashboard.html')
+
+def offline_page(request):
+    return render(request, 'offline.html')

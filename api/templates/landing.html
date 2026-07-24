@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoGarage Pro - Workshop Management Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0D0D0D;
+            color: #E0E0E0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 40px;
+            background: #121212;
+            border-bottom: 1px solid #222;
+        }
+        nav .logo { font-size: 18px; font-weight: 700; color: #FF6F00; }
+        nav a {
+            color: #E0E0E0;
+            text-decoration: none;
+            margin-left: 24px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        nav a.primary {
+            background: #FF6F00;
+            padding: 8px 18px;
+            border-radius: 7px;
+            color: #fff;
+        }
+        .hero {
+            text-align: center;
+            padding: 80px 20px 60px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        .hero h1 span { color: #FF6F00; }
+        .hero p {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        .hero .cta {
+            display: inline-block;
+            background: #FF6F00;
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            margin: 0 6px;
+        }
+        .hero .cta-outline {
+            display: inline-block;
+            background: transparent;
+            color: #E0E0E0;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid #444;
+            margin: 0 6px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 960px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .feature-card {
+            background: #1A1A1A;
+            border: 1px solid #2A2A2A;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+        .feature-card h3 { font-size: 16px; margin-bottom: 8px; color: #FF6F00; }
+        .feature-card p { font-size: 13px; color: #888; line-height: 1.5; }
+        .footer {
+            text-align: center;
+            padding: 40px;
+            color: #555;
+            font-size: 12px;
+        }
+        @media (max-width: 768px) {
+            .features { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 28px; }
+            nav { padding: 12px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <span class="logo">AutoGarage Pro</span>
+        <div>
+            <a href="/api/dashboard-page/">Dashboard</a>
+            <a href="/api/auth/login-page/" class="primary">Sign In</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Manage Your <span>Garage</span> Like a Pro</h1>
+        <p>Work orders, inventory, customers, payments, and AI diagnostics — all in one platform. Built for African workshops.</p>
+        <a href="/api/auth/register-page/" class="cta">Get Started Free</a>
+        <a href="/api/dashboard-page/" class="cta-outline">Live Demo</a>
+    </div>
+
+    <div class="features">
+        <div class="feature-card">
+            <h3>Work Orders</h3>
+            <p>Track repairs from intake to completion. Assign mechanics, track status, and generate invoices.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Inventory Management</h3>
+            <p>Monitor stock levels in real-time. Get alerts when parts run low. Never miss a sale.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Customer Records</h3>
+            <p>Build your customer database. Track vehicle history, service records, and appointments.</p>
+        </div>
+        <div class="feature-card">
+            <h3>AI Diagnostics</h3>
+            <p>Enter an OBD-II fault code and get instant diagnostic steps, severity ratings, and cost estimates.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Dashboard & Reports</h3>
+            <p>See revenue, active jobs, and mechanic performance at a glance. Export reports with one click.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Multi-Tenant Ready</h3>
+            <p>Each garage's data is completely isolated. Scale from one workshop to a network of branches.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        AutoGarage Pro &copy; 2026 — Built in Malawi. <a href="https://github.com" style="color:#888;">GitHub</a>
+    </div>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/api/templates/sw.js");}</script>
+</body>
+</html>
