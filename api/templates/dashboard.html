@@ -518,6 +518,7 @@
                 case 'payments': await loadPayments(); break;
                 case 'invoices': await loadInvoices(); break;
                 case 'garages': await loadGarages(); break;
+                case 'ai': await loadAI(); break;
                 case 'reports': await loadReports(); break;
                 case 'settings': await loadSettings(); break;
                 default: loadPlaceholder(section);
@@ -1170,6 +1171,78 @@
         localStorage.clear();
         alert("Local cache cleared. Token removed. You will be redirected to login.");
         window.location.href = "/api/auth/login-page/";
+    }
+
+
+    // ==================== AI ASSISTANT ====================
+    async function loadAI() {
+        try {
+            const codesData = await api("/ai/codes/").catch(() => ({}));
+            const supportedCodes = codesData.supported_codes || [];
+
+            document.getElementById("main-content").innerHTML = `
+                <div class="header">
+                    <h1 class="header-title">AI Diagnostic Assistant</h1>
+                </div>
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-title">Fault Code Diagnosis</div>
+                        <div class="form-group">
+                            <label>OBD-II Fault Code</label>
+                            <input id="aiCode" placeholder="e.g. P0300" style="text-transform:uppercase;" maxlength="5">
+                        </div>
+                        <div class="form-group">
+                            <label>Vehicle Info (optional)</label>
+                            <input id="aiVehicle" placeholder="e.g. Toyota Hilux 2018">
+                        </div>
+                        <button class="btn btn-primary" style="width:100%;" onclick="runDiagnosis()">Run Diagnosis</button>
+                        <div id="aiResult" style="margin-top:16px;"></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Supported Codes</div>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead><tr><th>Code</th><th>Description</th><th>Severity</th></tr></thead>
+                                <tbody>
+                                    ${supportedCodes.length > 0 ? supportedCodes.map(c => `
+                                        <tr style="cursor:pointer;" onclick="document.getElementById(047aiCode047).value=047${c.code}047; runDiagnosis();">
+                                            <td class="text-mono" style="color:var(--orange);">${c.code}</td>
+                                            <td style="font-size:12px;">${c.title}</td>
+                                            <td><span class="tag tag-${c.severity === "Critical" ? "progress" : c.severity === "High" ? "parts" : c.severity === "Medium" ? "invoice" : "done"}">${c.severity}</span></td>
+                                        </tr>
+                                    `).join("") : "<tr><td colspan=0473047 style=047text-align:center;color:var(--text2);padding:20px;047>Loading codes...</td></tr>"}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } catch(e) {
+            document.getElementById("main-content").innerHTML = `<div class="card" style="text-align:center;padding:60px;"><h2>Error</h2><p style="color:var(--text2);">${e.message}</p></div>`;
+        }
+    }
+
+    async function runDiagnosis() {
+        const code = document.getElementById("aiCode").value.trim();
+        const vehicle = document.getElementById("aiVehicle").value.trim();
+        const resultDiv = document.getElementById("aiResult");
+        if (!code) { resultDiv.innerHTML = "<p style=047color:var(--red);047>Please enter a fault code</p>"; return; }
+        resultDiv.innerHTML = "<div class=047loading-spinner047></div> Analyzing...";
+        try {
+            const data = await api("/ai/diagnose/", "POST", { code, vehicle });
+            const severityColors = { Critical: "var(--red)", High: "var(--orange)", Medium: "var(--amber)", Low: "var(--green)" };
+            resultDiv.innerHTML = `
+                <div style="margin-top:12px;padding:16px;background:var(--surface2);border-radius:8px;border-left:3px solid ${severityColors[data.severity]||"var(--blue)"};">
+                    <h3 style="color:var(--text);margin-bottom:4px;">${data.title}</h3>
+                    <p style="font-size:11px;color:var(--text2);margin-bottom:10px;">Vehicle: ${data.vehicle} | Severity: <span style="color:${severityColors[data.severity]||"var(--text2)"};">${data.severity}</span> | Est. Cost: ${data.estimated_cost}</p>
+                    <ol style="padding-left:16px;font-size:13px;color:var(--text);line-height:1.8;">
+                        ${data.details.map(d => `<li>${d}</li>`).join("")}
+                    </ol>
+                </div>
+            `;
+        } catch(e) {
+            resultDiv.innerHTML = `<p style="color:var(--red);">Diagnosis failed: ${e.message}</p>`;
+        }
     }
 
     function loadPlaceholder(section) {

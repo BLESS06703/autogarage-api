@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
-from .modules import auth_views, dashboard_views, report_views
+from .modules import auth_views, dashboard_views, report_views, ai_views
 
 router = DefaultRouter()
 router.register('garages', views.GarageVS)
@@ -30,4 +30,6 @@ urlpatterns = [
     path('dashboard-page/', dashboard_views.dashboard_page),
     path('reports/revenue/', report_views.revenue_report),
     path('reports/jobs/', report_views.jobs_report),
+    path('ai/diagnose/', ai_views.ai_diagnose),
+    path('ai/codes/', ai_views.ai_codes_list),
 ]
