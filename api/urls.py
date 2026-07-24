@@ -11,6 +11,10 @@ router.register('work-orders', views.WorkOrderVS)
 router.register('inventory', views.InventoryVS)
 router.register('payments', views.PaymentVS)
 router.register('appointments', views.AppointmentVS)
+router.register('user-roles', views.UserRoleVS)
+router.register('mechanics', views.MechanicProfileVS)
+router.register('services', views.ServiceCatalogVS)
+router.register('work-order-services', views.WorkOrderServiceVS)
 
 urlpatterns = [
     path('', include(router.urls)),

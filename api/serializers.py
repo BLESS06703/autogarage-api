@@ -35,3 +35,34 @@ class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = '__all__'
+
+# === PHASE 1 SERIALIZERS ===
+
+class UserRoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserRole
+        fields = '__all__'
+
+
+class MechanicProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    full_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = MechanicProfile
+        fields = ['id', 'user', 'username', 'full_name', 'garage', 'skills', 'is_available', 'phone', 'hire_date', 'created_at']
+
+    def get_full_name(self, obj):
+        return obj.user.get_full_name() or obj.user.username
+
+
+class ServiceCatalogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceCatalog
+        fields = '__all__'
+
+
+class WorkOrderServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkOrderService
+        fields = '__all__'

@@ -68,3 +68,66 @@ class Appointment(models.Model):
     time = models.CharField(max_length=20)
     reason = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+# === PHASE 1 ADDITIONS ===
+
+class UserRole(models.Model):
+    """Extends Django User with role for multi-garage access"""
+    ROLE_CHOICES = [
+        ('admin', 'Admin'),
+        ('owner', 'Garage Owner'),
+        ('manager', 'Manager'),
+        ('mechanic', 'Mechanic'),
+        ('receptionist', 'Receptionist'),
+    ]
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='role_profile')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='mechanic')
+    garage = models.ForeignKey(Garage, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"
+
+
+class MechanicProfile(models.Model):
+    """Extended profile for mechanic users"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='mechanic_profile')
+    garage = models.ForeignKey(Garage, on_delete=models.CASCADE, related_name='mechanics')
+    skills = models.TextField(blank=True, help_text="Comma-separated skills e.g. Engine, Brakes, Electrical")
+    is_available = models.BooleanField(default=True)
+    phone = models.CharField(max_length=20, blank=True)
+    hire_date = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.get_full_name() or self.user.username} - {self.garage.name}"
+
+
+class ServiceCatalog(models.Model):
+    """Predefined services offered by a garage"""
+    garage = models.ForeignKey(Garage, on_delete=models.CASCADE, related_name='services')
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    category = models.CharField(max_length=100, blank=True, help_text="e.g. Engine, Brakes, Electrical, Bodywork")
+    base_price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    estimated_hours = models.DecimalField(max_digits=5, decimal_places=1, default=1.0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['category', 'name']
+
+    def __str__(self):
+        return f"{self.name} - MWK {self.base_price}"
+
+
+class WorkOrderService(models.Model):
+    """Links services from catalog to a work order"""
+    work_order = models.ForeignKey(WorkOrder, on_delete=models.CASCADE, related_name='services_used')
+    service = models.ForeignKey(ServiceCatalog, on_delete=models.SET_NULL, null=True)
+    custom_description = models.CharField(max_length=200, blank=True)
+    quantity = models.DecimalField(max_digits=5, decimal_places=1, default=1.0)
+    price = models.DecimalField(max_digits=12, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.service or self.custom_description} - {self.work_order.srn}"

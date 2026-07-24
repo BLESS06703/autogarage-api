@@ -9,3 +9,7 @@ class WorkOrderVS(viewsets.ModelViewSet): queryset = WorkOrder.objects.all(); se
 class InventoryVS(viewsets.ModelViewSet): queryset = InventoryItem.objects.all(); serializer_class = InventorySerializer
 class PaymentVS(viewsets.ModelViewSet): queryset = Payment.objects.all(); serializer_class = PaymentSerializer
 class AppointmentVS(viewsets.ModelViewSet): queryset = Appointment.objects.all(); serializer_class = AppointmentSerializer
+class UserRoleVS(viewsets.ModelViewSet): queryset = UserRole.objects.all(); serializer_class = UserRoleSerializer
+class MechanicProfileVS(viewsets.ModelViewSet): queryset = MechanicProfile.objects.all(); serializer_class = MechanicProfileSerializer
+class ServiceCatalogVS(viewsets.ModelViewSet): queryset = ServiceCatalog.objects.all(); serializer_class = ServiceCatalogSerializer
+class WorkOrderServiceVS(viewsets.ModelViewSet): queryset = WorkOrderService.objects.all(); serializer_class = WorkOrderServiceSerializer
