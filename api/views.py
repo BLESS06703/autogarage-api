@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from rest_framework.exceptions import PermissionDenied
 from .models import *
 from .serializers import *
+import datetime
 
 # ==================== BASE PERMISSION ====================
 class IsGarageMember(permissions.BasePermission):
@@ -336,3 +337,36 @@ class InvoiceVS(viewsets.ModelViewSet):
         if not garage:
             raise PermissionDenied("No garage assigned to your account")
         serializer.save(garage=garage)
+
+# ==================== NOTIFICATIONS ====================
+class NotificationVS(viewsets.ModelViewSet):
+    serializer_class = NotificationSerializer
+    permission_classes = [IsGarageMember]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return Notification.objects.all()
+        garage = get_user_garage(user)
+        if garage:
+            return Notification.objects.filter(garage=garage)
+        return Notification.objects.none()
+
+    def perform_create(self, serializer):
+        garage = get_user_garage(self.request.user)
+        if not garage:
+            raise PermissionDenied("No garage assigned")
+        serializer.save(garage=garage)
+
+# ==================== NOTIFICATION HELPERS ====================
+def send_notification(garage, type, title, message, priority='medium', user=None, link=''):
+    """Create a notification for a garage"""
+    Notification.objects.create(
+        garage=garage,
+        user=user,
+        type=type,
+        title=title,
+        message=message,
+        priority=priority,
+        link=link
+    )

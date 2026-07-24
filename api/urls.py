@@ -19,6 +19,7 @@ router.register('work-order-parts', views.WorkOrderPartVS, basename='workorderpa
 router.register('service-history', views.ServiceHistoryVS, basename='servicehistory')
 router.register('diagnostics', views.DiagnosticRecordVS, basename='diagnostic')
 router.register('invoices', views.InvoiceVS, basename='invoice')
+router.register('notifications', views.NotificationVS, basename='notification')
 
 urlpatterns = [
     path('', include(router.urls)),

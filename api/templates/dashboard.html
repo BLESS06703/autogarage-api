@@ -519,6 +519,7 @@
                 case 'invoices': await loadInvoices(); break;
                 case 'garages': await loadGarages(); break;
                 case 'ai': await loadAI(); break;
+                case 'notifications': await loadNotifications(); break;
                 case 'reports': await loadReports(); break;
                 case 'settings': await loadSettings(); break;
                 default: loadPlaceholder(section);
@@ -1244,6 +1245,74 @@
             resultDiv.innerHTML = `<p style="color:var(--red);">Diagnosis failed: ${e.message}</p>`;
         }
     }
+
+
+    // ==================== NOTIFICATIONS ====================
+    async function loadNotifications() {
+        try {
+            const data = await api("/notifications/").catch(() => []);
+            const list = extractList(data);
+            const unread = list.filter(n => !n.is_read).length;
+
+            const priorityColors = { urgent: "var(--red)", high: "var(--orange)", medium: "var(--amber)", low: "var(--blue)" };
+
+            document.getElementById("main-content").innerHTML = `
+                <div class="header">
+                    <h1 class="header-title">Notifications</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-outline" onclick="markAllRead()">Mark All Read</button>
+                        <button class="btn btn-outline" onclick="loadSection(047notifications047)">Refresh</button>
+                    </div>
+                </div>
+                <div class="card">
+                    ${list.length > 0 ? list.map(n => `
+                        <div class="activity-item" style="opacity:${n.is_read ? "0.5" : "1"};cursor:pointer;" onclick="${n.link ? `window.location.href=047${n.link}047` : ""}">
+                            <span class="activity-marker" style="background:${priorityColors[n.priority]||"var(--blue)"};color:#fff;font-size:8px;">${n.priority.toUpperCase().substring(0,3)}</span>
+                            <span style="flex:1;">
+                                <strong>${n.title}</strong>
+                                <span style="font-size:11px;color:var(--text2);display:block;">${n.message}</span>
+                            </span>
+                            <span style="font-size:10px;color:var(--text2);">${n.created_at ? n.created_at.substring(0,16) : ""}</span>
+                            ${!n.is_read ? `<button class="btn btn-outline" style="font-size:10px;padding:4px 8px;" onclick="event.stopPropagation();markRead(${n.id})">Read</button>` : ""}
+                        </div>
+                    `).join("") : "<div class=047card-empty047>No notifications</div>"}
+                </div>
+            `;
+            window._notifList = list;
+        } catch(e) {
+            document.getElementById("main-content").innerHTML = `<div class="card" style="text-align:center;padding:60px;"><h2>Error</h2><p style="color:var(--text2);">${e.message}</p></div>`;
+        }
+    }
+
+    async function markRead(id) {
+        try { await api(`/notifications/${id}/`, "PATCH", { is_read: true }); loadSection("notifications"); } catch(e) {}
+    }
+
+    async function markAllRead() {
+        const list = window._notifList || [];
+        for (const n of list) {
+            if (!n.is_read) {
+                try { await api(`/notifications/${n.id}/`, "PATCH", { is_read: true }); } catch(e) {}
+            }
+        }
+        loadSection("notifications");
+    }
+
+    async function updateNotifBadge() {
+        try {
+            const data = await api("/notifications/").catch(() => []);
+            const list = extractList(data);
+            const count = list.filter(n => !n.is_read).length;
+            const badge = document.getElementById("notifBadge");
+            if (badge) {
+                badge.textContent = count;
+                badge.style.display = count > 0 ? "inline" : "none";
+            }
+        } catch(e) {}
+    }
+
+    setInterval(updateNotifBadge, 30000);
+    updateNotifBadge();
 
     function loadPlaceholder(section) {
         const titles = {

@@ -207,3 +207,35 @@ class Invoice(models.Model):
 
     def __str__(self):
         return f"Invoice {self.invoice_number} - {self.customer.full_name}"
+
+# === NOTIFICATION SYSTEM ===
+class Notification(models.Model):
+    """In-app notifications for garage staff"""
+    PRIORITY = [
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+        ('urgent', 'Urgent'),
+    ]
+    TYPE_CHOICES = [
+        ('work_order', 'Work Order'),
+        ('appointment', 'Appointment'),
+        ('inventory', 'Inventory'),
+        ('payment', 'Payment'),
+        ('system', 'System'),
+    ]
+    garage = models.ForeignKey(Garage, on_delete=models.CASCADE, related_name='notifications')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='notifications')
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='system')
+    title = models.CharField(max_length=200)
+    message = models.TextField()
+    priority = models.CharField(max_length=10, choices=PRIORITY, default='medium')
+    is_read = models.BooleanField(default=False)
+    link = models.CharField(max_length=500, blank=True, help_text="Deep link to related resource")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"[{self.priority.upper()}] {self.title} - {self.garage.name}"
