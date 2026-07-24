@@ -13,3 +13,7 @@ class UserRoleVS(viewsets.ModelViewSet): queryset = UserRole.objects.all(); seri
 class MechanicProfileVS(viewsets.ModelViewSet): queryset = MechanicProfile.objects.all(); serializer_class = MechanicProfileSerializer
 class ServiceCatalogVS(viewsets.ModelViewSet): queryset = ServiceCatalog.objects.all(); serializer_class = ServiceCatalogSerializer
 class WorkOrderServiceVS(viewsets.ModelViewSet): queryset = WorkOrderService.objects.all(); serializer_class = WorkOrderServiceSerializer
+class WorkOrderPartVS(viewsets.ModelViewSet): queryset = WorkOrderPart.objects.all(); serializer_class = WorkOrderPartSerializer
+class ServiceHistoryVS(viewsets.ModelViewSet): queryset = ServiceHistory.objects.all(); serializer_class = ServiceHistorySerializer
+class DiagnosticRecordVS(viewsets.ModelViewSet): queryset = DiagnosticRecord.objects.all(); serializer_class = DiagnosticRecordSerializer
+class InvoiceVS(viewsets.ModelViewSet): queryset = Invoice.objects.all(); serializer_class = InvoiceSerializer

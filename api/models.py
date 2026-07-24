@@ -131,3 +131,79 @@ class WorkOrderService(models.Model):
 
     def __str__(self):
         return f"{self.service or self.custom_description} - {self.work_order.srn}"
+
+# === PHASE 2: RELATIONSHIPS & TRACKING ===
+
+class WorkOrderPart(models.Model):
+    """Tracks inventory parts consumed on a work order"""
+    work_order = models.ForeignKey(WorkOrder, on_delete=models.CASCADE, related_name='parts_used')
+    inventory_item = models.ForeignKey(InventoryItem, on_delete=models.SET_NULL, null=True)
+    part_name = models.CharField(max_length=200)
+    quantity_used = models.IntegerField(default=1)
+    unit_price = models.DecimalField(max_digits=12, decimal_places=2)
+    total_price = models.DecimalField(max_digits=12, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.total_price = self.quantity_used * self.unit_price
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.part_name} x{self.quantity_used} - {self.work_order.srn}"
+
+
+class ServiceHistory(models.Model):
+    """Records completed services for a vehicle's history"""
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='service_history')
+    work_order = models.ForeignKey(WorkOrder, on_delete=models.SET_NULL, null=True)
+    garage = models.ForeignKey(Garage, on_delete=models.CASCADE)
+    mechanic = models.ForeignKey(MechanicProfile, on_delete=models.SET_NULL, null=True)
+    service_date = models.DateField(auto_now_add=True)
+    description = models.TextField()
+    mileage_at_service = models.IntegerField(default=0)
+    total_cost = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-service_date']
+        verbose_name_plural = 'Service Histories'
+
+    def __str__(self):
+        return f"{self.vehicle.plate} - {self.service_date}"
+
+
+class DiagnosticRecord(models.Model):
+    """Stores diagnostic results linked to a work order"""
+    work_order = models.ForeignKey(WorkOrder, on_delete=models.CASCADE, related_name='diagnostics')
+    mechanic = models.ForeignKey(MechanicProfile, on_delete=models.SET_NULL, null=True)
+    symptoms = models.TextField(blank=True)
+    fault_codes = models.TextField(blank=True, help_text="Comma-separated OBD2/DTC codes")
+    diagnosis = models.TextField(blank=True)
+    recommended_action = models.TextField(blank=True)
+    estimated_cost = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Diagnosis - {self.work_order.srn}"
+
+
+class Invoice(models.Model):
+    """Final invoice generated from a completed work order"""
+    work_order = models.OneToOneField(WorkOrder, on_delete=models.CASCADE, related_name='invoice')
+    garage = models.ForeignKey(Garage, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    invoice_number = models.CharField(max_length=20, unique=True, default=generate_ref)
+    subtotal_services = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    subtotal_parts = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    tax_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    discount_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    total_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    status = models.CharField(max_length=20, choices=[('draft','Draft'),('sent','Sent'),('paid','Paid'),('cancelled','Cancelled')], default='draft')
+    issued_date = models.DateField(auto_now_add=True)
+    due_date = models.DateField(null=True, blank=True)
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Invoice {self.invoice_number} - {self.customer.full_name}"

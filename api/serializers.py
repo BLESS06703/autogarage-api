@@ -66,3 +66,34 @@ class WorkOrderServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkOrderService
         fields = '__all__'
+
+# === PHASE 2 SERIALIZERS ===
+
+class WorkOrderPartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkOrderPart
+        fields = '__all__'
+
+
+class ServiceHistorySerializer(serializers.ModelSerializer):
+    vehicle_plate = serializers.CharField(source='vehicle.plate', read_only=True)
+    mechanic_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ServiceHistory
+        fields = '__all__'
+
+    def get_mechanic_name(self, obj):
+        return obj.mechanic.user.get_full_name() if obj.mechanic else None
+
+
+class DiagnosticRecordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DiagnosticRecord
+        fields = '__all__'
+
+
+class InvoiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Invoice
+        fields = '__all__'
