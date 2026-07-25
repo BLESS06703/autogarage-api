@@ -177,6 +177,6 @@ tbody tr:hover td { background: rgba(255,255,255,0.03); }
     .page-header { flex-direction: column; align-items: flex-start; }
     .fab { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 22px; }
     .fab-menu { bottom: 84px; right: 20px; }
-    .user-bar { top: 14px; right: 60px; bottom: auto; padding: 0; background: transparent; border: none; } .user-bar .user-name { display: none; } .user-bar .user-garage { display: none; }
+    .user-bar { top: 14px; right: 14px; bottom: auto; padding: 6px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; } .user-bar .user-name { font-size: 12px; } .user-bar .user-garage { font-size: 9px; }
     .welcome-name { font-size: 20px; }
 }
