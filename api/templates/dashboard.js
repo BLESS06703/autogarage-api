@@ -71,7 +71,7 @@ async function dash() {
         <div class="content-grid">
             <div class="card"><div class="card-title"><i class="fas fa-clock"></i> Recent Activity</div><div id="activity"></div></div>
             <div class="card"><div class="card-title"><i class="fas fa-bolt"></i> Quick Actions</div>
-                <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="showWOModal()"><i class="fas fa-plus"></i> New Work Order</button>
+                <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="showQuickIntake()"><i class="fas fa-plus"></i> New Work Order</button>
                 <button class="btn btn-outline" style="width:100%;margin-bottom:8px;" onclick="showCustomerModal()"><i class="fas fa-user-plus"></i> Register Customer</button>
                 <button class="btn btn-outline" style="width:100%;margin-bottom:8px;" onclick="showVehicleModal()"><i class="fas fa-car"></i> Register Vehicle</button>
                 <button class="btn btn-outline" style="width:100%;" onclick="showInventoryModal()"><i class="fas fa-box"></i> Add Inventory</button>
@@ -93,7 +93,7 @@ async function wo() {
     const list = L(await api('/work-orders/'));
     const sc = {'In Progress':'tag-progress','Awaiting Parts':'tag-parts','Ready (Pending Invoice)':'tag-invoice','Completed':'tag-done'};
     document.getElementById('main-content').innerHTML = `
-        <div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Work Orders</h1><button class="btn btn-primary" onclick="showWOModal()"><i class="fas fa-plus"></i> New</button></div>
+        <div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Work Orders</h1><button class="btn btn-primary" onclick="showQuickIntake()"><i class="fas fa-plus"></i> New</button></div>
         <div class="card">
             <div class="search-wrap"><i class="fas fa-search"></i><input class="search-input" id="woS" placeholder="Search..." oninput="FT('woS','woB')"></div>
             <div class="filter-chips">
@@ -108,7 +108,7 @@ async function wo() {
                 <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();editWO(${w.id},'${(w.vehicle_info||'').replace(/'/g,"\\'")}','${(w.customer_name||'').replace(/'/g,"\\'")}',${parseFloat(w.cost_estimate||0)})"><i class="fas fa-edit"></i></button>
                 <button class="btn btn-outline btn-sm" style="color:var(--red);border-color:var(--red);" onclick="event.stopPropagation();confirmDelete('Delete WO?','Remove #${w.srn||w.id}?',()=>deleteWO(${w.id}))"><i class="fas fa-trash"></i></button>
                 <select onchange="woUp(${w.id},this.value)" style="padding:5px 8px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:5px;font-size:11px;margin-left:4px;"><option>Status</option><option>In Progress</option><option>Awaiting Parts</option><option>Ready (Pending Invoice)</option><option>Completed</option></select>
-            </td></tr>`).join('')||'<tr><td colspan="5"><div class="empty-state"><i class="fas fa-clipboard-list"></i><p>No work orders</p><button class="btn btn-primary" style="margin-top:12px;" onclick="showWOModal()">Create First Work Order</button></div></td></tr>'}</tbody></table></div>
+            </td></tr>`).join('')||'<tr><td colspan="5"><div class="empty-state"><i class="fas fa-clipboard-list"></i><p>No work orders</p><button class="btn btn-primary" style="margin-top:12px;" onclick="showQuickIntake()">Create First Work Order</button></div></td></tr>'}</tbody></table></div>
         </div>`;
 }
 
@@ -326,6 +326,59 @@ async function updateVeh(id) {
 }
 
 // ===== CREATE MODALS =====
+function showQuickIntake() {
+    const ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = `<div class="modal" style="max-width:600px;"><div class="modal-title"><i class="fas fa-clipboard-list"></i> New Job Intake</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div><div class="form-group"><label>Customer Name *</label><input id="qiName" placeholder="Full name"></div></div>
+            <div><div class="form-group"><label>Phone</label><input id="qiPhone" placeholder="+265..."></div></div>
+            <div><div class="form-group"><label>Vehicle Make *</label><input id="qiMake" placeholder="Toyota"></div></div>
+            <div><div class="form-group"><label>Vehicle Model *</label><input id="qiModel" placeholder="Hilux"></div></div>
+            <div><div class="form-group"><label>Plate Number *</label><input id="qiPlate" placeholder="BT1234"></div></div>
+            <div><div class="form-group"><label>Year</label><input id="qiYear" placeholder="2018"></div></div>
+            <div><div class="form-group"><label>Mileage</label><input id="qiMileage" type="number" value="0"></div></div>
+            <div><div class="form-group"><label>Cost Estimate (MWK)</label><input id="qiCost" type="number" value="0"></div></div>
+        </div>
+        <div class="form-group"><label>Issue / Problem Description *</label><textarea id="qiIssue" placeholder="Describe what needs to be fixed..."></textarea></div>
+        <div class="form-actions"><button class="btn btn-outline" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitIntake()"><i class="fas fa-save"></i> Submit Job</button></div></div>`;
+    document.body.appendChild(ov);
+    ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
+}
+
+async function submitIntake() {
+    const name = document.getElementById('qiName').value.trim();
+    const make = document.getElementById('qiMake').value.trim();
+    const model = document.getElementById('qiModel').value.trim();
+    const plate = document.getElementById('qiPlate').value.trim();
+    const issue = document.getElementById('qiIssue').value.trim();
+    
+    if (!name) return showToast('Customer name required', 'error');
+    if (!make || !model) return showToast('Vehicle make and model required', 'error');
+    if (!plate) return showToast('Plate number required', 'error');
+    if (!issue) return showToast('Issue description required', 'error');
+    
+    try {
+        await api('/intake/', 'POST', {
+            customer_name: name,
+            customer_phone: document.getElementById('qiPhone').value,
+            vehicle_make: make,
+            vehicle_model: model,
+            vehicle_plate: plate,
+            vehicle_year: document.getElementById('qiYear').value,
+            vehicle_mileage: parseInt(document.getElementById('qiMileage').value) || 0,
+            issue_description: issue,
+            cost_estimate: parseFloat(document.getElementById('qiCost').value) || 0
+        });
+        document.querySelector('.modal-overlay').remove();
+        showToast('Job intake complete!', 'success');
+        loadSection('dashboard');
+    } catch(e) {
+        showToast('Failed: ' + e.message, 'error');
+    }
+}
+
+// Keep old modal as fallback, but point to new one
 function showWOModal() {
     const ov = document.createElement('div'); ov.className = 'modal-overlay';
     ov.innerHTML = `<div class="modal"><div class="modal-title">New Work Order</div>

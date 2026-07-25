@@ -6,213 +6,237 @@
     <title>Create Account — AutoGarage Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root {
-            --bg: #0D0D0D; --surface: #1A1A1A; --border: #2A2A2A;
-            --text: #E0E0E0; --text2: #888; --orange: #FF6F00; --green: #22C55E; --red: #EF4444; --amber: #F59E0B;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: var(--bg); color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex; min-height: 100vh;
-        }
-        .split { display: flex; width: 100%; }
-        .left {
-            flex: 1; background: linear-gradient(160deg, #1A1A1A 0%, #0A0A0A 100%);
-            display: none; align-items: center; justify-content: center; padding: 40px;
-        }
-        .left-content { text-align: center; max-width: 380px; }
-        .left-content h2 { font-size: 22px; margin-bottom: 10px; }
-        .left-content p { color: var(--text2); font-size: 13px; line-height: 1.6; margin-bottom: 20px; }
-        .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
-        .step-num { width: 28px; height: 28px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-        .step-text { font-size: 12px; color: var(--text2); }
-        .step-text strong { color: var(--text); display: block; font-size: 13px; }
-
-        .right { flex: 1; display: flex; align-items: center; justify-content: center; padding: 30px; }
-        .form-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px; padding: 36px 30px; width: 100%; max-width: 440px;
-        }
-        .logo-area { text-align: center; margin-bottom: 20px; }
-        .logo-area h3 { font-size: 18px; color: var(--orange); font-weight: 700; }
-        .logo-area span { font-size: 10px; color: var(--text2); letter-spacing: 1px; display: block; }
-
-        .form-row { display: flex; gap: 10px; }
-        .form-group { margin-bottom: 14px; flex: 1; position: relative; }
-        .form-group label { display: block; font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 500; }
-        .form-group input {
-            width: 100%; padding: 12px 38px 12px 12px; background: #0A0A0A;
-            border: 1px solid var(--border); border-radius: 8px; color: var(--text);
-            font-size: 13px; outline: none; transition: border-color 0.2s;
-        }
-        .form-group input:focus { border-color: var(--orange); }
-        .form-group .input-icon { position: absolute; right: 12px; top: 34px; color: var(--text2); cursor: pointer; font-size: 13px; }
-        .form-group .input-icon:hover { color: var(--text); }
-
-        .password-strength { margin-top: -8px; margin-bottom: 12px; }
-        .strength-bar { height: 4px; border-radius: 2px; transition: 0.3s; margin-top: 4px; }
-        .strength-text { font-size: 10px; color: var(--text2); }
-
-        .btn-create {
-            width: 100%; padding: 13px; background: var(--orange); color: #fff;
-            border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
-            cursor: pointer; transition: 0.2s; display: flex; align-items: center;
-            justify-content: center; gap: 8px;
-        }
-        .btn-create:hover { background: #E65100; }
-        .btn-create:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .message {
-            font-size: 12px; padding: 10px 14px; border-radius: 8px; margin-bottom: 12px;
-            display: none; align-items: center; gap: 8px;
-        }
-        .msg-error { display: flex; background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-        .msg-success { display: flex; background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
-
-        .footer-link { text-align: center; margin-top: 14px; font-size: 12px; color: var(--text2); }
-        .footer-link a { color: var(--orange); text-decoration: none; font-weight: 500; }
-
-        @media (min-width: 768px) { .left { display: flex; } }
-        @media (max-width: 400px) { .form-row { flex-direction: column; gap: 0; } }
+        :root { --bg:#0D0D0D; --surface:#1A1A1A; --border:#2A2A2A; --text:#E0E0E0; --text2:#888; --orange:#FF6F00; --green:#22C55E; --red:#EF4444; --amber:#F59E0B; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; display:flex; min-height:100vh; }
+        .split { display:flex; width:100%; }
+        .left { flex:1; background:linear-gradient(160deg,#1A1A1A 0%,#0A0A0A 100%); display:none; align-items:center; justify-content:center; padding:40px; }
+        .left-content { text-align:center; max-width:360px; }
+        .left-content .icon-circle { width:72px; height:72px; border-radius:20px; background:rgba(34,197,94,0.15); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:32px; color:var(--green); }
+        .left-content h2 { font-size:22px; margin-bottom:8px; }
+        .left-content p { color:var(--text2); font-size:13px; line-height:1.6; }
+        .steps { text-align:left; margin-top:24px; }
+        .step { display:flex; gap:10px; align-items:flex-start; margin-bottom:14px; }
+        .step-num { width:26px; height:26px; background:var(--orange); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
+        .step-text { font-size:12px; color:var(--text2); }
+        .step-text strong { color:var(--text); display:block; font-size:13px; }
+        .right { flex:1; display:flex; align-items:center; justify-content:center; padding:30px; }
+        .form-card { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:36px 32px; width:100%; max-width:460px; }
+        .brand { text-align:center; margin-bottom:24px; }
+        .brand h1 { font-size:20px; color:var(--orange); font-weight:700; }
+        .brand span { font-size:10px; color:var(--text2); letter-spacing:1.5px; display:block; margin-top:4px; }
+        .field { margin-bottom:16px; position:relative; }
+        .field label { display:block; font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px; font-weight:500; }
+        .field input { width:100%; padding:13px 42px 13px 14px; background:#0A0A0A; border:1.5px solid var(--border); border-radius:10px; color:var(--text); font-size:13px; outline:none; transition:0.2s; }
+        .field input:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(255,111,0,0.1); }
+        .field input.error { border-color:var(--red); }
+        .field .icon-right { position:absolute; right:14px; top:36px; color:var(--text2); cursor:pointer; font-size:13px; }
+        .field .icon-right:hover { color:var(--text); }
+        .field .error-msg { font-size:10px; color:var(--red); margin-top:3px; display:none; }
+        .field .error-msg.show { display:block; }
+        .form-row { display:flex; gap:12px; }
+        .form-row .field { flex:1; }
+        .strength { margin-top:-8px; margin-bottom:10px; }
+        .strength-bar { height:4px; border-radius:2px; transition:0.3s; background:#333; }
+        .strength-bar span { display:block; height:100%; border-radius:2px; transition:0.3s; }
+        .strength-text { font-size:10px; margin-top:3px; }
+        .btn { width:100%; padding:15px; background:var(--orange); color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; transition:0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+        .btn:hover { background:#E65100; }
+        .btn:disabled { opacity:0.6; cursor:not-allowed; }
+        .alert { font-size:12px; padding:12px 16px; border-radius:10px; margin-bottom:14px; display:none; align-items:center; gap:8px; }
+        .alert-error { display:flex; background:rgba(239,68,68,0.1); color:var(--red); border:1px solid rgba(239,68,68,0.2); }
+        .alert-success { display:flex; background:rgba(34,197,94,0.1); color:var(--green); border:1px solid rgba(34,197,94,0.2); }
+        .footer-link { text-align:center; margin-top:18px; font-size:12px; color:var(--text2); }
+        .footer-link a { color:var(--orange); text-decoration:none; font-weight:500; }
+        .footer-link a:hover { text-decoration:underline; }
+        @media (min-width:768px) { .left { display:flex; } }
+        @media (max-width:480px) { .form-row { flex-direction:column; gap:0; } }
     </style>
 </head>
 <body>
 <div class="split">
     <div class="left">
         <div class="left-content">
+            <div class="icon-circle"><i class="fas fa-rocket"></i></div>
             <h2>Start Your Journey</h2>
-            <p>Join garages using AutoGarage Pro to manage their workshop operations.</p>
-            <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Create Account</strong>Fill in your garage details</div></div>
-            <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Add Customers</strong>Build your customer database</div></div>
-            <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Run Your Garage</strong>Manage work orders & revenue</div></div>
+            <p>Join garages across Africa using AutoGarage Pro.</p>
+            <div class="steps">
+                <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Create Account</strong>Fill in your details below</div></div>
+                <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Set Up Garage</strong>Add customers and vehicles</div></div>
+                <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Run Your Business</strong>Track work orders and revenue</div></div>
+            </div>
         </div>
     </div>
     <div class="right">
         <div class="form-card">
-            <div class="logo-area">
-                <h3><i class="fas fa-wrench"></i> AutoGarage Pro</h3>
-                <span>CREATE YOUR ACCOUNT</span>
+            <div class="brand">
+                <h1>AutoGarage Pro</h1>
+                <span>CREATE YOUR FREE ACCOUNT</span>
             </div>
-            <div id="message" class="message"></div>
-            <div class="form-group">
-                <label>Garage Name</label>
-                <input type="text" id="garageName" placeholder="e.g. Bless Garage Ltd">
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="username" placeholder="Choose username">
+            <div id="alert" class="alert"></div>
+            <form id="registerForm" onsubmit="return handleRegister(event)">
+                <div class="field">
+                    <label>Garage Name *</label>
+                    <input type="text" id="garageName" placeholder="e.g. Bless Garage Ltd" required minlength="2">
+                    <div class="error-msg" id="garageNameError"></div>
                 </div>
-                <div class="form-group">
-                    <label>Phone</label>
-                    <input type="tel" id="phone" placeholder="+265...">
+                <div class="form-row">
+                    <div class="field">
+                        <label>Username *</label>
+                        <input type="text" id="username" placeholder="Choose a username" required minlength="3" pattern="[a-zA-Z0-9_]+">
+                        <div class="error-msg" id="usernameError"></div>
+                    </div>
+                    <div class="field">
+                        <label>Phone</label>
+                        <input type="tel" id="phone" placeholder="+265888111222" pattern="[+]?[0-9]{7,15}">
+                        <div class="error-msg" id="phoneError"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="password" placeholder="Minimum 6 characters" oninput="checkStrength()">
-                <i class="fas fa-eye input-icon" id="togglePass1" onclick="togglePass('password','togglePass1')"></i>
-            </div>
-            <div class="password-strength">
-                <div class="strength-bar" id="strengthBar" style="width:0;"></div>
-                <div class="strength-text" id="strengthText"></div>
-            </div>
-            <div class="form-group">
-                <label>Confirm Password</label>
-                <input type="password" id="confirmPassword" placeholder="Re-enter password">
-                <i class="fas fa-eye input-icon" id="togglePass2" onclick="togglePass('confirmPassword','togglePass2')"></i>
-            </div>
-            <button class="btn-create" id="registerBtn" onclick="register()"><i class="fas fa-rocket"></i> Create Free Account</button>
-            <div class="footer-link">
-                Already registered? <a href="/api/auth/login-page/">Sign in</a>
-            </div>
+                <div class="field">
+                    <label>Password *</label>
+                    <input type="password" id="password" placeholder="Minimum 6 characters" required minlength="6" oninput="updateStrength()">
+                    <i class="fas fa-eye icon-right" id="toggle1" onclick="togglePass('password','toggle1')"></i>
+                    <div class="error-msg" id="passwordError"></div>
+                </div>
+                <div class="strength">
+                    <div class="strength-bar"><span id="strengthFill"></span></div>
+                    <div class="strength-text" id="strengthText"></div>
+                </div>
+                <div class="field">
+                    <label>Confirm Password *</label>
+                    <input type="password" id="confirmPassword" placeholder="Re-enter password" required>
+                    <i class="fas fa-eye icon-right" id="toggle2" onclick="togglePass('confirmPassword','toggle2')"></i>
+                    <div class="error-msg" id="confirmError"></div>
+                </div>
+                <button type="submit" class="btn" id="registerBtn"><i class="fas fa-rocket"></i> Create Free Account</button>
+            </form>
+            <div class="footer-link">Already registered? <a href="/api/auth/login-page/">Sign in</a></div>
         </div>
     </div>
 </div>
 <script>
-function togglePass(inputId, iconId) {
-    const input = document.getElementById(inputId);
-    const icon = document.getElementById(iconId);
-    if (input.type === 'password') { input.type = 'text'; icon.className = 'fas fa-eye-slash input-icon'; }
-    else { input.type = 'password'; icon.className = 'fas fa-eye input-icon'; }
+function togglePass(id, iconId) {
+    var i = document.getElementById(id);
+    var ic = document.getElementById(iconId);
+    if (i.type === 'password') { i.type = 'text'; ic.className = 'fas fa-eye-slash icon-right'; }
+    else { i.type = 'password'; ic.className = 'fas fa-eye icon-right'; }
 }
 
-function checkStrength() {
-    const p = document.getElementById('password').value;
-    const bar = document.getElementById('strengthBar');
-    const text = document.getElementById('strengthText');
-    let score = 0;
+function updateStrength() {
+    var p = document.getElementById('password').value;
+    var fill = document.getElementById('strengthFill');
+    var text = document.getElementById('strengthText');
+    var score = 0;
     if (p.length >= 6) score++;
     if (p.length >= 10) score++;
     if (/[A-Z]/.test(p)) score++;
     if (/[0-9]/.test(p)) score++;
     if (/[^A-Za-z0-9]/.test(p)) score++;
-
-    const colors = ['#EF4444','#F59E0B','#F59E0B','#22C55E','#22C55E'];
-    const labels = ['Very Weak','Weak','Fair','Strong','Very Strong'];
-    bar.style.width = (score * 25) + '%';
-    bar.style.background = colors[score];
+    var colors = ['#EF4444','#F59E0B','#F59E0B','#22C55E','#22C55E'];
+    var labels = ['Very Weak','Weak','Fair','Strong','Very Strong'];
+    var pct = Math.max(5, score * 25);
+    fill.style.width = pct + '%';
+    fill.style.background = colors[score];
     text.textContent = labels[score];
     text.style.color = colors[score];
 }
 
-function showMessage(msg, type) {
-    const el = document.getElementById('message');
-    el.className = 'message msg-' + type;
-    el.innerHTML = '<i class="fas fa-' + (type === 'error' ? 'exclamation-circle' : 'check-circle') + '"></i> ' + msg;
+function showAlert(msg, type) {
+    var el = document.getElementById('alert');
+    el.className = 'alert alert-' + type;
+    el.innerHTML = '<i class="fas fa-' + (type==='error'?'exclamation-circle':'check-circle') + '"></i> ' + msg;
 }
 
-async function register() {
-    const garageName = document.getElementById('garageName').value.trim();
-    const username = document.getElementById('username').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const password = document.getElementById('password').value;
-    const confirm = document.getElementById('confirmPassword').value;
-    const btn = document.getElementById('registerBtn');
-    const msg = document.getElementById('message');
-    msg.className = 'message'; msg.style.display = 'none';
+function showFieldError(id, msg) {
+    document.getElementById(id+'Error').textContent = msg;
+    document.getElementById(id+'Error').classList.add('show');
+    document.getElementById(id).classList.add('error');
+}
 
-    if (!garageName) { showMessage('Please enter your garage name', 'error'); return; }
-    if (!username) { showMessage('Please choose a username', 'error'); return; }
-    if (username.length < 3) { showMessage('Username must be at least 3 characters', 'error'); return; }
-    if (!password) { showMessage('Please enter a password', 'error'); return; }
-    if (password.length < 6) { showMessage('Password must be at least 6 characters', 'error'); return; }
-    if (password !== confirm) { showMessage('Passwords do not match', 'error'); return; }
+function clearErrors() {
+    document.getElementById('alert').className = 'alert';
+    ['garageName','username','phone','password','confirm'].forEach(function(id){
+        var e = document.getElementById(id+'Error'); if(e) e.classList.remove('show');
+        var i = document.getElementById(id.replace('confirm','confirmPassword')); if(i) i.classList.remove('error');
+        var i2 = document.getElementById(id); if(i2) i2.classList.remove('error');
+    });
+}
+
+async function handleRegister(e) {
+    e.preventDefault();
+    clearErrors();
+    
+    var garage = document.getElementById('garageName').value.trim();
+    var username = document.getElementById('username').value.trim();
+    var phone = document.getElementById('phone').value.trim();
+    var password = document.getElementById('password').value;
+    var confirm = document.getElementById('confirmPassword').value;
+    var btn = document.getElementById('registerBtn');
+    var valid = true;
+
+    if (!garage) { showFieldError('garageName','Garage name is required'); valid = false; }
+    else if (garage.length < 2) { showFieldError('garageName','Name is too short'); valid = false; }
+    
+    if (!username) { showFieldError('username','Username is required'); valid = false; }
+    else if (username.length < 3) { showFieldError('username','At least 3 characters'); valid = false; }
+    else if (!/^[a-zA-Z0-9_]+$/.test(username)) { showFieldError('username','Only letters, numbers, underscores'); valid = false; }
+    
+    if (phone && !/^\+?[0-9]{7,15}$/.test(phone)) { showFieldError('phone','Invalid phone number'); valid = false; }
+    
+    if (!password) { showFieldError('password','Password is required'); valid = false; }
+    else if (password.length < 6) { showFieldError('password','At least 6 characters'); valid = false; }
+    
+    if (password !== confirm) {
+        var ce = document.getElementById('confirmError');
+        ce.textContent = 'Passwords do not match';
+        ce.classList.add('show');
+        document.getElementById('confirmPassword').classList.add('error');
+        valid = false;
+    }
+    
+    if (!valid) return false;
 
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
 
-    try {
-        const res = await fetch('/api/auth/register/', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({username, password, garage_name: garageName, phone, role: 'owner'})
-        });
-        const data = await res.json();
+    var controller = new AbortController();
+    var timeout = setTimeout(function(){ controller.abort(); }, 20000);
 
+    try {
+        var res = await fetch('/api/auth/register/', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({username:username, password:password, garage_name:garage, phone:phone, role:'owner'}),
+            signal:controller.signal
+        });
+        clearTimeout(timeout);
+        
+        var data = await res.json();
+        
         if (data.access) {
             localStorage.setItem('token', data.access);
             localStorage.setItem('user', JSON.stringify(data));
-            localStorage.setItem('rememberedUser', username);
-            showMessage('Account created! Redirecting...', 'success');
-            btn.innerHTML = '<i class="fas fa-check"></i> Success!';
-            setTimeout(() => { window.location.href = '/api/dashboard-page/'; }, 800);
+            localStorage.setItem('savedUsername', username);
+            showAlert('Account created! Redirecting to dashboard...', 'success');
+            btn.innerHTML = '<i class="fas fa-check"></i> Created!';
+            setTimeout(function(){ window.location.href = '/api/dashboard-page/'; }, 600);
         } else {
-            showMessage(data.error || 'Registration failed. Please try again.', 'error');
+            showAlert(data.error || 'Registration failed. Please try again.', 'error');
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-rocket"></i> Create Free Account';
         }
-    } catch (e) {
-        showMessage('Connection error. Please check your internet.', 'error');
+    } catch(e) {
+        clearTimeout(timeout);
+        if (e.name === 'AbortError') {
+            showAlert('Request timed out. Please try again.', 'error');
+        } else {
+            showAlert('Network error. Check your connection.', 'error');
+        }
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-rocket"></i> Create Free Account';
     }
+    return false;
 }
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !document.getElementById('registerBtn').disabled) register();
-});
 </script>
 </body>
 </html>

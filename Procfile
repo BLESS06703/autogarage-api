@@ -1,2 +1,2 @@
-release: python manage.py migrate --noinput
+release: mkdir -p /var/data && python manage.py migrate --noinput
 web: gunicorn core.wsgi:application --bind 0.0.0.0:$PORT

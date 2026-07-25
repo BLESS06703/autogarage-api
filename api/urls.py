@@ -32,6 +32,6 @@ urlpatterns = [
     path('offline/', dashboard_views.offline_page),
     path('reports/revenue/', report_views.revenue_report),
     path('reports/jobs/', report_views.jobs_report),
-    path('ai/diagnose/', ai_views.ai_diagnose),
-    path('ai/codes/', ai_views.ai_codes_list),
+odes/', ai_views.ai_codes_list),/a     path('intake/', intake_views.quick_intake),
+odes/', ai_views.ai_codes_list),/a     path('intake/', intake_views.quick_intake),
 ]
