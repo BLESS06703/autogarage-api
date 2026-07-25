@@ -38,7 +38,10 @@
 </aside>
 
 <div class="toast-container" id="toastContainer"></div>
-<div class="user-bar" id="userBar"></div>
+<div class="user-bar" id="userBar">
+    <div class="user-avatar" onclick="loadSection('settings')" id="userAvatar">G</div>
+    <div><div class="user-name" id="userName">Garage Owner</div><div class="user-garage" id="garageName">AutoGarage Pro</div></div>
+</div>
 
 <main class="main" id="main-content"></main>
 
@@ -52,5 +55,18 @@
 </div>
 
 <script src="/api/templates/dashboard.js"></script>
+<script>
+// Update user bar immediately from saved data
+(function(){
+    var d = JSON.parse(localStorage.getItem('user') || '{}');
+    if (d.username) {
+        document.getElementById('userName').textContent = d.username;
+        document.getElementById('userAvatar').textContent = d.username[0].toUpperCase();
+    }
+    if (d.garage_name) {
+        document.getElementById('garageName').textContent = d.garage_name + (d.role ? ' • ' + d.role : '');
+    }
+})();
+</script>
 </body>
 </html>
