@@ -167,16 +167,29 @@ tbody tr:hover td { background: rgba(255,255,255,0.03); }
 .fab-item i { width: 18px; text-align: center; color: var(--orange); }
 
 /* Mobile */
+
 @media (max-width: 768px) {
-    .hamburger { display: flex; align-items: center; justify-content: center; }
+    .hamburger { display: flex !important; align-items: center; justify-content: center; }
     .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); box-shadow: 4px 0 20px rgba(0,0,0,0.5); }
-    .main { margin-left: 0; padding: 60px 16px 16px 16px; }
-    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .content-grid { grid-template-columns: 1fr; }
-    .page-header { flex-direction: column; align-items: flex-start; }
-    .fab { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 22px; }
-    .fab-menu { bottom: 84px; right: 20px; }
-    .user-bar { top: 14px; right: 14px; bottom: auto; padding: 6px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; } .user-bar .user-name { font-size: 12px; } .user-bar .user-garage { font-size: 9px; }
-    .welcome-name { font-size: 20px; }
+    .main { margin-left: 0 !important; padding: 56px 12px 80px 12px !important; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+    .content-grid { grid-template-columns: 1fr !important; }
+    .page-header { flex-direction: column; align-items: flex-start !important; gap: 8px !important; }
+    .page-header h1 { font-size: 18px !important; }
+    .table-wrapper { font-size: 11px !important; }
+    th, td { padding: 8px 6px !important; font-size: 10px !important; }
+    .kpi-value { font-size: 20px !important; }
+    .kpi-card { padding: 12px !important; }
+    .card { padding: 14px !important; }
+    .fab { bottom: 16px; right: 16px; width: 48px; height: 48px; font-size: 20px; }
+    .fab-menu { bottom: 74px; right: 16px; min-width: 180px; }
+    .user-bar { top: 8px; right: 8px; padding: 4px 8px; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); }
+    .user-bar .user-name { font-size: 11px; }
+    .user-bar .user-garage { font-size: 9px; }
+    .welcome-name { font-size: 18px !important; }
+    .modal { width: 95% !important; padding: 16px !important; max-width: none !important; }
+    .btn { padding: 8px 12px; font-size: 11px; }
+    .filter-chips { gap: 4px; }
+    .filter-chip { padding: 4px 10px; font-size: 10px; }
 }

@@ -23,7 +23,7 @@ document.querySelectorAll('.nav-item[data-section]').forEach(btn => {
     btn.addEventListener('click', function() {
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
         this.classList.add('active');
-        document.getElementById('sidebar').classList.remove('open');
+        closeSidebar();
         document.getElementById('fabMenu').classList.remove('open');
         loadSection(this.dataset.section);
     });
@@ -33,6 +33,7 @@ function toggleFab() { document.getElementById('fabMenu').classList.toggle('open
 
 // ===== SECTION LOADER =====
 async function loadSection(s) {
+    closeSidebar();
     const m = document.getElementById('main-content');
     m.innerHTML = '<div style="text-align:center;padding:60px;"><div class="loading-spinner"></div></div>';
     // Show/hide hamburger
@@ -392,8 +393,9 @@ function showWOModal() {
     ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
 }
 async function createWO() {
-    const v=document.getElementById('wv').value, c=document.getElementById('wc').value;
-    if(!v||!c) return showToast('Vehicle and customer required','error');
+    const v=document.getElementById('wv').value.trim(), c=document.getElementById('wc').value.trim();
+    if(!v) { showToast('Vehicle name is required', 'error'); return; }
+    if(!c) { showToast('Customer name is required', 'error'); return; }
     await api('/work-orders/','POST',{vehicle_info:v,customer_name:c,issue_description:document.getElementById('wi').value,cost_estimate:parseFloat(document.getElementById('wk').value)||0});
     document.querySelector('.modal-overlay').remove(); showToast('Work order created','success'); loadSection('workorders');
 }
@@ -410,8 +412,9 @@ function showCustomerModal() {
     ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
 }
 async function createCustomer() {
-    const n=document.getElementById('cmName').value;
-    if(!n) return showToast('Name required','error');
+    const n=document.getElementById('cmName').value.trim();
+    const p=document.getElementById('cmPhone').value.trim();
+    if(!n) { showToast('Customer name is required', 'error'); return; }
     await api('/customers/','POST',{full_name:n,phone:document.getElementById('cmPhone').value,email:document.getElementById('cmEmail').value});
     document.querySelector('.modal-overlay').remove(); showToast('Customer registered','success'); loadSection('customers');
 }
@@ -430,8 +433,10 @@ function showVehicleModal() {
     ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
 }
 async function createVehicle() {
-    const mk=document.getElementById('vmMake').value, md=document.getElementById('vmModel').value, pl=document.getElementById('vmPlate').value;
-    if(!mk||!md||!pl) return showToast('Make, model and plate required','error');
+    const mk=document.getElementById('vmMake').value.trim(), md=document.getElementById('vmModel').value.trim(), pl=document.getElementById('vmPlate').value.trim();
+    if(!mk) { showToast('Vehicle make is required', 'error'); return; }
+    if(!md) { showToast('Vehicle model is required', 'error'); return; }
+    if(!pl) { showToast('Plate number is required', 'error'); return; }
     await api('/vehicles/','POST',{make:mk,model_name:md,plate:pl,year:document.getElementById('vmYear').value,mileage:parseInt(document.getElementById('vmMileage').value)||0});
     document.querySelector('.modal-overlay').remove(); showToast('Vehicle registered','success'); loadSection('vehicles');
 }
@@ -449,8 +454,8 @@ function showInventoryModal() {
     ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
 }
 async function createInventory() {
-    const n=document.getElementById('imName').value;
-    if(!n) return showToast('Part name required','error');
+    const n=document.getElementById('imName').value.trim();
+    if(!n) { showToast('Part name is required', 'error'); return; }
     await api('/inventory/','POST',{part_name:n,quantity:parseInt(document.getElementById('imQty').value)||1,min_threshold:parseInt(document.getElementById('imMin').value)||5,unit_price:parseFloat(document.getElementById('imPrice').value)||0});
     document.querySelector('.modal-overlay').remove(); showToast('Item added','success'); loadSection('inventory');
 }
@@ -520,7 +525,7 @@ setTimeout(loadUserInfo, 3000);
 if (window.innerWidth <= 768) document.getElementById('hamburgerBtn').style.display = 'flex';
 window.addEventListener('resize', () => {
     if (window.innerWidth <= 768) document.getElementById('hamburgerBtn').style.display = 'flex';
-    else { document.getElementById('hamburgerBtn').style.display = 'none'; document.getElementById('sidebar').classList.remove('open'); }
+    else { document.getElementById('hamburgerBtn').style.display = 'none'; closeSidebar(); }
 });
 
 loadSection('dashboard');
