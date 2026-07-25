@@ -441,28 +441,20 @@ function logout() { localStorage.removeItem('token'); localStorage.removeItem('u
 
 // Init
 function loadUserInfo() {
-    try {
-        const userData = JSON.parse(localStorage.getItem('user') || '{}');
-        if (userData.username) {
-            document.getElementById('userName').textContent = userData.username;
-            document.getElementById('userAvatar').textContent = userData.username[0].toUpperCase();
-        }
-        if (userData.role && userData.garage_name) {
-            document.getElementById('garageName').textContent = userData.garage_name + ' • ' + userData.role;
-        } else if (userData.garage_name) {
-            document.getElementById('garageName').textContent = userData.garage_name;
-        } else if (userData.role) {
-            document.getElementById('garageName').textContent = userData.role;
-        }
-    } catch(e) {
-        console.log('User info load error:', e);
-    }
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    const username = userData.username || 'User';
+    const initial = username[0].toUpperCase();
+    const garageInfo = (userData.garage_name || 'Garage') + (userData.role ? ' • ' + userData.role : '');
+    
+    document.getElementById('userBar').innerHTML = 
+        '<div class="user-avatar" onclick="loadSection('settings')">' + initial + '</div>' +
+        '<div><div class="user-name">' + username + '</div><div class="user-garage">' + garageInfo + '</div></div>';
 }
 
-// Run immediately and also after dashboard loads
+// Run immediately - user bar is now rendered with real data
 loadUserInfo();
-setTimeout(loadUserInfo, 1000);
-setTimeout(loadUserInfo, 3000);
+// Run immediately and also after dashboard loads
+
 
 if (window.innerWidth <= 768) document.getElementById('hamburgerBtn').style.display = 'flex';
 window.addEventListener('resize', () => {
