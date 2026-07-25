@@ -1,8 +1,6 @@
 const API = '/api';
-document.addEventListener('DOMContentLoaded', function() {
-    const token = localStorage.getItem('token');
-    if (!token) { window.location.href = '/api/auth/login-page/'; return; }
-    // Rest of init continues...
+const token = localStorage.getItem('token');
+if (!token) { window.location.href = '/api/auth/login-page/'; }
 
 
 async function api(p, m='GET', b=null) {
@@ -530,7 +528,4 @@ if (window.innerWidth <= 768) document.getElementById('hamburgerBtn').style.disp
 window.addEventListener('resize', () => {
     if (window.innerWidth <= 768) document.getElementById('hamburgerBtn').style.display = 'flex';
     else { document.getElementById('hamburgerBtn').style.display = 'none'; closeSidebar(); }
-});
-
 loadSection('dashboard');
-});
