@@ -8,93 +8,69 @@
     <style>
         :root {
             --bg: #0D0D0D; --surface: #1A1A1A; --border: #2A2A2A;
-            --text: #E0E0E0; --text2: #888; --orange: #FF6F00;
-            --green: #22C55E; --red: #EF4444; --blue: #3B82F6;
+            --text: #E0E0E0; --text2: #888; --orange: #FF6F00; --green: #22C55E; --red: #EF4444;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: var(--bg);
-            color: var(--text);
+            background: var(--bg); color: var(--text);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            min-height: 100vh;
+            display: flex; min-height: 100vh;
         }
         .split { display: flex; width: 100%; }
-        
-        /* LEFT PANEL */
         .left {
-            flex: 1;
-            background: linear-gradient(160deg, #1A1A1A 0%, #0A0A0A 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            display: none;
+            flex: 1; background: linear-gradient(160deg, #1A1A1A 0%, #0A0A0A 100%);
+            display: none; align-items: center; justify-content: center; padding: 40px;
         }
         .left-content { text-align: center; max-width: 380px; }
-        .left-content .logo-img { width: 80px; height: 80px; border-radius: 18px; margin-bottom: 20px; }
-        .left-content h2 { font-size: 22px; margin-bottom: 10px; color: var(--text); }
-        .left-content p { color: var(--text2); font-size: 13px; line-height: 1.6; margin-bottom: 24px; }
-        .left-content .features { text-align: left; }
-        .left-content .feat { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; font-size: 13px; color: var(--text2); }
-        .left-content .feat i { font-size: 14px; color: var(--green); width: 18px; text-align: center; }
+        .left-content h2 { font-size: 22px; margin-bottom: 10px; }
+        .left-content p { color: var(--text2); font-size: 13px; line-height: 1.6; margin-bottom: 20px; }
+        .feat { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; font-size: 13px; color: var(--text2); }
+        .feat i { color: var(--green); width: 18px; text-align: center; }
 
-        /* RIGHT PANEL */
-        .right {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 30px;
-        }
+        .right { flex: 1; display: flex; align-items: center; justify-content: center; padding: 30px; }
         .form-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 40px 32px;
-            width: 100%;
-            max-width: 400px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 16px; padding: 40px 32px; width: 100%; max-width: 400px;
         }
-        .form-card .logo-area { text-align: center; margin-bottom: 20px; }
-        .form-card .logo-area img { width: 56px; height: 56px; border-radius: 14px; }
-        .form-card .logo-area h3 { font-size: 18px; color: var(--orange); margin-top: 10px; font-weight: 700; }
-        .form-card .logo-area span { font-size: 11px; color: var(--text2); letter-spacing: 1px; display: block; }
-        
-        .form-group { margin-bottom: 14px; position: relative; }
-        
+        .logo-area { text-align: center; margin-bottom: 24px; }
+        .logo-area h3 { font-size: 20px; color: var(--orange); font-weight: 700; }
+        .logo-area span { font-size: 11px; color: var(--text2); letter-spacing: 1px; display: block; }
+
+        .form-group { margin-bottom: 16px; position: relative; }
         .form-group label { display: block; font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; font-weight: 500; }
         .form-group input {
-            width: 100%; padding: 12px 14px 12px 38px;
-            background: #0A0A0A; border: 1px solid var(--border);
-            border-radius: 8px; color: var(--text); font-size: 14px;
-            outline: none; transition: border-color 0.2s;
+            width: 100%; padding: 13px 40px 13px 14px; background: #0A0A0A;
+            border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+            font-size: 14px; outline: none; transition: border-color 0.2s;
         }
         .form-group input:focus { border-color: var(--orange); }
-        
+        .form-group .input-icon { position: absolute; right: 14px; top: 38px; color: var(--text2); cursor: pointer; font-size: 14px; }
+        .form-group .input-icon:hover { color: var(--text); }
+
         .btn-signin {
-            width: 100%; padding: 13px;
-            background: var(--orange); color: #fff;
-            border: none; border-radius: 8px;
-            font-size: 14px; font-weight: 600;
-            cursor: pointer; margin-top: 8px;
-            transition: 0.2s; display: flex;
-            align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 14px; background: var(--orange); color: #fff;
+            border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center;
+            justify-content: center; gap: 8px;
         }
         .btn-signin:hover { background: #E65100; }
-        
+        .btn-signin:disabled { opacity: 0.5; cursor: not-allowed; }
+
         .message {
-            font-size: 12px; padding: 10px; border-radius: 6px;
-            margin-bottom: 12px; display: none;
+            font-size: 12px; padding: 10px 14px; border-radius: 8px; margin-bottom: 14px;
+            display: none; align-items: center; gap: 8px;
         }
-        .msg-error { display: block; background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-        .msg-success { display: block; background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
-        
-        .footer-link { text-align: center; margin-top: 16px; font-size: 13px; color: var(--text2); }
+        .msg-error { display: flex; background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+        .msg-success { display: flex; background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+
+        .options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 12px; }
+        .options label { display: flex; align-items: center; gap: 6px; color: var(--text2); cursor: pointer; }
+        .options input[type="checkbox"] { accent-color: var(--orange); }
+        .forgot { color: var(--orange); text-decoration: none; }
+        .forgot:hover { text-decoration: underline; }
+
+        .footer-link { text-align: center; margin-top: 18px; font-size: 13px; color: var(--text2); }
         .footer-link a { color: var(--orange); text-decoration: none; font-weight: 500; }
-        .footer-link a:hover { text-decoration: underline; }
-        
-        .divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; color: var(--text2); font-size: 11px; }
-        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
         @media (min-width: 768px) { .left { display: flex; } }
     </style>
@@ -103,40 +79,35 @@
 <div class="split">
     <div class="left">
         <div class="left-content">
-            <img src="/api/templates/logo.png" alt="BlessGarage" class="logo-img" onerror="this.style.display='none'">
             <h2>Welcome Back</h2>
             <p>Sign in to access your workshop dashboard, manage work orders, and grow your garage business.</p>
-            <div class="features">
-                <div class="feat"><i class="fas fa-check-circle"></i> Track work orders in real-time</div>
-                <div class="feat"><i class="fas fa-check-circle"></i> AI-powered fault diagnostics</div>
-                <div class="feat"><i class="fas fa-check-circle"></i> Inventory & stock alerts</div>
-                <div class="feat"><i class="fas fa-check-circle"></i> Revenue reports & analytics</div>
-            </div>
+            <div class="feat"><i class="fas fa-check-circle"></i> Track work orders in real-time</div>
+            <div class="feat"><i class="fas fa-check-circle"></i> AI-powered fault diagnostics</div>
+            <div class="feat"><i class="fas fa-check-circle"></i> Inventory & stock alerts</div>
+            <div class="feat"><i class="fas fa-check-circle"></i> Revenue reports & analytics</div>
         </div>
     </div>
     <div class="right">
         <div class="form-card">
             <div class="logo-area">
-                <img src="/api/templates/logo.png" alt="Logo" onerror="this.style.display='none'">
-                <h3>AutoGarage Pro</h3>
+                <h3><i class="fas fa-wrench"></i> AutoGarage Pro</h3>
                 <span>SIGN IN TO CONTINUE</span>
             </div>
             <div id="message" class="message"></div>
-            <div class="form-group" style="position:relative;">
+            <div class="form-group">
                 <label>Username</label>
-                <i class="fas fa-user" style="position:absolute;left:14px;top:38px;color:var(--text2);font-size:14px;z-index:1;"></i>
-                <input type="text" id="username" placeholder="Enter your username" autocomplete="username" style="padding:12px 14px 12px 38px;">
+                <input type="text" id="username" placeholder="Enter your username" autocomplete="username">
             </div>
-            <div class="form-group" style="position:relative;">
+            <div class="form-group">
                 <label>Password</label>
-                <i class="fas fa-lock" style="position:absolute;left:14px;top:38px;color:var(--text2);font-size:14px;z-index:1;"></i>
-                <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" style="padding:12px 40px 12px 38px;">
-                <i class="fas fa-eye" id="togglePass" style="position:absolute;right:14px;top:38px;cursor:pointer;color:var(--text2);font-size:14px;z-index:1;" onclick="togglePassword()"></i>
+                <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+                <i class="fas fa-eye input-icon" id="togglePass" onclick="togglePassword()"></i>
             </div>
-            <button class="btn-signin" onclick="login()">
-                <i class="fas fa-sign-in-alt"></i> Sign In
-            </button>
-            <div class="divider">or</div>
+            <div class="options">
+                <label><input type="checkbox" id="rememberMe"> Remember me</label>
+                <a href="#" class="forgot">Forgot password?</a>
+            </div>
+            <button class="btn-signin" id="loginBtn" onclick="login()"><i class="fas fa-sign-in-alt"></i> Sign In</button>
             <div class="footer-link">
                 Don't have an account? <a href="/api/auth/register-page/">Create one</a>
             </div>
@@ -147,50 +118,77 @@
     </div>
 </div>
 <script>
+const API = '/api';
+
+// Check if user was remembered
+if (localStorage.getItem('rememberedUser')) {
+    document.getElementById('username').value = localStorage.getItem('rememberedUser');
+    document.getElementById('rememberMe').checked = true;
+}
+
+function togglePassword() {
+    const input = document.getElementById('password');
+    const icon = document.getElementById('togglePass');
+    if (input.type === 'password') { input.type = 'text'; icon.className = 'fas fa-eye-slash input-icon'; }
+    else { input.type = 'password'; icon.className = 'fas fa-eye input-icon'; }
+}
+
+function showMessage(msg, type) {
+    const el = document.getElementById('message');
+    el.className = 'message msg-' + type;
+    el.innerHTML = '<i class="fas fa-' + (type === 'error' ? 'exclamation-circle' : 'check-circle') + '"></i> ' + msg;
+}
+
 async function login() {
-    const username = document.getElementById('username').value;
+    const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
+    const rememberMe = document.getElementById('rememberMe').checked;
+    const btn = document.getElementById('loginBtn');
     const msg = document.getElementById('message');
+
     msg.className = 'message'; msg.style.display = 'none';
 
-    if (!username || !password) {
-        msg.className = 'message msg-error';
-        msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter username and password';
-        return;
-    }
+    if (!username) { showMessage('Please enter your username', 'error'); return; }
+    if (!password) { showMessage('Please enter your password', 'error'); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+
     try {
-        const res = await fetch('/api/auth/login/', {
+        const res = await fetch(API + '/auth/login/', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({username, password})
         });
         const data = await res.json();
+
         if (data.access) {
-            msg.className = 'message msg-success';
-            msg.innerHTML = '<i class="fas fa-check-circle"></i> Signed in. Redirecting...';
             localStorage.setItem('token', data.access);
             localStorage.setItem('user', JSON.stringify(data));
-            setTimeout(() => { window.location.href = '/api/dashboard-page/'; }, 800);
+            if (rememberMe) {
+                localStorage.setItem('rememberedUser', username);
+            } else {
+                localStorage.removeItem('rememberedUser');
+            }
+            showMessage('Login successful! Redirecting...', 'success');
+            btn.innerHTML = '<i class="fas fa-check"></i> Success!';
+            setTimeout(() => { window.location.href = '/api/dashboard-page/'; }, 600);
         } else {
-            msg.className = 'message msg-error';
-            msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + (data.error || 'Invalid credentials');
+            showMessage(data.error || 'Invalid username or password', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
         }
     } catch (e) {
-        msg.className = 'message msg-error';
-        msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Connection error. Please try again.';
+        showMessage('Connection error. Please check your internet.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
     }
 }
-function togglePassword() {
-        const input = document.getElementById('password');
-        const icon = document.getElementById('togglePass');
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.className = 'fas fa-eye-slash';
-        } else {
-            input.type = 'password';
-            icon.className = 'fas fa-eye';
-        }
-    }
+
+// Allow Enter key to submit
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !document.getElementById('loginBtn').disabled) login();
+});
 </script>
 </body>
 </html>

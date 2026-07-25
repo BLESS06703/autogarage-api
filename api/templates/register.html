@@ -8,8 +8,7 @@
     <style>
         :root {
             --bg: #0D0D0D; --surface: #1A1A1A; --border: #2A2A2A;
-            --text: #E0E0E0; --text2: #888; --orange: #FF6F00;
-            --green: #22C55E; --red: #EF4444;
+            --text: #E0E0E0; --text2: #888; --orange: #FF6F00; --green: #22C55E; --red: #EF4444; --amber: #F59E0B;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -20,58 +19,57 @@
         .split { display: flex; width: 100%; }
         .left {
             flex: 1; background: linear-gradient(160deg, #1A1A1A 0%, #0A0A0A 100%);
-            display: flex; align-items: center; justify-content: center;
-            padding: 40px; display: none;
+            display: none; align-items: center; justify-content: center; padding: 40px;
         }
         .left-content { text-align: center; max-width: 380px; }
-        .left-content img { width: 80px; height: 80px; border-radius: 18px; margin-bottom: 20px; }
         .left-content h2 { font-size: 22px; margin-bottom: 10px; }
         .left-content p { color: var(--text2); font-size: 13px; line-height: 1.6; margin-bottom: 20px; }
-        .left-content .steps { text-align: left; }
-        .left-content .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
-        .left-content .step-num {
-            width: 28px; height: 28px; background: var(--orange); color: #fff;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 700; flex-shrink: 0;
-        }
-        .left-content .step-text { font-size: 12px; color: var(--text2); }
-        .left-content .step-text strong { color: var(--text); display: block; font-size: 13px; }
+        .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+        .step-num { width: 28px; height: 28px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+        .step-text { font-size: 12px; color: var(--text2); }
+        .step-text strong { color: var(--text); display: block; font-size: 13px; }
 
-        .right {
-            flex: 1; display: flex; align-items: center; justify-content: center; padding: 30px;
-        }
+        .right { flex: 1; display: flex; align-items: center; justify-content: center; padding: 30px; }
         .form-card {
             background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px; padding: 36px 30px; width: 100%; max-width: 420px;
+            border-radius: 16px; padding: 36px 30px; width: 100%; max-width: 440px;
         }
-        .form-card .logo-area { text-align: center; margin-bottom: 18px; }
-        .form-card .logo-area img { width: 52px; height: 52px; border-radius: 14px; }
-        .form-card .logo-area h3 { font-size: 17px; color: var(--orange); margin-top: 8px; font-weight: 700; }
-        .form-card .logo-area span { font-size: 10px; color: var(--text2); letter-spacing: 1px; display: block; }
-        
+        .logo-area { text-align: center; margin-bottom: 20px; }
+        .logo-area h3 { font-size: 18px; color: var(--orange); font-weight: 700; }
+        .logo-area span { font-size: 10px; color: var(--text2); letter-spacing: 1px; display: block; }
+
         .form-row { display: flex; gap: 10px; }
-        .form-group { margin-bottom: 12px; flex: 1; position: relative; }
-        
+        .form-group { margin-bottom: 14px; flex: 1; position: relative; }
         .form-group label { display: block; font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 500; }
         .form-group input {
-            width: 100%; padding: 11px 12px 11px 34px;
-            background: #0A0A0A; border: 1px solid var(--border);
-            border-radius: 8px; color: var(--text); font-size: 13px;
-            outline: none; transition: border-color 0.2s;
+            width: 100%; padding: 12px 38px 12px 12px; background: #0A0A0A;
+            border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+            font-size: 13px; outline: none; transition: border-color 0.2s;
         }
         .form-group input:focus { border-color: var(--orange); }
-        
+        .form-group .input-icon { position: absolute; right: 12px; top: 34px; color: var(--text2); cursor: pointer; font-size: 13px; }
+        .form-group .input-icon:hover { color: var(--text); }
+
+        .password-strength { margin-top: -8px; margin-bottom: 12px; }
+        .strength-bar { height: 4px; border-radius: 2px; transition: 0.3s; margin-top: 4px; }
+        .strength-text { font-size: 10px; color: var(--text2); }
+
         .btn-create {
             width: 100%; padding: 13px; background: var(--orange); color: #fff;
             border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
-            cursor: pointer; margin-top: 6px; transition: 0.2s;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center;
+            justify-content: center; gap: 8px;
         }
         .btn-create:hover { background: #E65100; }
-        
-        .message { font-size: 12px; padding: 10px; border-radius: 6px; margin-bottom: 10px; display: none; }
-        .msg-error { display: block; background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-        .msg-success { display: block; background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+        .btn-create:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .message {
+            font-size: 12px; padding: 10px 14px; border-radius: 8px; margin-bottom: 12px;
+            display: none; align-items: center; gap: 8px;
+        }
+        .msg-error { display: flex; background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+        .msg-success { display: flex; background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+
         .footer-link { text-align: center; margin-top: 14px; font-size: 12px; color: var(--text2); }
         .footer-link a { color: var(--orange); text-decoration: none; font-weight: 500; }
 
@@ -83,56 +81,49 @@
 <div class="split">
     <div class="left">
         <div class="left-content">
-            <img src="/api/templates/logo.png" alt="Logo" onerror="this.style.display='none'">
             <h2>Start Your Journey</h2>
-            <p>Join hundreds of garages using AutoGarage Pro to manage their workshop operations.</p>
-            <div class="steps">
-                <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Create Account</strong>Fill in your garage details</div></div>
-                <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Add Customers</strong>Build your customer database</div></div>
-                <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Run Your Garage</strong>Manage work orders & track revenue</div></div>
-            </div>
+            <p>Join garages using AutoGarage Pro to manage their workshop operations.</p>
+            <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Create Account</strong>Fill in your garage details</div></div>
+            <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Add Customers</strong>Build your customer database</div></div>
+            <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Run Your Garage</strong>Manage work orders & revenue</div></div>
         </div>
     </div>
     <div class="right">
         <div class="form-card">
             <div class="logo-area">
-                <img src="/api/templates/logo.png" alt="Logo" onerror="this.style.display='none'">
-                <h3>AutoGarage Pro</h3>
+                <h3><i class="fas fa-wrench"></i> AutoGarage Pro</h3>
                 <span>CREATE YOUR ACCOUNT</span>
             </div>
             <div id="message" class="message"></div>
-            <div class="form-group" style="position:relative;">
+            <div class="form-group">
                 <label>Garage Name</label>
-                <i class="fas fa-warehouse" style="position:absolute;left:14px;top:38px;color:var(--text2);font-size:13px;z-index:1;"></i>
-                <input type="text" id="garageName" style="padding:11px 14px 11px 34px;" placeholder="e.g. Bless Garage Ltd">
+                <input type="text" id="garageName" placeholder="e.g. Bless Garage Ltd">
             </div>
             <div class="form-row">
                 <div class="form-group">
                     <label>Username</label>
-                    <i class="fas fa-user"></i>
                     <input type="text" id="username" placeholder="Choose username">
                 </div>
                 <div class="form-group">
                     <label>Phone</label>
-                    <i class="fas fa-phone"></i>
                     <input type="tel" id="phone" placeholder="+265...">
                 </div>
             </div>
-            <div class="form-group" style="position:relative;">
+            <div class="form-group">
                 <label>Password</label>
-                <i class="fas fa-lock" style="position:absolute;left:14px;top:38px;color:var(--text2);font-size:13px;z-index:1;"></i>
-                <input type="password" id="password" placeholder="Minimum 6 characters" style="padding:11px 40px 11px 34px;">
-                <i class="fas fa-eye" id="togglePass" style="position:absolute;right:14px;top:38px;cursor:pointer;color:var(--text2);font-size:13px;z-index:1;" onclick="togglePassword('password','togglePass')"></i>
+                <input type="password" id="password" placeholder="Minimum 6 characters" oninput="checkStrength()">
+                <i class="fas fa-eye input-icon" id="togglePass1" onclick="togglePass('password','togglePass1')"></i>
             </div>
-            <div class="form-group" style="position:relative;">
+            <div class="password-strength">
+                <div class="strength-bar" id="strengthBar" style="width:0;"></div>
+                <div class="strength-text" id="strengthText"></div>
+            </div>
+            <div class="form-group">
                 <label>Confirm Password</label>
-                <i class="fas fa-lock" style="position:absolute;left:14px;top:38px;color:var(--text2);font-size:13px;z-index:1;"></i>
-                <input type="password" id="confirmPassword" placeholder="Re-enter password" style="padding:11px 40px 11px 34px;">
-                <i class="fas fa-eye" id="toggleConfirm" style="position:absolute;right:14px;top:38px;cursor:pointer;color:var(--text2);font-size:13px;z-index:1;" onclick="togglePassword('confirmPassword','toggleConfirm')"></i>
+                <input type="password" id="confirmPassword" placeholder="Re-enter password">
+                <i class="fas fa-eye input-icon" id="togglePass2" onclick="togglePass('confirmPassword','togglePass2')"></i>
             </div>
-            <button class="btn-create" onclick="register()">
-                <i class="fas fa-rocket"></i> Create Free Account
-            </button>
+            <button class="btn-create" id="registerBtn" onclick="register()"><i class="fas fa-rocket"></i> Create Free Account</button>
             <div class="footer-link">
                 Already registered? <a href="/api/auth/login-page/">Sign in</a>
             </div>
@@ -140,30 +131,58 @@
     </div>
 </div>
 <script>
+function togglePass(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (input.type === 'password') { input.type = 'text'; icon.className = 'fas fa-eye-slash input-icon'; }
+    else { input.type = 'password'; icon.className = 'fas fa-eye input-icon'; }
+}
+
+function checkStrength() {
+    const p = document.getElementById('password').value;
+    const bar = document.getElementById('strengthBar');
+    const text = document.getElementById('strengthText');
+    let score = 0;
+    if (p.length >= 6) score++;
+    if (p.length >= 10) score++;
+    if (/[A-Z]/.test(p)) score++;
+    if (/[0-9]/.test(p)) score++;
+    if (/[^A-Za-z0-9]/.test(p)) score++;
+
+    const colors = ['#EF4444','#F59E0B','#F59E0B','#22C55E','#22C55E'];
+    const labels = ['Very Weak','Weak','Fair','Strong','Very Strong'];
+    bar.style.width = (score * 25) + '%';
+    bar.style.background = colors[score];
+    text.textContent = labels[score];
+    text.style.color = colors[score];
+}
+
+function showMessage(msg, type) {
+    const el = document.getElementById('message');
+    el.className = 'message msg-' + type;
+    el.innerHTML = '<i class="fas fa-' + (type === 'error' ? 'exclamation-circle' : 'check-circle') + '"></i> ' + msg;
+}
+
 async function register() {
-    const garageName = document.getElementById('garageName').value;
-    const username = document.getElementById('username').value;
-    const phone = document.getElementById('phone').value;
+    const garageName = document.getElementById('garageName').value.trim();
+    const username = document.getElementById('username').value.trim();
+    const phone = document.getElementById('phone').value.trim();
     const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const btn = document.getElementById('registerBtn');
     const msg = document.getElementById('message');
     msg.className = 'message'; msg.style.display = 'none';
 
-    if (!garageName || !username || !password) {
-        msg.className = 'message msg-error';
-        msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Garage name, username and password are required';
-        return;
-    }
-    if (password.length < 6) {
-        msg.className = 'message msg-error';
-        msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Password must be at least 6 characters';
-        return;
-    }
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    if (password !== confirmPassword) {
-        msg.className = 'message msg-error';
-        msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Passwords do not match';
-        return;
-    }
+    if (!garageName) { showMessage('Please enter your garage name', 'error'); return; }
+    if (!username) { showMessage('Please choose a username', 'error'); return; }
+    if (username.length < 3) { showMessage('Username must be at least 3 characters', 'error'); return; }
+    if (!password) { showMessage('Please enter a password', 'error'); return; }
+    if (password.length < 6) { showMessage('Password must be at least 6 characters', 'error'); return; }
+    if (password !== confirm) { showMessage('Passwords do not match', 'error'); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+
     try {
         const res = await fetch('/api/auth/register/', {
             method: 'POST',
@@ -171,32 +190,29 @@ async function register() {
             body: JSON.stringify({username, password, garage_name: garageName, phone, role: 'owner'})
         });
         const data = await res.json();
+
         if (data.access) {
-            msg.className = 'message msg-success';
-            msg.innerHTML = '<i class="fas fa-check-circle"></i> Account created! Redirecting...';
             localStorage.setItem('token', data.access);
             localStorage.setItem('user', JSON.stringify(data));
-            setTimeout(() => { window.location.href = '/api/dashboard-page/'; }, 1000);
+            localStorage.setItem('rememberedUser', username);
+            showMessage('Account created! Redirecting...', 'success');
+            btn.innerHTML = '<i class="fas fa-check"></i> Success!';
+            setTimeout(() => { window.location.href = '/api/dashboard-page/'; }, 800);
         } else {
-            msg.className = 'message msg-error';
-            msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + (data.error || 'Registration failed');
+            showMessage(data.error || 'Registration failed. Please try again.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-rocket"></i> Create Free Account';
         }
     } catch (e) {
-        msg.className = 'message msg-error';
-        msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Connection error';
+        showMessage('Connection error. Please check your internet.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-rocket"></i> Create Free Account';
     }
 }
-function togglePassword(inputId, iconId) {
-        const input = document.getElementById(inputId);
-        const icon = document.getElementById(iconId);
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.className = 'fas fa-eye-slash';
-        } else {
-            input.type = 'password';
-            icon.className = 'fas fa-eye';
-        }
-    }
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !document.getElementById('registerBtn').disabled) register();
+});
 </script>
 </body>
 </html>
