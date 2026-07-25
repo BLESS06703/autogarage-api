@@ -175,6 +175,7 @@ async function register() {
             msg.className = 'message msg-success';
             msg.innerHTML = '<i class="fas fa-check-circle"></i> Account created! Redirecting...';
             localStorage.setItem('token', data.access);
+            localStorage.setItem('user', JSON.stringify(data));
             setTimeout(() => { window.location.href = '/api/dashboard-page/'; }, 1000);
         } else {
             msg.className = 'message msg-error';
