@@ -1,6 +1,9 @@
 const API = '/api';
-const token = localStorage.getItem('token');
-if (!token) { window.location.href = '/api/auth/login-page/'; }
+document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('token');
+    if (!token) { window.location.href = '/api/auth/login-page/'; return; }
+    // Rest of init continues...
+
 
 async function api(p, m='GET', b=null) {
     const o = { method:m, headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'} };
@@ -374,6 +377,7 @@ async function submitIntake() {
         document.querySelector('.modal-overlay').remove();
         showToast('Job intake complete!', 'success');
         loadSection('dashboard');
+});
     } catch(e) {
         showToast('Failed: ' + e.message, 'error');
     }
@@ -529,3 +533,4 @@ window.addEventListener('resize', () => {
 });
 
 loadSection('dashboard');
+});
