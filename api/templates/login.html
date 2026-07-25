@@ -155,36 +155,52 @@ async function login() {
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
 
+    // Set a timeout - if login takes more than 15 seconds, something is wrong
+    const timeout = setTimeout(() => {
+        showMessage('Server is taking too long. Please try again.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+    }, 15000);
+
     try {
         const res = await fetch(API + '/auth/login/', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({username, password})
         });
-        const data = await res.json();
+        
+        clearTimeout(timeout);
+        
+        // Try to parse response
+        let data;
+        try {
+            data = await res.json();
+        } catch(parseErr) {
+            showMessage('Invalid server response. Please try again.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+            return;
+        }
 
         if (data.access) {
-            // Always save token and user data
             localStorage.setItem('token', data.access);
             localStorage.setItem('user', JSON.stringify(data));
-            
-            // Save username if remember me is checked
             if (rememberMe) {
                 localStorage.setItem('savedUsername', username);
             } else {
                 localStorage.removeItem('savedUsername');
             }
-            
             showMessage('Login successful! Redirecting...', 'success');
             btn.innerHTML = '<i class="fas fa-check"></i> Success!';
             setTimeout(() => { window.location.href = '/api/dashboard-page/'; }, 500);
         } else {
-            showMessage(data.error || 'Invalid username or password', 'error');
+            showMessage(data.error || data.detail || 'Invalid username or password', 'error');
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
         }
     } catch (e) {
-        showMessage('Connection error. Please check your internet.', 'error');
+        clearTimeout(timeout);
+        showMessage('Network error. Check your connection and try again.', 'error');
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
     }

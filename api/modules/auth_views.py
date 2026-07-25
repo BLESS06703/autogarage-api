@@ -23,7 +23,9 @@ def register(request):
     if not username or not password:
         return JsonResponse({'error': 'Username and password required'}, status=400)
     if User.objects.filter(username=username).exists():
-        return JsonResponse({'error': 'Username already exists'}, status=400)
+        return JsonResponse({'error': 'Username already exists. Please choose a different username or login.'}, status=400)
+    if Garage.objects.filter(name=garage_name).exists():
+        return JsonResponse({'error': 'A garage with this name already exists.'}, status=400)
 
     user = User.objects.create_user(username=username, password=password)
     garage = Garage.objects.create(name=garage_name, owner=user, phone=data.get('phone', ''))
