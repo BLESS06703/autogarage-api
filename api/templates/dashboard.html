@@ -146,7 +146,21 @@
         .timeline-item { position: relative; padding: 8px 0 8px 20px; font-size: 13px; }
         .timeline-item::before { content: ''; position: absolute; left: -19px; top: 14px; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
 
-        @media (max-width: 768px) {
+        window.addEventListener('resize', function() {
+    if (window.innerWidth <= 768) {
+        document.getElementById('hamburgerBtn').style.display = 'flex';
+    } else {
+        document.getElementById('hamburgerBtn').style.display = 'none';
+        document.getElementById('sidebar').classList.remove('open');
+    }
+});
+
+// Init hamburger
+if (window.innerWidth <= 768) {
+    document.getElementById('hamburgerBtn').style.display = 'flex';
+}
+
+@media (max-width: 768px) {
             .hamburger { display: flex; align-items: center; justify-content: center; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); box-shadow: 4px 0 20px rgba(0,0,0,0.5); }
@@ -162,7 +176,7 @@
 </head>
 <body>
 
-<button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+<button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">AutoGarage Pro</div>
@@ -224,6 +238,12 @@ document.querySelectorAll('.nav-item[data-section]').forEach(btn => {
 });
 
 async function loadSection(s) {
+    // Show hamburger only on dashboard
+    if (s === 'dashboard') {
+        showHamburger();
+    } else {
+        hideHamburger();
+    }
     const m = document.getElementById('main-content');
     m.innerHTML = '<div style="text-align:center;padding:60px;"><div class="loading-spinner"></div></div>';
     try {
@@ -456,6 +476,29 @@ async function testConn(){const e=document.getElementById('tr');e.innerHTML='<di
 
 // Helpers
 function FT(s,t){const q=document.getElementById(s).value.toLowerCase();document.querySelectorAll(`#${t} tr`).forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q)?'':'';});}
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const btn = document.getElementById('hamburgerBtn');
+    sidebar.classList.toggle('open');
+    if (sidebar.classList.contains('open')) {
+        btn.innerHTML = '<i class="fas fa-times"></i>';
+    } else {
+        btn.innerHTML = '<i class="fas fa-bars"></i>';
+    }
+}
+
+// Hide hamburger on sub-pages, show on dashboard
+function hideHamburger() {
+    document.getElementById('hamburgerBtn').style.display = 'none';
+}
+function showHamburger() {
+    const btn = document.getElementById('hamburgerBtn');
+    if (window.innerWidth <= 768) {
+        btn.style.display = 'flex';
+        btn.innerHTML = '<i class="fas fa-bars"></i>';
+    }
+}
+
 function logout(){localStorage.removeItem('token');window.location.href='/api/auth/login-page/';}
 
 loadSection('dashboard');
