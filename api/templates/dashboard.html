@@ -468,10 +468,7 @@
 
 <button class="mobile-toggle" onclick="document.querySelector(047.sidebar047).classList.toggle(047open047)" style="display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:36px;height:36px;border-radius:8px;font-size:18px;cursor:pointer;">☰</button>
 <main class="main" id="main-content">
-    <div class="loading">
-        <div class="loading-spinner"></div>
-        <div>Loading dashboard...</div>
-    </div>
+    <div style="text-align:center;padding:60px;color:var(--text2);">Ready</div>
 </main>
 
 <script>
@@ -508,7 +505,7 @@
 
     async function loadSection(section) {
         const main = document.getElementById('main-content');
-        main.innerHTML = '<div class="loading"><div class="loading-spinner"></div><div>Loading...</div></div>';
+        // No spinner - load instantly
 
         try {
             clearTimeout(timeout);
@@ -536,11 +533,7 @@
 
     // ==================== DASHBOARD ====================
     async function loadDashboard() {
-        const timeout = setTimeout(() => {
-            if (document.getElementById('main-content').querySelector('.loading-spinner')) {
-                document.getElementById('main-content').innerHTML = '<div class="card" style="text-align:center;padding:60px;"><h2>Server is waking up</h2><p style="color:var(--text2);margin-top:8px;">Free tier spins down after inactivity. Please wait...</p><button class="btn btn-primary" style="margin-top:16px;" onclick="loadSection(\'dashboard\')">Retry</button></div>';
-            }
-        }, 10000);
+        // Timeout removed
         const orders = await api('/work-orders/').catch(() => []);
         const inventory = await api('/inventory/').catch(() => []);
         const appointments = await api('/appointments/').catch(() => []);
