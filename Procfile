@@ -1,2 +1,2 @@
-release: mkdir -p /var/data && python manage.py migrate --noinput
-web: gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
+release: python manage.py migrate --noinput
+web: gunicorn core.wsgi:application --bind 0.0.0.0:$PORT --workers=2 --timeout=120

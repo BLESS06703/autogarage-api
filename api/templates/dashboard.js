@@ -77,14 +77,14 @@ async function dash() {
                 <button class="btn btn-outline" style="width:100%;" onclick="showInventoryModal()"><i class="fas fa-box"></i> Add Inventory</button>
             </div>
         </div>`;
+    // Load KPIs with a single lightweight call
     try {
-        const [o,c,v,p] = await Promise.all([api('/work-orders/'),api('/customers/'),api('/vehicles/'),api('/payments/')]);
-        const wo=L(o),cu=L(c),ve=L(v),pa=L(p);
-        document.getElementById('k1').textContent = cu.length;
-        document.getElementById('k2').textContent = ve.length;
-        document.getElementById('k3').textContent = wo.filter(w=>w.status==='In Progress'||w.status==='Awaiting Parts').length;
-        document.getElementById('k4').textContent = 'MWK '+pa.reduce((s,p)=>s+(parseFloat(p.amount)||0),0).toLocaleString();
-        document.getElementById('activity').innerHTML = wo.slice(0,5).map(w=>`<div class="activity-item"><span class="activity-dot ${w.status==='Completed'?'dot-green':w.status==='In Progress'?'dot-orange':'dot-blue'}">${w.status==='Completed'?'&#10003;':'&#9679;'}</span><span style="flex:1;">${w.vehicle_info||'WO'} #${w.id}</span><span class="tag ${w.status==='Completed'?'tag-done':w.status==='In Progress'?'tag-progress':'tag-parts'}">${w.status}</span></div>`).join('')||'<div class="empty-state"><p>No activity yet</p></div>';
+        const data = await api('/charts/all/');
+        document.getElementById('k1').textContent = data.total_customers || 0;
+        document.getElementById('k2').textContent = data.active_jobs || 0;
+        document.getElementById('k3').textContent = (data.active_jobs || 0) + (data.completed_jobs || 0);
+        document.getElementById('k4').textContent = 'MWK ' + (data.total_revenue || 0).toLocaleString();
+        document.getElementById('activity').innerHTML = '<div class="empty-state"><p>Click Work Orders to view</p></div>';
     } catch(e) {}
 }
 
