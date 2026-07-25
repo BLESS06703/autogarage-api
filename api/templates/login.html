@@ -120,9 +120,10 @@
 <script>
 const API = '/api';
 
-// Check if user was remembered
-if (localStorage.getItem('rememberedUser')) {
-    document.getElementById('username').value = localStorage.getItem('rememberedUser');
+// Auto-fill saved username
+const savedUser = localStorage.getItem('savedUsername');
+if (savedUser) {
+    document.getElementById('username').value = savedUser;
     document.getElementById('rememberMe').checked = true;
 }
 
@@ -163,16 +164,20 @@ async function login() {
         const data = await res.json();
 
         if (data.access) {
+            // Always save token and user data
             localStorage.setItem('token', data.access);
             localStorage.setItem('user', JSON.stringify(data));
+            
+            // Save username if remember me is checked
             if (rememberMe) {
-                localStorage.setItem('rememberedUser', username);
+                localStorage.setItem('savedUsername', username);
             } else {
-                localStorage.removeItem('rememberedUser');
+                localStorage.removeItem('savedUsername');
             }
+            
             showMessage('Login successful! Redirecting...', 'success');
             btn.innerHTML = '<i class="fas fa-check"></i> Success!';
-            setTimeout(() => { window.location.href = '/api/dashboard-page/'; }, 600);
+            setTimeout(() => { window.location.href = '/api/dashboard-page/'; }, 500);
         } else {
             showMessage(data.error || 'Invalid username or password', 'error');
             btn.disabled = false;
@@ -185,7 +190,6 @@ async function login() {
     }
 }
 
-// Allow Enter key to submit
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !document.getElementById('loginBtn').disabled) login();
 });
