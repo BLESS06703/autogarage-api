@@ -440,11 +440,33 @@ function showToast(message, type) {
 function logout() { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = '/api/auth/login-page/'; }
 
 // Init
-try {
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
-    if (userData.username) { document.getElementById('userName').textContent = userData.username; document.getElementById('userAvatar').textContent = userData.username[0].toUpperCase(); }
-    if (userData.garage_name) document.getElementById('garageName').textContent = userData.garage_name;
-} catch(e) {}
+async function loadUserInfo() {
+    try {
+        const userData = JSON.parse(localStorage.getItem('user') || '{}');
+        if (userData.username) {
+            document.getElementById('userName').textContent = userData.username;
+            document.getElementById('userAvatar').textContent = userData.username[0].toUpperCase();
+        }
+        if (userData.garage_name) {
+            document.getElementById('garageName').textContent = userData.garage_name;
+        }
+        if (userData.role) {
+            document.getElementById('garageName').textContent = (userData.garage_name || 'Garage') + ' • ' + userData.role;
+        }
+        // If no user data, try fetching from API
+        if (!userData.username) {
+            const me = await api('/user-roles/').catch(() => []);
+            const roles = L(me);
+            if (roles.length > 0) {
+                const r = roles[0];
+                document.getElementById('userName').textContent = r.user_name || 'User';
+                document.getElementById('userAvatar').textContent = (r.user_name || 'U')[0].toUpperCase();
+                document.getElementById('garageName').textContent = (r.garage_name || 'Garage') + ' • ' + (r.role || 'staff');
+            }
+        }
+    } catch(e) {}
+}
+loadUserInfo();
 
 if (window.innerWidth <= 768) document.getElementById('hamburgerBtn').style.display = 'flex';
 window.addEventListener('resize', () => {
