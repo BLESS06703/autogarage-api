@@ -3,165 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoGarage Pro - Offline</title>
+    <title>Offline — AutoGarage Pro</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: #0D0D0D;
-            color: #E0E0E0;
+            background: #0D0D0D; color: #E0E0E0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 20px;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; text-align: center; padding: 20px;
         }
         .card {
-            background: #1A1A1A;
-            border: 1px solid #2A2A2A;
-            border-radius: 16px;
-            padding: 48px 32px;
-            max-width: 480px;
-            width: 100%;
+            background: #1A1A1A; border: 1px solid #2A2A2A;
+            border-radius: 16px; padding: 48px 32px; max-width: 440px;
         }
-        .icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 20px;
-            background: rgba(255,111,0,0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
+        .icon { font-size: 48px; margin-bottom: 16px; }
+        h1 { font-size: 22px; color: #FF6F00; margin-bottom: 8px; }
+        p { font-size: 14px; color: #888; margin-bottom: 20px; line-height: 1.6; }
+        .status { display: flex; align-items: center; gap: 8px; background: #0A0A0A; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #EF4444; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+        button {
+            background: #FF6F00; color: #fff; border: none; padding: 12px 28px;
+            border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
         }
-        h1 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #FF6F00;
-        }
-        p {
-            font-size: 14px;
-            color: #888;
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-        .status-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #0A0A0A;
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-bottom: 20px;
-            font-size: 13px;
-        }
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #EF4444;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        .retry-btn {
-            display: inline-block;
-            background: #FF6F00;
-            color: #fff;
-            padding: 12px 28px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            text-decoration: none;
-            transition: background 0.2s;
-        }
-        .retry-btn:hover { background: #E65100; }
-        .info {
-            margin-top: 20px;
-            font-size: 11px;
-            color: #555;
-        }
-        .info span {
-            display: block;
-            margin-top: 4px;
-            font-family: monospace;
-        }
+        button:hover { background: #E65100; }
     </style>
 </head>
 <body>
     <div class="card">
-        <div class="icon">&#9881;</div>
-        <h1>Connection Lost</h1>
-        <p>Unable to reach the AutoGarage Pro server. Please check your internet connection and try again.</p>
-        
-        <div class="status-bar">
-            <span class="dot"></span>
-            <span style="flex:1;">Server unreachable</span>
-            <span style="color:#888;" id="retryCount">Attempt 1</span>
+        <div class="icon">📡</div>
+        <h1>No Connection</h1>
+        <p>Unable to reach the server. Please check your internet connection.</p>
+        <div class="status">
+            <span class="dot"></span> Server unreachable
         </div>
-
-        <button class="retry-btn" onclick="retry()">Retry Connection</button>
-        
-        <div class="info">
-            AutoGarage Pro v2.0
-            <span id="errorDetail"></span>
-        </div>
+        <button onclick="location.reload()">Retry Connection</button>
     </div>
-
     <script>
-        let attempts = 1;
-        const API = 'https://autogarage-api-wwj4.onrender.com/api/auth/login-page/';
-
-        async function retry() {
-            const btn = document.querySelector('.retry-btn');
-            const dot = document.querySelector('.dot');
-            const statusText = document.querySelector('.status-bar span');
-            const retryCount = document.getElementById('retryCount');
-            const errorDetail = document.getElementById('errorDetail');
-
-            btn.textContent = 'Connecting...';
-            btn.style.opacity = '0.7';
-            dot.style.background = '#F59E0B';
-            statusText.textContent = 'Checking connection...';
-            attempts++;
-            retryCount.textContent = 'Attempt ' + attempts;
-
-            try {
-                const res = await fetch(API, { method: 'HEAD', cache: 'no-cache' });
-                if (res.ok) {
-                    dot.style.background = '#22C55E';
-                    statusText.textContent = 'Connected! Redirecting...';
-                    btn.textContent = 'Connected';
-                    btn.style.background = '#22C55E';
-                    setTimeout(() => { window.location.href = '/api/auth/login-page/'; }, 800);
-                } else {
-                    throw new Error('Server returned ' + res.status);
-                }
-            } catch (e) {
-                dot.style.background = '#EF4444';
-                statusText.textContent = 'Still unreachable';
-                btn.textContent = 'Retry Connection';
-                btn.style.opacity = '1';
-                errorDetail.textContent = e.message;
-            }
-        }
-
-        // Auto-retry every 15 seconds
-        setInterval(retry, 15000);
-
-        // Show error if any
-        const urlParams = new URLSearchParams(window.location.search);
-        const reason = urlParams.get('reason');
-        if (reason) {
-            document.getElementById('errorDetail').textContent = reason;
-        }
+        setInterval(() => { fetch('/api/auth/login-page/').then(r => { if(r.ok) location.reload(); }).catch(() => {}); }, 10000);
     </script>
 </body>
 </html>
