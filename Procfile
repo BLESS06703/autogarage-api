@@ -1,2 +1,2 @@
-release: python manage.py migrate --noinput
+release: python manage.py migrate --noinput && python manage.py seed_demo
 web: gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
