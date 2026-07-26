@@ -106,7 +106,7 @@ function showToast(msg, type) {
     }
 }
 
-
+</script>
     <style>
         :root {
             --bg: #0D0D0D; --surface: #1A1A1A; --surface2: #242424;
@@ -275,6 +275,48 @@ if (window.innerWidth <= 768) {
         }
     .user-bar{position:fixed;top:12px;right:16px;z-index:90;display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;}.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:13px;}.user-name{font-size:12px;color:var(--text);}.user-garage{font-size:10px;color:var(--text2);}
 </style>
+</head>
+<body>
+
+<button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">AutoGarage Pro</div>
+    <div class="sidebar-ver">Management Console</div>
+    <button class="nav-item active" data-section="dashboard"><i class="fas fa-th-large"></i> Dashboard</button>
+    <div class="nav-section">Operations</div>
+    <button class="nav-item" data-section="customers"><i class="fas fa-users"></i> Customers</button>
+    <button class="nav-item" data-section="vehicles"><i class="fas fa-car"></i> Vehicles</button>
+    <button class="nav-item" data-section="appointments"><i class="fas fa-calendar-alt"></i> Appointments</button>
+    <button class="nav-item" data-section="workorders"><i class="fas fa-clipboard-list"></i> Work Orders</button>
+    <button class="nav-item" data-section="mechanics"><i class="fas fa-user-cog"></i> Mechanics</button>
+    <button class="nav-item" data-section="inventory"><i class="fas fa-boxes"></i> Inventory</button>
+    <div class="nav-section">Finance</div>
+    <button class="nav-item" data-section="invoices"><i class="fas fa-file-invoice"></i> Invoices</button>
+    <button class="nav-item" data-section="payments"><i class="fas fa-money-bill-wave"></i> Payments</button>
+    <button class="nav-item" data-section="reports"><i class="fas fa-chart-bar"></i> Reports</button>
+    <div class="nav-section">Smart Tools</div>
+    <button class="nav-item" data-section="ai"><i class="fas fa-robot"></i> AI Diagnostics</button>
+    <button class="nav-item" data-section="notifications"><i class="fas fa-bell"></i> Notifications</button>
+    <div class="nav-section">Administration</div>
+    <button class="nav-item" data-section="settings"><i class="fas fa-cog"></i> Settings</button>
+    <div style="margin-top: auto; padding-top: 16px;">
+        <button class="nav-item" onclick="logout()" style="color: var(--red);"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+    </div>
+</aside>
+
+<div class="user-bar" id="userBar"><div class="user-avatar" id="userAvatar">U</div><div><div class="user-name" id="userName">User</div><div class="user-garage" id="garageName">Garage</div></div></div>
+<main class="main" id="main-content"></main>
+
+<button class="fab" onclick="document.getElementById('fabMenu').classList.toggle('open')">+</button>
+<div class="fab-menu" id="fabMenu">
+    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('workorders');setTimeout(()=>woModal(),300);"><i class="fas fa-clipboard-list"></i> New Work Order</button>
+    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('customers');"><i class="fas fa-user-plus"></i> Register Customer</button>
+    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('vehicles');"><i class="fas fa-car"></i> Register Vehicle</button>
+    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('inventory');"><i class="fas fa-box"></i> Add Inventory</button>
+    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('invoices');"><i class="fas fa-file-invoice"></i> New Invoice</button>
+</div>
+
 <script>
 const API = '/api';
 const token = localStorage.getItem('token');
@@ -673,6 +715,98 @@ function showToast(msg, type) {
     } else {
         alert(msg);
     }
+}
+
+
+function toggleFab() { document.getElementById('fabMenu').classList.toggle('open'); }
+
+function showCustomerModal() {
+    var ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = '<div class="modal"><div class="modal-title">Register Customer</div><div class="form-group"><label>Full Name *</label><input id="cmName" placeholder="Customer name"></div><div class="form-group"><label>Phone</label><input id="cmPhone" placeholder="+265..."></div><div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button><button class="btn btn-primary" onclick="createCust()">Register</button></div></div>';
+    document.body.appendChild(ov);
+}
+async function createCust() {
+    var n = document.getElementById('cmName').value.trim();
+    if (!n) { alert('Name required'); return; }
+    await api('/customers/', 'POST', {full_name: n, phone: document.getElementById('cmPhone').value});
+    document.querySelector('.modal-overlay').remove();
+    alert('Customer registered!');
+    loadSection('customers');
+}
+
+function showVehicleModal() {
+    var ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = '<div class="modal"><div class="modal-title">Register Vehicle</div><div class="form-group"><label>Make *</label><input id="vmMake" placeholder="Toyota"></div><div class="form-group"><label>Model *</label><input id="vmModel" placeholder="Hilux"></div><div class="form-group"><label>Plate *</label><input id="vmPlate" placeholder="BT1234"></div><div class="form-group"><label>Year</label><input id="vmYear" placeholder="2018"></div><div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button><button class="btn btn-primary" onclick="createVeh()">Register</button></div></div>';
+    document.body.appendChild(ov);
+}
+async function createVeh() {
+    var mk = document.getElementById('vmMake').value.trim();
+    var pl = document.getElementById('vmPlate').value.trim();
+    if (!mk || !pl) { alert('Make and plate required'); return; }
+    await api('/vehicles/', 'POST', {make: mk, model_name: document.getElementById('vmModel').value, plate: pl, year: document.getElementById('vmYear').value, mileage: parseInt(document.getElementById('vmMileage').value)||0});
+    document.querySelector('.modal-overlay').remove();
+    alert('Vehicle registered!');
+    loadSection('vehicles');
+}
+
+function showInventoryModal() {
+    var ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = '<div class="modal"><div class="modal-title">Add Inventory</div><div class="form-group"><label>Part Name *</label><input id="imName" placeholder="Oil Filter"></div><div class="form-group"><label>Quantity</label><input id="imQty" type="number" value="1"></div><div class="form-group"><label>Min Threshold</label><input id="imMin" type="number" value="5"></div><div class="form-group"><label>Unit Price (MWK)</label><input id="imPrice" type="number" value="0"></div><div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button><button class="btn btn-primary" onclick="createInv()">Add</button></div></div>';
+    document.body.appendChild(ov);
+}
+async function createInv() {
+    var n = document.getElementById('imName').value.trim();
+    if (!n) { alert('Part name required'); return; }
+    await api('/inventory/', 'POST', {part_name: n, quantity: parseInt(document.getElementById('imQty').value)||1, min_threshold: parseInt(document.getElementById('imMin').value)||5, unit_price: parseFloat(document.getElementById('imPrice').value)||0});
+    document.querySelector('.modal-overlay').remove();
+    alert('Item added!');
+    loadSection('inventory');
+}
+
+
+function toggleFab() { document.getElementById('fabMenu').classList.toggle('open'); }
+
+function showCustomerModal() {
+    var ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = '<div class="modal"><div class="modal-title">Register Customer</div><div class="form-group"><label>Full Name *</label><input id="cmName" placeholder="Customer name"></div><div class="form-group"><label>Phone</label><input id="cmPhone" placeholder="+265..."></div><div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button><button class="btn btn-primary" onclick="createCust()">Register</button></div></div>';
+    document.body.appendChild(ov);
+}
+async function createCust() {
+    var n = document.getElementById('cmName').value.trim();
+    if (!n) { alert('Name required'); return; }
+    await api('/customers/', 'POST', {full_name: n, phone: document.getElementById('cmPhone').value});
+    document.querySelector('.modal-overlay').remove();
+    alert('Customer registered!');
+    loadSection('customers');
+}
+
+function showVehicleModal() {
+    var ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = '<div class="modal"><div class="modal-title">Register Vehicle</div><div class="form-group"><label>Make *</label><input id="vmMake" placeholder="Toyota"></div><div class="form-group"><label>Model *</label><input id="vmModel" placeholder="Hilux"></div><div class="form-group"><label>Plate *</label><input id="vmPlate" placeholder="BT1234"></div><div class="form-group"><label>Year</label><input id="vmYear" placeholder="2018"></div><div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button><button class="btn btn-primary" onclick="createVeh()">Register</button></div></div>';
+    document.body.appendChild(ov);
+}
+async function createVeh() {
+    var mk = document.getElementById('vmMake').value.trim();
+    var pl = document.getElementById('vmPlate').value.trim();
+    if (!mk || !pl) { alert('Make and plate required'); return; }
+    await api('/vehicles/', 'POST', {make: mk, model_name: document.getElementById('vmModel').value, plate: pl, year: document.getElementById('vmYear').value, mileage: parseInt(document.getElementById('vmMileage').value)||0});
+    document.querySelector('.modal-overlay').remove();
+    alert('Vehicle registered!');
+    loadSection('vehicles');
+}
+
+function showInventoryModal() {
+    var ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = '<div class="modal"><div class="modal-title">Add Inventory</div><div class="form-group"><label>Part Name *</label><input id="imName" placeholder="Oil Filter"></div><div class="form-group"><label>Quantity</label><input id="imQty" type="number" value="1"></div><div class="form-group"><label>Min Threshold</label><input id="imMin" type="number" value="5"></div><div class="form-group"><label>Unit Price (MWK)</label><input id="imPrice" type="number" value="0"></div><div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button><button class="btn btn-primary" onclick="createInv()">Add</button></div></div>';
+    document.body.appendChild(ov);
+}
+async function createInv() {
+    var n = document.getElementById('imName').value.trim();
+    if (!n) { alert('Part name required'); return; }
+    await api('/inventory/', 'POST', {part_name: n, quantity: parseInt(document.getElementById('imQty').value)||1, min_threshold: parseInt(document.getElementById('imMin').value)||5, unit_price: parseFloat(document.getElementById('imPrice').value)||0});
+    document.querySelector('.modal-overlay').remove();
+    alert('Item added!');
+    loadSection('inventory');
 }
 
 </script>
