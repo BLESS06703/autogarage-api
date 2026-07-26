@@ -219,7 +219,7 @@ async function handleRegister(e) {
             localStorage.setItem('savedUsername', username);
             showAlert('Account created! Redirecting to dashboard...', 'success');
             btn.innerHTML = '<i class="fas fa-check"></i> Created!';
-            setTimeout(function(){ window.location.href = '/api/dashboard-page/'; }, 600);
+            document.getElementById('msg').innerHTML += '<br><a href="/api/dashboard-page/" style="color:var(--orange);font-weight:bold;">Go to Dashboard</a>';
         } else {
             showAlert(data.error || 'Registration failed. Please try again.', 'error');
             btn.disabled = false;

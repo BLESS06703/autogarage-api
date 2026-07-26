@@ -97,7 +97,7 @@ const API = '/api';
     var token = localStorage.getItem('token');
     if (token) {
         fetch(API + '/dashboard/', {headers:{'Authorization':'Bearer '+token}})
-            .then(function(r){ if(r.ok) window.location.href='/api/dashboard-page/'; })
+            .then(function(r){ if(r.ok) { document.getElementById('msg').className='msg success'; document.getElementById('msg').textContent='Already logged in. Click below to continue.'; document.getElementById('msg').innerHTML+='<br><a href="/api/dashboard-page/" style="color:var(--orange);">Go to Dashboard</a>'; } })
             .catch(function(){});
     }
 })();
@@ -171,7 +171,7 @@ async function handleLogin(e) {
             else { localStorage.removeItem('savedUsername'); }
             showAlert('Login successful! Redirecting...', 'success');
             btn.innerHTML = '<i class="fas fa-check"></i> Signed In';
-            setTimeout(function(){ window.location.href = '/api/dashboard-page/'; }, 400);
+            btn.innerHTML = 'Done!'; document.getElementById('msg').innerHTML += '<br><a href="/api/dashboard-page/" style="color:var(--orange);font-weight:bold;">Go to Dashboard</a>';
         } else {
             showAlert(data.error || data.detail || 'Invalid credentials. Please try again.', 'error');
             btn.disabled = false;
