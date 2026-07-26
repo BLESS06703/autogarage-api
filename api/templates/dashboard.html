@@ -7,8 +7,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root{
---bg:#0A0A0A;--surface:#161616;--surface2:#1E1E1E;--border:#252525;
---text:#E0E0E0;--text2:#777;--accent:#4A4A4A;--accent2:#5A5A5A;
+--bg:#1a1a2e;--surface:#16213e;--surface2:#0f3460;--border:#1f3460;
+--text:#E0E0E0;--text2:#8892b0;--accent:#0a84ff;--accent2:#533483;
 --green:#22c55e;--amber:#f59e0b;--red:#ef4444;--blue:#0a84ff;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -35,7 +35,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px}
 .card-title{font-size:11px;font-weight:600;color:var(--text);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px}
 .btn{padding:9px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
-.btn-primary{background:var(--text);color:var(--bg)}
+.btn-primary{background:var(--accent);color:#fff}
 .btn-primary:hover{background:var(--accent2)}
 .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
 .btn-outline:hover{background:var(--surface2)}
@@ -64,7 +64,7 @@ td{padding:10px 12px;border-bottom:1px solid var(--border)}
 .page-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
 .page-header h1{font-size:18px;font-weight:700;flex:1}
 .back-btn{background:var(--surface2);color:var(--text);border:1px solid var(--border);padding:7px 12px;border-radius:6px;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:4px}
-.fab{position:fixed;bottom:24px;right:24px;z-index:150;width:52px;height:52px;border-radius:50%;background:var(--text);color:var(--bg);border:none;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center}
+.fab{position:fixed;bottom:24px;right:24px;z-index:150;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center}
 .fab-menu{position:fixed;bottom:88px;right:24px;z-index:150;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:6px;display:none;flex-direction:column;gap:2px;box-shadow:0 8px 24px rgba(0,0,0,0.5);min-width:200px}
 .fab-menu.open{display:flex}
 .fab-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;cursor:pointer;font-size:12px;color:var(--text);border:none;background:none;width:100%;text-align:left}
