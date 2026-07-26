@@ -5,7 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoGarage Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+function toggleFab() { document.getElementById('fabMenu').classList.toggle('open'); }
+
+function showCustomerModal() {
+    var ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = '<div class="modal"><div class="modal-title">Register Customer</div>' +
+        '<div class="form-group"><label>Full Name *</label><input id="cmName" placeholder="Customer name"></div>' +
+        '<div class="form-group"><label>Phone</label><input id="cmPhone" placeholder="+265..."></div>' +
+        '<div class="form-group"><label>Email</label><input id="cmEmail" placeholder="email@example.com"></div>' +
+        '<div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button>' +
+        '<button class="btn btn-primary" onclick="createCustomer()">Register</button></div></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
+}
+async function createCustomer() {
+    var n = document.getElementById('cmName').value.trim();
+    if (!n) { showToast('Name is required', 'error'); return; }
+    try {
+        await api('/customers/', 'POST', {
+            full_name: n,
+            phone: document.getElementById('cmPhone').value,
+            email: document.getElementById('cmEmail').value
+        });
+        document.querySelector('.modal-overlay').remove();
+        showToast('Customer registered', 'success');
+        loadSection('customers');
+    } catch(e) { showToast('Failed: ' + e.message, 'error'); }
+}
+
+function showVehicleModal() {
+    var ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = '<div class="modal"><div class="modal-title">Register Vehicle</div>' +
+        '<div class="form-group"><label>Make *</label><input id="vmMake" placeholder="Toyota"></div>' +
+        '<div class="form-group"><label>Model *</label><input id="vmModel" placeholder="Hilux"></div>' +
+        '<div class="form-group"><label>Plate *</label><input id="vmPlate" placeholder="BT1234"></div>' +
+        '<div class="form-group"><label>Year</label><input id="vmYear" placeholder="2018"></div>' +
+        '<div class="form-group"><label>Mileage</label><input id="vmMileage" type="number" value="0"></div>' +
+        '<div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button>' +
+        '<button class="btn btn-primary" onclick="createVehicle()">Register</button></div></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
+}
+async function createVehicle() {
+    var mk = document.getElementById('vmMake').value.trim();
+    var md = document.getElementById('vmModel').value.trim();
+    var pl = document.getElementById('vmPlate').value.trim();
+    if (!mk || !md || !pl) { showToast('Make, model and plate required', 'error'); return; }
+    try {
+        await api('/vehicles/', 'POST', {
+            make: mk, model_name: md, plate: pl,
+            year: document.getElementById('vmYear').value,
+            mileage: parseInt(document.getElementById('vmMileage').value) || 0
+        });
+        document.querySelector('.modal-overlay').remove();
+        showToast('Vehicle registered', 'success');
+        loadSection('vehicles');
+    } catch(e) { showToast('Failed: ' + e.message, 'error'); }
+}
+
+function showInventoryModal() {
+    var ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = '<div class="modal"><div class="modal-title">Add Inventory</div>' +
+        '<div class="form-group"><label>Part Name *</label><input id="imName" placeholder="Oil Filter"></div>' +
+        '<div class="form-group"><label>Quantity</label><input id="imQty" type="number" value="1"></div>' +
+        '<div class="form-group"><label>Min Threshold</label><input id="imMin" type="number" value="5"></div>' +
+        '<div class="form-group"><label>Unit Price (MWK)</label><input id="imPrice" type="number" value="0"></div>' +
+        '<div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button>' +
+        '<button class="btn btn-primary" onclick="createInventory()">Add</button></div></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
+}
+async function createInventory() {
+    var n = document.getElementById('imName').value.trim();
+    if (!n) { showToast('Part name required', 'error'); return; }
+    try {
+        await api('/inventory/', 'POST', {
+            part_name: n,
+            quantity: parseInt(document.getElementById('imQty').value) || 1,
+            min_threshold: parseInt(document.getElementById('imMin').value) || 5,
+            unit_price: parseFloat(document.getElementById('imPrice').value) || 0
+        });
+        document.querySelector('.modal-overlay').remove();
+        showToast('Item added', 'success');
+        loadSection('inventory');
+    } catch(e) { showToast('Failed: ' + e.message, 'error'); }
+}
+
+function showToast(msg, type) {
+    type = type || 'info';
+    var t = document.createElement('div');
+    t.className = 'toast toast-' + type;
+    t.textContent = msg;
+    var container = document.getElementById('toastContainer');
+    if (container) {
+        container.appendChild(t);
+        setTimeout(function(){ t.remove(); }, 3000);
+    } else {
+        alert(msg);
+    }
+}
+
+</script>
     <style>
         :root {
             --bg: #0D0D0D; --surface: #1A1A1A; --surface2: #242424;
@@ -172,7 +273,8 @@ if (window.innerWidth <= 768) {
             .fab-menu { bottom: 84px; right: 20px; }
             .welcome-name { font-size: 20px; }
         }
-    </style>
+    .user-bar{position:fixed;top:12px;right:16px;z-index:90;display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;}.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:13px;}.user-name{font-size:12px;color:var(--text);}.user-garage{font-size:10px;color:var(--text2);}
+</style>
 </head>
 <body>
 
@@ -203,6 +305,7 @@ if (window.innerWidth <= 768) {
     </div>
 </aside>
 
+<div class="user-bar" id="userBar"><div class="user-avatar" id="userAvatar">U</div><div><div class="user-name" id="userName">User</div><div class="user-garage" id="garageName">Garage</div></div></div>
 <main class="main" id="main-content"></main>
 
 <button class="fab" onclick="document.getElementById('fabMenu').classList.toggle('open')">+</button>
@@ -217,7 +320,6 @@ if (window.innerWidth <= 768) {
 <script>
 const API = '/api';
 const token = localStorage.getItem('token');
-if (!token) { window.location.href = '/api/auth/login-page/'; }
 
 async function api(p, m='GET', b=null) {
     const o = { method:m, headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'} };
@@ -501,7 +603,120 @@ function showHamburger() {
 
 function logout(){localStorage.removeItem('token');window.location.href='/api/auth/login-page/';}
 
+
+(function(){
+    var d = JSON.parse(localStorage.getItem('user') || '{}');
+    if (d.username) {
+        document.getElementById('userName').textContent = d.username;
+        document.getElementById('userAvatar').textContent = d.username[0].toUpperCase();
+    }
+    if (d.garage_name) {
+        document.getElementById('garageName').textContent = d.garage_name + (d.role ? ' • ' + d.role : '');
+    }
+})();
+
 loadSection('dashboard');
+
+function toggleFab() { document.getElementById('fabMenu').classList.toggle('open'); }
+
+function showCustomerModal() {
+    var ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = '<div class="modal"><div class="modal-title">Register Customer</div>' +
+        '<div class="form-group"><label>Full Name *</label><input id="cmName" placeholder="Customer name"></div>' +
+        '<div class="form-group"><label>Phone</label><input id="cmPhone" placeholder="+265..."></div>' +
+        '<div class="form-group"><label>Email</label><input id="cmEmail" placeholder="email@example.com"></div>' +
+        '<div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button>' +
+        '<button class="btn btn-primary" onclick="createCustomer()">Register</button></div></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
+}
+async function createCustomer() {
+    var n = document.getElementById('cmName').value.trim();
+    if (!n) { showToast('Name is required', 'error'); return; }
+    try {
+        await api('/customers/', 'POST', {
+            full_name: n,
+            phone: document.getElementById('cmPhone').value,
+            email: document.getElementById('cmEmail').value
+        });
+        document.querySelector('.modal-overlay').remove();
+        showToast('Customer registered', 'success');
+        loadSection('customers');
+    } catch(e) { showToast('Failed: ' + e.message, 'error'); }
+}
+
+function showVehicleModal() {
+    var ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = '<div class="modal"><div class="modal-title">Register Vehicle</div>' +
+        '<div class="form-group"><label>Make *</label><input id="vmMake" placeholder="Toyota"></div>' +
+        '<div class="form-group"><label>Model *</label><input id="vmModel" placeholder="Hilux"></div>' +
+        '<div class="form-group"><label>Plate *</label><input id="vmPlate" placeholder="BT1234"></div>' +
+        '<div class="form-group"><label>Year</label><input id="vmYear" placeholder="2018"></div>' +
+        '<div class="form-group"><label>Mileage</label><input id="vmMileage" type="number" value="0"></div>' +
+        '<div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button>' +
+        '<button class="btn btn-primary" onclick="createVehicle()">Register</button></div></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
+}
+async function createVehicle() {
+    var mk = document.getElementById('vmMake').value.trim();
+    var md = document.getElementById('vmModel').value.trim();
+    var pl = document.getElementById('vmPlate').value.trim();
+    if (!mk || !md || !pl) { showToast('Make, model and plate required', 'error'); return; }
+    try {
+        await api('/vehicles/', 'POST', {
+            make: mk, model_name: md, plate: pl,
+            year: document.getElementById('vmYear').value,
+            mileage: parseInt(document.getElementById('vmMileage').value) || 0
+        });
+        document.querySelector('.modal-overlay').remove();
+        showToast('Vehicle registered', 'success');
+        loadSection('vehicles');
+    } catch(e) { showToast('Failed: ' + e.message, 'error'); }
+}
+
+function showInventoryModal() {
+    var ov = document.createElement('div'); ov.className = 'modal-overlay';
+    ov.innerHTML = '<div class="modal"><div class="modal-title">Add Inventory</div>' +
+        '<div class="form-group"><label>Part Name *</label><input id="imName" placeholder="Oil Filter"></div>' +
+        '<div class="form-group"><label>Quantity</label><input id="imQty" type="number" value="1"></div>' +
+        '<div class="form-group"><label>Min Threshold</label><input id="imMin" type="number" value="5"></div>' +
+        '<div class="form-group"><label>Unit Price (MWK)</label><input id="imPrice" type="number" value="0"></div>' +
+        '<div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button>' +
+        '<button class="btn btn-primary" onclick="createInventory()">Add</button></div></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
+}
+async function createInventory() {
+    var n = document.getElementById('imName').value.trim();
+    if (!n) { showToast('Part name required', 'error'); return; }
+    try {
+        await api('/inventory/', 'POST', {
+            part_name: n,
+            quantity: parseInt(document.getElementById('imQty').value) || 1,
+            min_threshold: parseInt(document.getElementById('imMin').value) || 5,
+            unit_price: parseFloat(document.getElementById('imPrice').value) || 0
+        });
+        document.querySelector('.modal-overlay').remove();
+        showToast('Item added', 'success');
+        loadSection('inventory');
+    } catch(e) { showToast('Failed: ' + e.message, 'error'); }
+}
+
+function showToast(msg, type) {
+    type = type || 'info';
+    var t = document.createElement('div');
+    t.className = 'toast toast-' + type;
+    t.textContent = msg;
+    var container = document.getElementById('toastContainer');
+    if (container) {
+        container.appendChild(t);
+        setTimeout(function(){ t.remove(); }, 3000);
+    } else {
+        alert(msg);
+    }
+}
+
 </script>
 </body>
 </html>
