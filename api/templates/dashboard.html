@@ -357,7 +357,11 @@ document.getElementById('main-content').innerHTML='<div class="page-header"><but
 
 function logout(){localStorage.removeItem('token');window.location.href='/api/auth/login-page/';}
 
+try {
 if(token){loadSection('dashboard');}else{document.getElementById('main-content').innerHTML='<div style="text-align:center;padding:80px 20px"><h2>Sign In Required</h2><p style="color:var(--text2);margin:12px 0 20px">Please log in to access your dashboard.</p><a href="/api/auth/login-page/" style="display:inline-block;background:var(--orange);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600">Go to Login</a></div>';}
+} catch(e) {
+document.getElementById('main-content').innerHTML = '<div style="text-align:center;padding:60px;color:white;"><h2>Error</h2><p style="color:var(--red);">' + e.message + '</p><p style="color:var(--text2);">Line: ' + e.lineNumber + '</p></div>';
+}
 </script>
 </body>
 </html>
