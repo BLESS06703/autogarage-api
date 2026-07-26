@@ -106,6 +106,38 @@ function showToast(msg, type) {
     }
 }
 
+
+function toggleFab(){document.getElementById('fabMenu').classList.toggle('open');}
+function openCreateForm(type){
+    var forms={
+        customer:{title:'Register Customer',fields:'<div class="form-group"><label>Full Name *</label><input id="cfName" placeholder="Customer name"></div><div class="form-group"><label>Phone</label><input id="cfPhone" placeholder="+265..."></div>',endpoint:'/customers/',data:function(){return{full_name:document.getElementById('cfName').value,phone:document.getElementById('cfPhone').value};},section:'customers'},
+        vehicle:{title:'Register Vehicle',fields:'<div class="form-group"><label>Make *</label><input id="cfMake" placeholder="Toyota"></div><div class="form-group"><label>Model</label><input id="cfModel" placeholder="Hilux"></div><div class="form-group"><label>Plate *</label><input id="cfPlate" placeholder="BT1234"></div><div class="form-group"><label>Year</label><input id="cfYear" placeholder="2018"></div>',endpoint:'/vehicles/',data:function(){return{make:document.getElementById('cfMake').value,model_name:document.getElementById('cfModel').value,plate:document.getElementById('cfPlate').value,year:document.getElementById('cfYear').value,mileage:0};},section:'vehicles'},
+        inventory:{title:'Add Inventory',fields:'<div class="form-group"><label>Part Name *</label><input id="cfPart" placeholder="Oil Filter"></div><div class="form-group"><label>Quantity</label><input id="cfQty" type="number" value="1"></div><div class="form-group"><label>Min Threshold</label><input id="cfMin" type="number" value="5"></div><div class="form-group"><label>Unit Price (MWK)</label><input id="cfPrice" type="number" value="0"></div>',endpoint:'/inventory/',data:function(){return{part_name:document.getElementById('cfPart').value,quantity:parseInt(document.getElementById('cfQty').value)||1,min_threshold:parseInt(document.getElementById('cfMin').value)||5,unit_price:parseFloat(document.getElementById('cfPrice').value)||0};},section:'inventory'},
+        workorder:{title:'New Work Order',fields:'<div class="form-group"><label>Vehicle *</label><input id="cfVeh" placeholder="e.g. Toyota Hilux"></div><div class="form-group"><label>Customer *</label><input id="cfCust" placeholder="Customer name"></div><div class="form-group"><label>Issue</label><textarea id="cfIssue"></textarea></div><div class="form-group"><label>Cost (MWK)</label><input id="cfCost" type="number" value="0"></div>',endpoint:'/work-orders/',data:function(){return{vehicle_info:document.getElementById('cfVeh').value,customer_name:document.getElementById('cfCust').value,issue_description:document.getElementById('cfIssue').value,cost_estimate:parseFloat(document.getElementById('cfCost').value)||0};},section:'workorders'}
+    };
+    var f=forms[type];
+    var ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML='<div class="modal"><div class="modal-title">'+f.title+'</div>'+f.fields+'<div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button><button class="btn btn-primary" onclick="submitForm(\''+type+'\')">Create</button></div></div>';
+    document.body.appendChild(ov);
+}
+async function submitForm(type){
+    var forms={
+        customer:{endpoint:'/customers/',data:function(){return{full_name:document.getElementById('cfName').value,phone:document.getElementById('cfPhone').value};},section:'customers',nameField:'cfName',nameLabel:'Name'},
+        vehicle:{endpoint:'/vehicles/',data:function(){return{make:document.getElementById('cfMake').value,model_name:document.getElementById('cfModel').value,plate:document.getElementById('cfPlate').value,year:document.getElementById('cfYear').value,mileage:0};},section:'vehicles',nameField:'cfMake',nameLabel:'Make'},
+        inventory:{endpoint:'/inventory/',data:function(){return{part_name:document.getElementById('cfPart').value,quantity:parseInt(document.getElementById('cfQty').value)||1,min_threshold:parseInt(document.getElementById('cfMin').value)||5,unit_price:parseFloat(document.getElementById('cfPrice').value)||0};},section:'inventory',nameField:'cfPart',nameLabel:'Part name'},
+        workorder:{endpoint:'/work-orders/',data:function(){return{vehicle_info:document.getElementById('cfVeh').value,customer_name:document.getElementById('cfCust').value,issue_description:document.getElementById('cfIssue').value,cost_estimate:parseFloat(document.getElementById('cfCost').value)||0};},section:'workorders',nameField:'cfVeh',nameLabel:'Vehicle'}
+    };
+    var f=forms[type];
+    if(!f)return;
+    var val=document.getElementById(f.nameField).value.trim();
+    if(!val){alert(f.nameLabel+' is required');return;}
+    try{
+        await api(f.endpoint,'POST',f.data());
+        document.querySelector('.modal-overlay').remove();
+        alert('Created successfully!');
+        loadSection(f.section);
+    }catch(e){alert('Error: '+e.message);}
+}
 </script>
     <style>
         :root {
@@ -310,11 +342,11 @@ if (window.innerWidth <= 768) {
 
 <button class="fab" onclick="document.getElementById('fabMenu').classList.toggle('open')">+</button>
 <div class="fab-menu" id="fabMenu">
-    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('workorders');setTimeout(()=>woModal(),300);"><i class="fas fa-clipboard-list"></i> New Work Order</button>
-    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('customers');"><i class="fas fa-user-plus"></i> Register Customer</button>
-    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('vehicles');"><i class="fas fa-car"></i> Register Vehicle</button>
-    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('inventory');"><i class="fas fa-box"></i> Add Inventory</button>
-    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('invoices');"><i class="fas fa-file-invoice"></i> New Invoice</button>
+    <button class="fab-item" onclick="toggleFab();openCreateForm('workorder')"><i class="fas fa-clipboard-list"></i> New Work Order</button>
+    <button class="fab-item" onclick="toggleFab();openCreateForm('customer')"><i class="fas fa-user-plus"></i> Register Customer</button>
+    <button class="fab-item" onclick="toggleFab();openCreateForm('vehicle')"><i class="fas fa-car"></i> Register Vehicle</button>
+    <button class="fab-item" onclick="toggleFab();openCreateForm('inventory')"><i class="fas fa-box"></i> Add Inventory</button>
+    <button class="fab-item" onclick="toggleFab();loadSection('invoices')"><i class="fas fa-file-invoice"></i> New Invoice</button>
 </div>
 
 <script>
@@ -809,6 +841,38 @@ async function createInv() {
     loadSection('inventory');
 }
 
+
+function toggleFab(){document.getElementById('fabMenu').classList.toggle('open');}
+function openCreateForm(type){
+    var forms={
+        customer:{title:'Register Customer',fields:'<div class="form-group"><label>Full Name *</label><input id="cfName" placeholder="Customer name"></div><div class="form-group"><label>Phone</label><input id="cfPhone" placeholder="+265..."></div>',endpoint:'/customers/',data:function(){return{full_name:document.getElementById('cfName').value,phone:document.getElementById('cfPhone').value};},section:'customers'},
+        vehicle:{title:'Register Vehicle',fields:'<div class="form-group"><label>Make *</label><input id="cfMake" placeholder="Toyota"></div><div class="form-group"><label>Model</label><input id="cfModel" placeholder="Hilux"></div><div class="form-group"><label>Plate *</label><input id="cfPlate" placeholder="BT1234"></div><div class="form-group"><label>Year</label><input id="cfYear" placeholder="2018"></div>',endpoint:'/vehicles/',data:function(){return{make:document.getElementById('cfMake').value,model_name:document.getElementById('cfModel').value,plate:document.getElementById('cfPlate').value,year:document.getElementById('cfYear').value,mileage:0};},section:'vehicles'},
+        inventory:{title:'Add Inventory',fields:'<div class="form-group"><label>Part Name *</label><input id="cfPart" placeholder="Oil Filter"></div><div class="form-group"><label>Quantity</label><input id="cfQty" type="number" value="1"></div><div class="form-group"><label>Min Threshold</label><input id="cfMin" type="number" value="5"></div><div class="form-group"><label>Unit Price (MWK)</label><input id="cfPrice" type="number" value="0"></div>',endpoint:'/inventory/',data:function(){return{part_name:document.getElementById('cfPart').value,quantity:parseInt(document.getElementById('cfQty').value)||1,min_threshold:parseInt(document.getElementById('cfMin').value)||5,unit_price:parseFloat(document.getElementById('cfPrice').value)||0};},section:'inventory'},
+        workorder:{title:'New Work Order',fields:'<div class="form-group"><label>Vehicle *</label><input id="cfVeh" placeholder="e.g. Toyota Hilux"></div><div class="form-group"><label>Customer *</label><input id="cfCust" placeholder="Customer name"></div><div class="form-group"><label>Issue</label><textarea id="cfIssue"></textarea></div><div class="form-group"><label>Cost (MWK)</label><input id="cfCost" type="number" value="0"></div>',endpoint:'/work-orders/',data:function(){return{vehicle_info:document.getElementById('cfVeh').value,customer_name:document.getElementById('cfCust').value,issue_description:document.getElementById('cfIssue').value,cost_estimate:parseFloat(document.getElementById('cfCost').value)||0};},section:'workorders'}
+    };
+    var f=forms[type];
+    var ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML='<div class="modal"><div class="modal-title">'+f.title+'</div>'+f.fields+'<div class="form-actions"><button class="btn btn-outline" onclick="this.closest(\'.modal-overlay\').remove()">Cancel</button><button class="btn btn-primary" onclick="submitForm(\''+type+'\')">Create</button></div></div>';
+    document.body.appendChild(ov);
+}
+async function submitForm(type){
+    var forms={
+        customer:{endpoint:'/customers/',data:function(){return{full_name:document.getElementById('cfName').value,phone:document.getElementById('cfPhone').value};},section:'customers',nameField:'cfName',nameLabel:'Name'},
+        vehicle:{endpoint:'/vehicles/',data:function(){return{make:document.getElementById('cfMake').value,model_name:document.getElementById('cfModel').value,plate:document.getElementById('cfPlate').value,year:document.getElementById('cfYear').value,mileage:0};},section:'vehicles',nameField:'cfMake',nameLabel:'Make'},
+        inventory:{endpoint:'/inventory/',data:function(){return{part_name:document.getElementById('cfPart').value,quantity:parseInt(document.getElementById('cfQty').value)||1,min_threshold:parseInt(document.getElementById('cfMin').value)||5,unit_price:parseFloat(document.getElementById('cfPrice').value)||0};},section:'inventory',nameField:'cfPart',nameLabel:'Part name'},
+        workorder:{endpoint:'/work-orders/',data:function(){return{vehicle_info:document.getElementById('cfVeh').value,customer_name:document.getElementById('cfCust').value,issue_description:document.getElementById('cfIssue').value,cost_estimate:parseFloat(document.getElementById('cfCost').value)||0};},section:'workorders',nameField:'cfVeh',nameLabel:'Vehicle'}
+    };
+    var f=forms[type];
+    if(!f)return;
+    var val=document.getElementById(f.nameField).value.trim();
+    if(!val){alert(f.nameLabel+' is required');return;}
+    try{
+        await api(f.endpoint,'POST',f.data());
+        document.querySelector('.modal-overlay').remove();
+        alert('Created successfully!');
+        loadSection(f.section);
+    }catch(e){alert('Error: '+e.message);}
+}
 </script>
 </body>
 </html>
