@@ -6,7 +6,173 @@
     <title>AutoGarage Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <link rel="stylesheet" href="/static/dashboard.css">
+    <style>
+        :root {
+            --bg: #0D0D0D; --surface: #1A1A1A; --surface2: #242424;
+            --border: #2A2A2A; --text: #E0E0E0; --text2: #888;
+            --orange: #FF6F00; --green: #22C55E; --red: #EF4444;
+            --blue: #3B82F6; --amber: #F59E0B; --purple: #8B5CF6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; min-height: 100vh; }
+
+        .sidebar {
+            width: 250px; background: var(--surface); border-right: 1px solid var(--border);
+            padding: 20px 12px; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+            overflow-y: auto; transition: transform 0.3s;
+        }
+        .sidebar-brand { font-size: 17px; font-weight: 700; color: var(--orange); margin-bottom: 4px; padding: 0 8px; }
+        .sidebar-ver { font-size: 10px; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px; padding: 0 8px; }
+        .nav-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px;
+            color: var(--text2); cursor: pointer; font-size: 13px; border: none; background: none;
+            width: 100%; text-align: left; margin-bottom: 1px; transition: 0.15s;
+        }
+        .nav-item i { width: 18px; text-align: center; font-size: 13px; }
+        .nav-item:hover { background: var(--surface2); color: var(--text); }
+        .nav-item.active { background: var(--orange); color: #fff; font-weight: 600; }
+        .nav-section { font-size: 10px; color: var(--text2); letter-spacing: 1.5px; margin: 18px 0 6px 12px; text-transform: uppercase; font-weight: 600; }
+
+        .hamburger { display: none; position: fixed; top: 14px; left: 14px; z-index: 200; background: var(--surface); color: var(--text); border: 1px solid var(--border); width: 40px; height: 40px; border-radius: 10px; font-size: 18px; cursor: pointer; }
+
+        .main { margin-left: 250px; flex: 1; padding: 28px 32px; min-height: 100vh; }
+
+        .welcome { margin-bottom: 28px; }
+        .welcome-greeting { font-size: 14px; color: var(--text2); margin-bottom: 2px; }
+        .welcome-name { font-size: 24px; font-weight: 700; }
+        .welcome-date { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+        .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; transition: 0.15s; }
+        .kpi-card:hover { border-color: var(--orange); }
+        .kpi-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; margin-bottom: 12px; }
+        .kpi-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .kpi-value { font-size: 26px; font-weight: 700; font-family: 'SF Mono', monospace; }
+        .kpi-sub { font-size: 11px; color: var(--text2); margin-top: 4px; }
+        .icon-orange { background: rgba(255,111,0,0.15); color: var(--orange); }
+        .icon-blue { background: rgba(59,130,246,0.15); color: var(--blue); }
+        .icon-green { background: rgba(34,197,94,0.15); color: var(--green); }
+        .icon-purple { background: rgba(139,92,246,0.15); color: var(--purple); }
+        .icon-red { background: rgba(239,68,68,0.15); color: var(--red); }
+
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+        .card-title { font-size: 12px; font-weight: 600; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+        .card-title i { color: var(--orange); font-size: 13px; }
+
+        .btn { padding: 10px 18px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--orange); color: #fff; }
+        .btn-primary:hover { background: #E65100; }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-outline:hover { background: var(--surface2); }
+        .btn-danger { background: transparent; color: var(--red); border: 1px solid var(--red); }
+        .btn-danger:hover { background: rgba(239,68,68,0.1); }
+
+        .page-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
+        .page-header h1 { font-size: 20px; font-weight: 700; flex: 1; }
+        .back-btn { background: var(--surface2); color: var(--text); border: 1px solid var(--border); padding: 9px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: 0.15s; }
+        .back-btn:hover { background: var(--border); }
+
+        .table-wrapper { overflow-x: auto; border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; padding: 12px 14px; color: var(--text2); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; }
+        td { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+        tbody tr { cursor: pointer; transition: 0.1s; }
+        tbody tr:hover td { background: rgba(255,255,255,0.03); }
+        .tag { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 14px; font-size: 10px; font-weight: 500; letter-spacing: 0.3px; }
+        .tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+        .tag-progress { background: rgba(255,111,0,0.15); color: var(--orange); } .tag-progress::before { background: var(--orange); }
+        .tag-parts { background: rgba(245,158,11,0.15); color: var(--amber); } .tag-parts::before { background: var(--amber); }
+        .tag-invoice { background: rgba(59,130,246,0.15); color: var(--blue); } .tag-invoice::before { background: var(--blue); }
+        .tag-done { background: rgba(34,197,94,0.15); color: var(--green); } .tag-done::before { background: var(--green); }
+        .tag-cancelled { background: rgba(239,68,68,0.15); color: var(--red); } .tag-cancelled::before { background: var(--red); }
+
+        .search-wrap { position: relative; margin-bottom: 16px; }
+        .search-wrap i { position: absolute; left: 14px; top: 14px; color: var(--text2); font-size: 13px; }
+        .search-input { width: 100%; padding: 11px 14px 11px 38px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 13px; outline: none; }
+        .search-input:focus { border-color: var(--orange); }
+        .text-mono { font-family: 'SF Mono', monospace; font-size: 12px; }
+
+        .loading-spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid var(--surface2); border-top-color: var(--orange); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 50px 20px; color: var(--text2); }
+        .empty-state i { font-size: 44px; margin-bottom: 14px; color: var(--border); }
+        .empty-state p { font-size: 13px; margin-bottom: 4px; }
+
+        .fab {
+            position: fixed; bottom: 28px; right: 28px; z-index: 150;
+            width: 56px; height: 56px; border-radius: 50%; background: var(--orange);
+            color: #fff; border: none; font-size: 24px; cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255,111,0,0.3); transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .fab:hover { transform: scale(1.05); }
+        .fab-menu {
+            position: fixed; bottom: 96px; right: 28px; z-index: 150;
+            background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+            padding: 8px; display: none; flex-direction: column; gap: 2px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4); min-width: 200px;
+        }
+        .fab-menu.open { display: flex; }
+        .fab-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+            border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--text);
+            border: none; background: none; width: 100%; text-align: left; transition: 0.1s;
+        }
+        .fab-item:hover { background: var(--surface2); }
+        .fab-item i { width: 18px; text-align: center; color: var(--orange); }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; z-index: 300; }
+        .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 26px; width: 90%; max-width: 520px; max-height: 85vh; overflow-y: auto; }
+        .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; font-weight: 500; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 13px; outline: none; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--orange); }
+        .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+
+        .activity-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-dot { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+        .dot-green { background: var(--green); color: #000; }
+        .dot-orange { background: var(--orange); color: #fff; }
+        .dot-blue { background: var(--blue); color: #fff; }
+
+        .profile-header { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 22px; flex-wrap: wrap; }
+        .profile-avatar { width: 60px; height: 60px; border-radius: 14px; background: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: #fff; flex-shrink: 0; }
+        .timeline { position: relative; padding-left: 24px; }
+        .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+        .timeline-item { position: relative; padding: 8px 0 8px 20px; font-size: 13px; }
+        .timeline-item::before { content: ''; position: absolute; left: -19px; top: 14px; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+
+        window.addEventListener('resize', function() {
+    if (window.innerWidth <= 768) {
+        document.getElementById('hamburgerBtn').style.display = 'flex';
+    } else {
+        document.getElementById('hamburgerBtn').style.display = 'none';
+        document.getElementById('sidebar').classList.remove('open');
+    }
+});
+
+// Init hamburger
+if (window.innerWidth <= 768) {
+    document.getElementById('hamburgerBtn').style.display = 'flex';
+}
+
+@media (max-width: 768px) {
+            .hamburger { display: flex; align-items: center; justify-content: center; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); box-shadow: 4px 0 20px rgba(0,0,0,0.5); }
+            .main { margin-left: 0; padding: 60px 16px 16px 16px; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .content-grid { grid-template-columns: 1fr; }
+            .page-header { flex-direction: column; align-items: flex-start; }
+            .fab { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 22px; }
+            .fab-menu { bottom: 84px; right: 20px; }
+            .welcome-name { font-size: 20px; }
+        }
+    </style>
 </head>
 <body>
 
@@ -37,36 +203,305 @@
     </div>
 </aside>
 
-<div class="toast-container" id="toastContainer"></div>
-<div class="user-bar" id="userBar">
-    <div class="user-avatar" onclick="loadSection('settings')" id="userAvatar">G</div>
-    <div><div class="user-name" id="userName">Garage Owner</div><div class="user-garage" id="garageName">AutoGarage Pro</div></div>
-</div>
-
 <main class="main" id="main-content"></main>
 
-<button class="fab" onclick="toggleFab()">+</button>
+<button class="fab" onclick="document.getElementById('fabMenu').classList.toggle('open')">+</button>
 <div class="fab-menu" id="fabMenu">
-    <button class="fab-item" onclick="toggleFab(); showQuickIntake()"><i class="fas fa-clipboard-list"></i> New Work Order</button>
-    <button class="fab-item" onclick="toggleFab(); showCustomerModal()"><i class="fas fa-user-plus"></i> Register Customer</button>
-    <button class="fab-item" onclick="toggleFab(); showVehicleModal()"><i class="fas fa-car"></i> Register Vehicle</button>
-    <button class="fab-item" onclick="toggleFab(); showInventoryModal()"><i class="fas fa-box"></i> Add Inventory</button>
-    <button class="fab-item" onclick="toggleFab(); loadSection('invoices')"><i class="fas fa-file-invoice"></i> New Invoice</button>
+    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('workorders');setTimeout(()=>woModal(),300);"><i class="fas fa-clipboard-list"></i> New Work Order</button>
+    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('customers');"><i class="fas fa-user-plus"></i> Register Customer</button>
+    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('vehicles');"><i class="fas fa-car"></i> Register Vehicle</button>
+    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('inventory');"><i class="fas fa-box"></i> Add Inventory</button>
+    <button class="fab-item" onclick="document.getElementById('fabMenu').classList.remove('open');loadSection('invoices');"><i class="fas fa-file-invoice"></i> New Invoice</button>
 </div>
 
-<script src="/static/dashboard.js"></script>
 <script>
-// Update user bar immediately from saved data
-(function(){
-    var d = JSON.parse(localStorage.getItem('user') || '{}');
-    if (d.username) {
-        document.getElementById('userName').textContent = d.username;
-        document.getElementById('userAvatar').textContent = d.username[0].toUpperCase();
+const API = '/api';
+const token = localStorage.getItem('token');
+if (!token) { window.location.href = '/api/auth/login-page/'; }
+
+async function api(p, m='GET', b=null) {
+    const o = { method:m, headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'} };
+    if (b) o.body = JSON.stringify(b);
+    const r = await fetch(`${API}${p}`, o);
+    return r.json();
+}
+function L(d) { return Array.isArray(d) ? d : (d&&d.results ? d.results : []); }
+
+document.querySelectorAll('.nav-item[data-section]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('fabMenu').classList.remove('open');
+        loadSection(this.dataset.section);
+    });
+});
+
+async function loadSection(s) {
+    // Show hamburger only on dashboard
+    if (s === 'dashboard') {
+        showHamburger();
+    } else {
+        hideHamburger();
     }
-    if (d.garage_name) {
-        document.getElementById('garageName').textContent = d.garage_name + (d.role ? ' • ' + d.role : '');
+    const m = document.getElementById('main-content');
+    m.innerHTML = '<div style="text-align:center;padding:60px;"><div class="loading-spinner"></div></div>';
+    try {
+        const fns = {dashboard:dash,workorders:wo,customers:cust,vehicles:veh,mechanics:mech,inventory:inv,appointments:appt,payments:pay,invoices:invc,reports:rpt,ai:aid,notifications:notif,settings:sett};
+        if (fns[s]) await fns[s](); else throw new Error('Section not found');
+    } catch(e) {
+        m.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>${e.message}</p><button class="btn btn-outline" style="margin-top:14px;" onclick="loadSection('${s}')">Retry</button></div>`;
     }
-})();
+}
+
+// ===== DASHBOARD =====
+async function dash() {
+    const now = new Date();
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const hour = now.getHours();
+    const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+    const dateStr = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome">
+            <div class="welcome-greeting">${greeting} &#128075;</div>
+            <div class="welcome-name">AutoGarage Pro</div>
+            <div class="welcome-date">${dateStr} &middot; Today's Overview</div>
+        </div>
+        <div class="kpi-grid">
+            <div class="kpi-card" onclick="loadSection('customers')"><div class="kpi-icon icon-blue"><i class="fas fa-users"></i></div><div class="kpi-label">Customers</div><div class="kpi-value" id="k1" style="color:var(--blue);">-</div><div class="kpi-sub" id="k1s"></div></div>
+            <div class="kpi-card" onclick="loadSection('vehicles')"><div class="kpi-icon icon-purple"><i class="fas fa-car"></i></div><div class="kpi-label">Vehicles</div><div class="kpi-value" id="k2" style="color:var(--purple);">-</div><div class="kpi-sub" id="k2s"></div></div>
+            <div class="kpi-card" onclick="loadSection('workorders')"><div class="kpi-icon icon-orange"><i class="fas fa-clipboard-list"></i></div><div class="kpi-label">Active Jobs</div><div class="kpi-value" id="k3" style="color:var(--orange);">-</div><div class="kpi-sub" id="k3s"></div></div>
+            <div class="kpi-card" onclick="loadSection('reports')"><div class="kpi-icon icon-green"><i class="fas fa-chart-bar"></i></div><div class="kpi-label">Revenue</div><div class="kpi-value" id="k4" style="color:var(--green);">-</div><div class="kpi-sub" id="k4s">Today</div></div>
+        </div>
+        <div class="content-grid">
+            <div class="card"><div class="card-title"><i class="fas fa-clock"></i> Recent Activity</div><div id="activity"></div></div>
+            <div class="card"><div class="card-title"><i class="fas fa-bolt"></i> Quick Actions</div>
+                <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="loadSection('workorders');setTimeout(()=>woModal(),300);"><i class="fas fa-plus"></i> New Work Order</button>
+                <button class="btn btn-outline" style="width:100%;margin-bottom:8px;" onclick="loadSection('customers')"><i class="fas fa-user-plus"></i> Register Customer</button>
+                <button class="btn btn-outline" style="width:100%;margin-bottom:8px;" onclick="loadSection('vehicles')"><i class="fas fa-car"></i> Register Vehicle</button>
+                <button class="btn btn-outline" style="width:100%;" onclick="loadSection('inventory')"><i class="fas fa-box"></i> Add Inventory Item</button>
+            </div>
+        </div>`;
+    try {
+        const [o,c,v,m,p] = await Promise.all([api('/work-orders/'),api('/customers/'),api('/vehicles/'),api('/mechanics/'),api('/payments/')]);
+        const wo=L(o),cu=L(c),ve=L(v),me=L(m),pa=L(p);
+        const active=wo.filter(w=>w.status==='In Progress'||w.status==='Awaiting Parts').length;
+        const urgent=wo.filter(w=>w.status==='Awaiting Parts').length;
+        const rev=pa.reduce((s,p)=>s+(parseFloat(p.amount)||0),0);
+        const inService=wo.filter(w=>w.status==='In Progress').length;
+        document.getElementById('k1').textContent=cu.length; document.getElementById('k1s').textContent='Registered';
+        document.getElementById('k2').textContent=ve.length; document.getElementById('k2s').textContent=`${inService} in service`;
+        document.getElementById('k3').textContent=active; document.getElementById('k3s').textContent=`${urgent} urgent`;
+        document.getElementById('k4').textContent='MWK '+rev.toLocaleString();
+        const act=document.getElementById('activity');
+        act.innerHTML=wo.slice(0,5).map(w=>`<div class="activity-item"><span class="activity-dot ${w.status==='Completed'?'dot-green':w.status==='In Progress'?'dot-orange':'dot-blue'}">${w.status==='Completed'?'&#10003;':'&#9679;'}</span><span style="flex:1;">${w.vehicle_info||'Work Order'} #${w.id}</span><span class="tag ${w.status==='Completed'?'tag-done':w.status==='In Progress'?'tag-progress':'tag-parts'}">${w.status}</span></div>`).join('')||'<div class="empty-state"><p>No recent activity</p></div>';
+    } catch(e) {}
+}
+
+// ===== CUSTOMERS =====
+async function cust(){
+    const list = L(await api('/customers/'));
+    document.getElementById('main-content').innerHTML = `
+        <div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Customers</h1></div>
+        <div class="card"><div class="search-wrap"><i class="fas fa-search"></i><input class="search-input" id="cs" placeholder="Search customers..." oninput="FT('cs','cb')"></div>
+        <div class="table-wrapper"><table><thead><tr><th>Customer</th><th>Phone</th><th>Email</th><th>Registered</th><th></th></tr></thead>
+        <tbody id="cb">${list.map(c=>`<tr onclick="custProfile(${c.id},'${c.full_name.replace(/'/g,"\\'")}','${c.phone||''}','${c.email||''}','${c.reference_number||''}')"><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:34px;height:34px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:13px;">${(c.full_name||'?')[0]}</div><div><strong>${c.full_name}</strong><div class="text-mono" style="color:var(--text2);">${c.reference_number||'--'}</div></div></div></td><td><i class="fas fa-phone" style="color:var(--text2);margin-right:6px;"></i>${c.phone||'--'}</td><td><i class="fas fa-envelope" style="color:var(--text2);margin-right:6px;"></i>${c.email||'--'}</td><td>${(c.created_at||'').substring(0,10)}</td><td><i class="fas fa-chevron-right" style="color:var(--text2);"></i></td></tr>`).join('')||'<tr><td colspan="5"><div class="empty-state"><i class="fas fa-users"></i><p>No customers</p></div></td></tr>'}</tbody></table></div></div>`;
+}
+function custProfile(id,name,phone,email,ref){
+    document.getElementById('main-content').innerHTML = `
+        <div class="page-header"><button class="back-btn" onclick="loadSection('customers')"><i class="fas fa-arrow-left"></i> Back</button><h1>Customer Profile</h1></div>
+        <div class="profile-header"><div class="profile-avatar">${name[0]}</div><div><h2 style="font-size:20px;">${name}</h2><p style="color:var(--text2);font-size:12px;">${ref}</p><p style="color:var(--text2);font-size:12px;"><i class="fas fa-phone"></i> ${phone||'N/A'} &middot; <i class="fas fa-envelope"></i> ${email||'N/A'}</p></div></div>
+        <div class="card"><div class="card-title">Vehicles & History</div><p style="color:var(--text2);">Loading...</p></div>`;
+}
+
+// ===== VEHICLES =====
+async function veh(){
+    const list = L(await api('/vehicles/'));
+    document.getElementById('main-content').innerHTML = `
+        <div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Vehicles</h1></div>
+        <div class="card"><div class="search-wrap"><i class="fas fa-search"></i><input class="search-input" id="vs" placeholder="Search by plate, make..." oninput="FT('vs','vb')"></div>
+        <div class="table-wrapper"><table><thead><tr><th>Vehicle</th><th>Plate</th><th>Year</th><th>Mileage</th><th></th></tr></thead>
+        <tbody id="vb">${list.map(v=>`<tr onclick="vehProfile(${v.id},'${v.make||''}','${v.model_name||''}','${v.plate||''}','${v.year||''}',${v.mileage||0})"><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.15);display:flex;align-items:center;justify-content:center;color:var(--purple);"><i class="fas fa-car"></i></div><div><strong>${v.make} ${v.model_name}</strong></div></div></td><td class="text-mono" style="color:var(--orange);font-weight:600;">${v.plate||'--'}</td><td>${v.year||'--'}</td><td>${(v.mileage||0).toLocaleString()} km</td><td><i class="fas fa-chevron-right" style="color:var(--text2);"></i></td></tr>`).join('')||'<tr><td colspan="5"><div class="empty-state"><i class="fas fa-car"></i><p>No vehicles</p></div></td></tr>'}</tbody></table></div></div>`;
+}
+function vehProfile(id,make,model,plate,year,mileage){
+    document.getElementById('main-content').innerHTML = `
+        <div class="page-header"><button class="back-btn" onclick="loadSection('vehicles')"><i class="fas fa-arrow-left"></i> Back</button><h1>Vehicle Profile</h1></div>
+        <div class="profile-header"><div class="profile-avatar" style="background:var(--purple);"><i class="fas fa-car"></i></div><div><h2 style="font-size:20px;">${make} ${model}</h2><p class="text-mono" style="color:var(--orange);font-weight:600;font-size:14px;">${plate}</p><p style="color:var(--text2);font-size:12px;">${year} &middot; ${mileage.toLocaleString()} km</p></div></div>
+        <div class="card"><div class="card-title"><i class="fas fa-history"></i> Service Timeline</div><div class="timeline"><div class="timeline-item">Oil Change — 20 Jul 2026</div><div class="timeline-item">Brake Pads Replaced — 15 Jun 2026</div><div class="timeline-item">Wheel Alignment — 10 May 2026</div></div></div>`;
+}
+
+// ===== WORK ORDERS =====
+async function wo(){
+    const list = L(await api('/work-orders/'));
+    const sc = {'In Progress':'tag-progress','Awaiting Parts':'tag-parts','Ready (Pending Invoice)':'tag-invoice','Completed':'tag-done'};
+    document.getElementById('main-content').innerHTML = `
+        <div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Work Orders</h1><button class="btn btn-primary" onclick="woModal()"><i class="fas fa-plus"></i> New</button></div>
+        <div class="card"><div class="search-wrap"><i class="fas fa-search"></i><input class="search-input" id="woS" placeholder="Search..." oninput="FT('woS','woB')"></div>
+        <div class="table-wrapper"><table><thead><tr><th>SRN</th><th>Vehicle</th><th>Status</th><th>Cost</th><th>Action</th></tr></thead>
+        <tbody id="woB">${list.map(w=>`<tr><td class="text-mono">${w.srn||'BG-'+w.id}</td><td>${w.vehicle_info||w.vehicle||'--'}</td><td><span class="tag ${sc[w.status]||'tag-progress'}">${w.status}</span></td><td class="text-mono">MWK ${parseFloat(w.cost_estimate||0).toLocaleString()}</td><td><select onchange="woUp(${w.id},this.value)" style="padding:6px 10px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:6px;font-size:11px;"><option>Status...</option><option>In Progress</option><option>Awaiting Parts</option><option>Ready (Pending Invoice)</option><option>Completed</option></select></td></tr>`).join('')||'<tr><td colspan="5"><div class="empty-state"><i class="fas fa-clipboard-list"></i><p>No work orders</p></div></td></tr>'}</tbody></table></div></div>`;
+}
+async function woUp(id,s){if(!s)return;await api(`/work-orders/${id}/`,'PATCH',{status:s});loadSection('workorders');}
+function woModal(){
+    const ov=document.createElement('div');ov.className='modal-overlay';
+    ov.innerHTML=`<div class="modal"><div class="modal-title">New Work Order</div>
+        <div class="form-group"><label>Vehicle</label><input id="wv" placeholder="e.g. Toyota Hilux"></div>
+        <div class="form-group"><label>Customer Name</label><input id="wc" placeholder="Customer name"></div>
+        <div class="form-group"><label>Issue Description</label><textarea id="wi"></textarea></div>
+        <div class="form-group"><label>Cost Estimate (MWK)</label><input id="wk" type="number" value="0"></div>
+        <div class="form-actions"><button class="btn btn-outline" onclick="this.closest('.modal-overlay').remove()">Cancel</button><button class="btn btn-primary" onclick="woCr()">Create</button></div></div>`;
+    document.body.appendChild(ov);
+    ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
+}
+async function woCr(){
+    const v=document.getElementById('wv').value,c=document.getElementById('wc').value;
+    const i=document.getElementById('wi').value,k=document.getElementById('wk').value;
+    if(!v||!c)return alert('Vehicle and customer required');
+    await api('/work-orders/','POST',{vehicle_info:v,customer_name:c,issue_description:i,cost_estimate:parseFloat(k||0)});
+    document.querySelector('.modal-overlay').remove();loadSection('workorders');
+}
+
+// ===== MECHANICS =====
+async function mech(){
+    const list = L(await api('/mechanics/'));
+    document.getElementById('main-content').innerHTML = `
+        <div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Mechanics</h1></div>
+        <div class="card"><div class="table-wrapper"><table><thead><tr><th>Mechanic</th><th>Skills</th><th>Phone</th><th>Status</th></tr></thead>
+        <tbody>${list.map(m=>`<tr><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:34px;height:34px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:13px;">${(m.full_name||m.username||'?')[0]}</div><strong>${m.full_name||m.username||'--'}</strong></div></td><td>${m.skills||'--'}</td><td>${m.phone||'--'}</td><td><span class="tag ${m.is_available?'tag-done':'tag-progress'}">${m.is_available?'Available':'Busy'}</span></td></tr>`).join('')||'<tr><td colspan="4"><div class="empty-state"><i class="fas fa-user-cog"></i><p>No mechanics</p></div></td></tr>'}</tbody></table></div></div>`;
+}
+
+// ===== INVENTORY =====
+async function inv(){
+    const list = L(await api('/inventory/'));
+    document.getElementById('main-content').innerHTML = `
+        <div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Inventory</h1></div>
+        <div class="card"><div class="search-wrap"><i class="fas fa-search"></i><input class="search-input" id="is" placeholder="Search parts..." oninput="FT('is','ib')"></div>
+        <div class="table-wrapper"><table><thead><tr><th>Part</th><th>Qty</th><th>Min</th><th>Price</th><th>Status</th></tr></thead>
+        <tbody id="ib">${list.map(i=>{const lo=i.quantity<i.min_threshold;return`<tr><td><strong>${i.part_name}</strong></td><td class="text-mono" style="color:${lo?'var(--red)':'var(--green)'};font-weight:600;">${i.quantity}</td><td>${i.min_threshold}</td><td class="text-mono">MWK ${parseFloat(i.unit_price||0).toLocaleString()}</td><td><span class="tag ${lo?'tag-parts':'tag-done'}">${lo?'Low Stock':'In Stock'}</span></td></tr>`;}).join('')||'<tr><td colspan="5"><div class="empty-state"><i class="fas fa-boxes"></i><p>No items</p></div></td></tr>'}</tbody></table></div></div>`;
+}
+
+// ===== APPOINTMENTS =====
+async function appt(){
+    const list = L(await api('/appointments/'));
+    document.getElementById('main-content').innerHTML = `
+        <div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Appointments</h1></div>
+        <div class="card"><div class="table-wrapper"><table><thead><tr><th>Date</th><th>Time</th><th>Customer</th><th>Reason</th></tr></thead>
+        <tbody>${list.map(a=>`<tr><td>${a.date||'--'}</td><td class="text-mono" style="color:var(--orange);font-weight:600;">${a.time||'--:--'}</td><td><strong>${a.customer_name||a.customer||'--'}</strong></td><td>${a.reason||'--'}</td></tr>`).join('')||'<tr><td colspan="4"><div class="empty-state"><i class="fas fa-calendar-alt"></i><p>No appointments</p></div></td></tr>'}</tbody></table></div></div>`;
+}
+
+// ===== PAYMENTS =====
+async function pay(){
+    const list = L(await api('/payments/'));
+    document.getElementById('main-content').innerHTML = `
+        <div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Payments</h1></div>
+        <div class="card"><div class="table-wrapper"><table><thead><tr><th>Ref</th><th>Amount</th><th>Method</th><th>Date</th></tr></thead>
+        <tbody>${list.map(p=>`<tr><td class="text-mono">${p.transaction_ref||'--'}</td><td class="text-mono" style="color:var(--green);font-weight:600;">MWK ${parseFloat(p.amount||0).toLocaleString()}</td><td>${p.payment_method||'--'}</td><td>${(p.created_at||'').substring(0,10)}</td></tr>`).join('')||'<tr><td colspan="4"><div class="empty-state"><i class="fas fa-money-bill-wave"></i><p>No payments</p></div></td></tr>'}</tbody></table></div></div>`;
+}
+
+// ===== INVOICES =====
+async function invc(){
+    const list = L(await api('/invoices/'));
+    const sc={paid:'tag-done',sent:'tag-invoice',draft:'tag-parts',cancelled:'tag-cancelled'};
+    document.getElementById('main-content').innerHTML = `
+        <div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Invoices</h1></div>
+        <div class="card"><div class="table-wrapper"><table><thead><tr><th>Invoice #</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody>${list.map(i=>`<tr><td class="text-mono">${i.invoice_number||'INV-'+i.id}</td><td><strong>${i.customer_name||'--'}</strong></td><td class="text-mono" style="color:var(--green);font-weight:600;">MWK ${parseFloat(i.total_amount||0).toLocaleString()}</td><td><span class="tag ${sc[i.status]||'tag-progress'}">${(i.status||'draft').toUpperCase()}</span></td></tr>`).join('')||'<tr><td colspan="4"><div class="empty-state"><i class="fas fa-file-invoice"></i><p>No invoices</p></div></td></tr>'}</tbody></table></div></div>`;
+}
+
+// ===== REPORTS =====
+async function rpt(){
+    document.getElementById('main-content').innerHTML = `<div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Reports</h1></div><div style="text-align:center;padding:40px;"><div class="loading-spinner"></div></div>`;
+    try{
+        const [o,p,m]=await Promise.all([api('/work-orders/'),api('/payments/'),api('/mechanics/')]);
+        const wo=L(o),pa=L(p),me=L(m);
+        const rev=pa.reduce((s,p)=>s+(parseFloat(p.amount)||0),0),comp=wo.filter(w=>w.status==='Completed').length,act=wo.filter(w=>w.status==='In Progress'||w.status==='Awaiting Parts').length,avg=comp>0?Math.round(rev/comp):0;
+        const st={'In Progress':0,'Awaiting Parts':0,'Ready (Pending Invoice)':0,'Completed':0};wo.forEach(w=>{if(st[w.status]!==undefined)st[w.status]++;});
+        const mt={};pa.forEach(p=>{const m=p.payment_method||'Other';mt[m]=(mt[m]||0)+parseFloat(p.amount||0);});
+        const it={};wo.forEach(w=>{const k=(w.issue_description||'General').split(' ').slice(0,3).join(' ');it[k]=(it[k]||0)+1;});
+        const top=Object.entries(it).sort((a,b)=>b[1]-a[1]).slice(0,6);
+        document.getElementById('main-content').innerHTML = `<div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Reports & Analytics</h1></div>
+            <div class="kpi-grid"><div class="kpi-card"><div class="kpi-label">Total Revenue</div><div class="kpi-value" style="color:var(--green);">MWK ${rev.toLocaleString()}</div></div><div class="kpi-card"><div class="kpi-label">Completed</div><div class="kpi-value" style="color:var(--blue);">${comp}</div></div><div class="kpi-card"><div class="kpi-label">Avg Value</div><div class="kpi-value" style="color:var(--orange);">MWK ${avg.toLocaleString()}</div></div><div class="kpi-card"><div class="kpi-label">Active</div><div class="kpi-value" style="color:var(--purple);">${act}</div></div></div>
+            <div class="content-grid"><div class="card"><div class="card-title"><i class="fas fa-chart-bar"></i> Revenue by Method</div><div style="height:280px;"><canvas id="c1"></canvas></div></div><div class="card"><div class="card-title"><i class="fas fa-chart-pie"></i> Job Status</div><div style="height:280px;"><canvas id="c2"></canvas></div></div><div class="card"><div class="card-title"><i class="fas fa-chart-line"></i> Common Repairs</div><div style="height:280px;"><canvas id="c3"></canvas></div></div><div class="card"><div class="card-title"><i class="fas fa-user-check"></i> Mechanic Workload</div><div style="height:280px;"><canvas id="c4"></canvas></div></div></div>`;
+        setTimeout(()=>{
+            const o={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#888'}}},scales:{x:{ticks:{color:'#888'},grid:{color:'#222'}},y:{ticks:{color:'#888'},grid:{color:'#222'}}}};
+            new Chart(document.getElementById('c1'),{type:'bar',data:{labels:Object.keys(mt),datasets:[{label:'Revenue (MWK)',data:Object.values(mt),backgroundColor:['#FF6F00','#3B82F6','#22C55E','#8B5CF6','#F59E0B'],borderRadius:6}]},options:o});
+            new Chart(document.getElementById('c2'),{type:'doughnut',data:{labels:Object.keys(st),datasets:[{data:Object.values(st),backgroundColor:['#FF6F00','#F59E0B','#3B82F6','#22C55E'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',padding:15}}}}});
+            new Chart(document.getElementById('c3'),{type:'line',data:{labels:top.map(i=>i[0]),datasets:[{label:'Occurrences',data:top.map(i=>i[1]),borderColor:'#FF6F00',backgroundColor:'rgba(255,111,0,0.1)',fill:true,tension:0.4,pointBackgroundColor:'#FF6F00'}]},options:o});
+            const md=me.slice(0,8).map(m=>({name:m.full_name||m.username||'N/A',jobs:wo.filter(w=>w.mechanic==m.user).length||1}));
+            new Chart(document.getElementById('c4'),{type:'polarArea',data:{labels:md.map(m=>m.name),datasets:[{data:md.map(m=>m.jobs),backgroundColor:['#FF6F00','#3B82F6','#22C55E','#8B5CF6','#F59E0B','#EF4444','#EC4899','#14B8A6'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',padding:10}}}}});
+        },500);
+    }catch(e){document.getElementById('main-content').innerHTML=`<div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Reports</h1></div><div class="empty-state"><i class="fas fa-chart-bar"></i><p>No data yet</p></div>`;}
+}
+
+// ===== AI =====
+async function aid(){
+    document.getElementById('main-content').innerHTML = `
+        <div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>AI Diagnostics</h1></div>
+        <div class="card" style="max-width:560px;"><div class="card-title"><i class="fas fa-robot"></i> Fault Code Analyzer</div>
+        <div class="form-group"><label>OBD-II Code</label><input id="ac" placeholder="e.g. P0300" maxlength="5" style="text-transform:uppercase;"></div>
+        <div class="form-group"><label>Vehicle (optional)</label><input id="av" placeholder="e.g. Toyota Hilux 2018"></div>
+        <button class="btn btn-primary" onclick="runAI()"><i class="fas fa-search"></i> Run Diagnosis</button><div id="ar" style="margin-top:14px;"></div></div>`;
+}
+async function runAI(){
+    const c=document.getElementById('ac').value,v=document.getElementById('av').value,el=document.getElementById('ar');
+    if(!c){el.innerHTML='<p style="color:var(--red);">Enter a code</p>';return;}
+    el.innerHTML='<div class="loading-spinner"></div>';
+    try{
+        const d=await api('/ai/diagnose/','POST',{code:c,vehicle:v});
+        const sc={Critical:'var(--red)',High:'var(--orange)',Medium:'var(--amber)',Low:'var(--green)'};
+        el.innerHTML=`<div style="padding:18px;background:var(--surface2);border-radius:10px;border-left:4px solid ${sc[d.severity]||'var(--blue)'};margin-top:12px;"><h3>${d.title}</h3><p style="font-size:12px;color:var(--text2);margin:8px 0;">Severity: <strong>${d.severity}</strong> &middot; Cost: <strong>${d.estimated_cost}</strong></p><ol style="padding-left:18px;font-size:13px;line-height:2;">${d.details.map(x=>`<li>${x}</li>`).join('')}</ol></div>`;
+    }catch(e){el.innerHTML=`<p style="color:var(--red);">${e.message}</p>`;}
+}
+
+// ===== NOTIFICATIONS =====
+async function notif(){
+    const list=L(await api('/notifications/'));
+    document.getElementById('main-content').innerHTML=`<div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Notifications</h1><button class="btn btn-outline" onclick="markAll()">Mark All Read</button></div>
+        <div class="card">${list.map(n=>`<div class="activity-item" style="opacity:${n.is_read?0.5:1};"><span class="activity-dot" style="background:${n.priority==='urgent'?'var(--red)':n.priority==='high'?'var(--orange)':'var(--blue)'};"></span><span style="flex:1;"><strong>${n.title}</strong><span style="font-size:11px;color:var(--text2);display:block;">${n.message}</span></span>${!n.is_read?`<button class="btn btn-outline" style="font-size:10px;padding:4px 10px;" onclick="mr(${n.id})">Read</button>`:''}</div>`).join('')||'<div class="empty-state"><i class="fas fa-bell"></i><p>No notifications</p></div>'}</div>`;
+    window._nl=list;
+}
+async function mr(id){await api(`/notifications/${id}/`,'PATCH',{is_read:true});loadSection('notifications');}
+async function markAll(){for(const n of(window._nl||[])){if(!n.is_read)await api(`/notifications/${n.id}/`,'PATCH',{is_read:true});}loadSection('notifications');}
+
+// ===== SETTINGS =====
+async function sett(){
+    document.getElementById('main-content').innerHTML=`
+        <div class="page-header"><button class="back-btn" onclick="loadSection('dashboard')"><i class="fas fa-arrow-left"></i> Back</button><h1>Settings</h1></div>
+        <div class="card" style="max-width:480px;"><table style="width:100%;"><tr><td style="padding:10px 0;color:var(--text2);">Platform</td><td>AutoGarage Pro v2.0</td></tr><tr><td style="padding:10px 0;color:var(--text2);">Status</td><td style="color:var(--green);">Connected</td></tr></table>
+        <button class="btn btn-outline" style="width:100%;margin-top:14px;" onclick="testConn()">Test Connection</button>
+        <button class="btn btn-danger" style="width:100%;margin-top:8px;" onclick="logout()">Sign Out</button><div id="tr" style="margin-top:10px;font-size:12px;"></div></div>`;
+}
+async function testConn(){const e=document.getElementById('tr');e.innerHTML='<div class="loading-spinner"></div>';const s=Date.now();try{await api('/dashboard/');e.innerHTML=`<span style="color:var(--green);">Connected (${Date.now()-s}ms)</span>`;}catch(x){e.innerHTML=`<span style="color:var(--red);">${x.message}</span>`;}}
+
+// Helpers
+function FT(s,t){const q=document.getElementById(s).value.toLowerCase();document.querySelectorAll(`#${t} tr`).forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q)?'':'';});}
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const btn = document.getElementById('hamburgerBtn');
+    sidebar.classList.toggle('open');
+    if (sidebar.classList.contains('open')) {
+        btn.innerHTML = '<i class="fas fa-times"></i>';
+    } else {
+        btn.innerHTML = '<i class="fas fa-bars"></i>';
+    }
+}
+
+// Hide hamburger on sub-pages, show on dashboard
+function hideHamburger() {
+    document.getElementById('hamburgerBtn').style.display = 'none';
+}
+function showHamburger() {
+    const btn = document.getElementById('hamburgerBtn');
+    if (window.innerWidth <= 768) {
+        btn.style.display = 'flex';
+        btn.innerHTML = '<i class="fas fa-bars"></i>';
+    }
+}
+
+function logout(){localStorage.removeItem('token');window.location.href='/api/auth/login-page/';}
+
+loadSection('dashboard');
 </script>
 </body>
 </html>
