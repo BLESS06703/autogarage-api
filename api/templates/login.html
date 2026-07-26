@@ -1,193 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In — AutoGarage Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root { --bg:#0D0D0D; --surface:#1A1A1A; --border:#2A2A2A; --text:#E0E0E0; --text2:#888; --orange:#FF6F00; --green:#22C55E; --red:#EF4444; --blue:#3B82F6; }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; display:flex; min-height:100vh; }
-        .split { display:flex; width:100%; }
-        .left { flex:1; background:linear-gradient(160deg,#1A1A1A 0%,#0A0A0A 100%); display:none; align-items:center; justify-content:center; padding:40px; }
-        .left-content { text-align:center; max-width:380px; }
-        .left-content .icon-circle { width:72px; height:72px; border-radius:20px; background:rgba(255,111,0,0.15); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:32px; color:var(--orange); }
-        .left-content h2 { font-size:22px; margin-bottom:8px; }
-        .left-content p { color:var(--text2); font-size:13px; line-height:1.6; }
-        .right { flex:1; display:flex; align-items:center; justify-content:center; padding:30px; }
-        .form-card { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:44px 36px; width:100%; max-width:420px; }
-        .brand { text-align:center; margin-bottom:28px; }
-        .brand h1 { font-size:22px; color:var(--orange); font-weight:700; }
-        .brand span { font-size:11px; color:var(--text2); letter-spacing:1.5px; display:block; margin-top:4px; }
-        .field { margin-bottom:18px; position:relative; }
-        .field label { display:block; font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; font-weight:500; }
-        .field input { width:100%; padding:14px 16px; background:#0A0A0A; border:1.5px solid var(--border); border-radius:10px; color:var(--text); font-size:14px; outline:none; transition:0.2s; }
-        .field input:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(255,111,0,0.1); }
-        .field input.error { border-color:var(--red); }
-        .field .icon-left { display:none; }
-        .field .icon-right { position:absolute; right:14px; top:38px; color:var(--text2); cursor:pointer; font-size:14px; }
-        .field .icon-right:hover { color:var(--text); }
-        .field .error-msg { font-size:10px; color:var(--red); margin-top:4px; display:none; }
-        .field .error-msg.show { display:block; }
-        .options { display:flex; justify-content:space-between; align-items:center; margin:8px 0 22px; font-size:12px; }
-        .options label { display:flex; align-items:center; gap:6px; color:var(--text2); cursor:pointer; }
-        .options input[type=checkbox] { accent-color:var(--orange); width:16px; height:16px; }
-        .btn { width:100%; padding:15px; background:var(--orange); color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; transition:0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
-        .btn:hover { background:#E65100; }
-        .btn:disabled { opacity:0.6; cursor:not-allowed; }
-        .alert { font-size:12px; padding:12px 16px; border-radius:10px; margin-bottom:16px; display:none; align-items:center; gap:8px; }
-        .alert-error { display:flex; background:rgba(239,68,68,0.1); color:var(--red); border:1px solid rgba(239,68,68,0.2); }
-        .alert-success { display:flex; background:rgba(34,197,94,0.1); color:var(--green); border:1px solid rgba(34,197,94,0.2); }
-        .footer-link { text-align:center; margin-top:20px; font-size:13px; color:var(--text2); }
-        .footer-link a { color:var(--orange); text-decoration:none; font-weight:500; }
-        .footer-link a:hover { text-decoration:underline; }
-        @media (min-width:768px) { .left { display:flex; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — AutoGarage Pro</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--bg:#1a1a2e;--surface:#16213e;--border:#1f3460;--text:#e0e0e0;--text2:#8892b0;--accent:#0a84ff;--green:#22c55e;--red:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:36px 28px;width:100%;max-width:380px}
+h1{text-align:center;font-size:20px;font-weight:700;margin-bottom:4px;color:var(--text)}
+.sub{text-align:center;color:var(--text2);font-size:11px;letter-spacing:1px;margin-bottom:24px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.field input{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none}
+.field input:focus{border-color:var(--accent)}
+.field .pw-wrap{position:relative}
+.field .pw-wrap input{padding-right:38px}
+.field .pw-wrap i{position:absolute;right:12px;top:12px;color:var(--text2);cursor:pointer}
+.btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:0.2s}
+.btn:hover{opacity:0.9}
+.btn:disabled{opacity:0.5}
+.msg{font-size:12px;padding:10px;border-radius:6px;margin-bottom:12px;display:none;text-align:center}
+.msg.error{display:block;background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2)}
+.msg.success{display:block;background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)}
+.links{text-align:center;margin-top:14px;font-size:12px;color:var(--text2)}
+.links a{color:var(--accent);text-decoration:none;font-weight:500}
+</style>
 </head>
 <body>
-<div class="split">
-    <div class="left">
-        <div class="left-content">
-            <div class="icon-circle"><i class="fas fa-wrench"></i></div>
-            <h2>Welcome Back</h2>
-            <p>Sign in to manage your workshop, track repairs, and grow your business.</p>
-        </div>
-    </div>
-    <div class="right">
-        <div class="form-card">
-            <div class="brand">
-                <h1>AutoGarage Pro</h1>
-                <span>SIGN IN TO CONTINUE</span>
-            </div>
-            <div id="alert" class="alert"></div>
-            <form id="loginForm" onsubmit="return handleLogin(event)">
-                <div class="field">
-                    <label>Username</label>
-                    <i class="fas fa-user icon-left"></i>
-                    <input type="text" id="username" placeholder="Enter your username" autocomplete="username" required minlength="2">
-                    <div class="error-msg" id="usernameError"></div>
-                </div>
-                <div class="field">
-                    <label>Password</label>
-                    <i class="fas fa-lock icon-left"></i>
-                    <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" required minlength="4">
-                    <i class="fas fa-eye icon-right" id="togglePass" onclick="togglePassword()"></i>
-                    <div class="error-msg" id="passwordError"></div>
-                </div>
-                <div class="options">
-                    <label><input type="checkbox" id="rememberMe"> Remember me</label>
-                </div>
-                <button type="submit" class="btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
-            </form>
-            <div class="footer-link">Don't have an account? <a href="/api/auth/register-page/">Create one</a></div>
-            <div class="footer-link" style="margin-top:8px;"><a href="/"><i class="fas fa-arrow-left"></i> Back to Home</a></div>
-        </div>
-    </div>
+<div class="card">
+<h1>AutoGarage Pro</h1>
+<div class="sub">SIGN IN</div>
+<div id="msg" class="msg"></div>
+<div class="field">
+<label>Username</label>
+<input type="text" id="username" placeholder="Enter username" autocomplete="username">
+</div>
+<div class="field">
+<label>Password</label>
+<div class="pw-wrap">
+<input type="password" id="password" placeholder="Enter password" autocomplete="current-password">
+<i class="fas fa-eye" onclick="var p=document.getElementById('password');p.type=p.type==='password'?'text':'password';this.className=p.type==='password'?'fas fa-eye':'fas fa-eye-slash'"></i>
+</div>
+</div>
+<button class="btn" id="btn" onclick="login()">Sign In</button>
+<div id="dashboardLink" style="text-align:center;margin-top:12px;display:none"></div>
+<div class="links">
+<a href="/api/auth/register-page/">Create account</a> · <a href="/">Home</a>
+</div>
 </div>
 <script>
-const API = '/api';
+var saved=localStorage.getItem('savedUsername');
+if(saved)document.getElementById('username').value=saved;
 
-// Auto-fill saved username
-(function(){
-    var saved = localStorage.getItem('savedUsername');
-    if (saved) { document.getElementById('username').value = saved; document.getElementById('rememberMe').checked = true; }
-    
-    // Check existing token
-    var token = localStorage.getItem('token');
-    if (token) {
-        fetch(API + '/dashboard/', {headers:{'Authorization':'Bearer '+token}})
-            .then(function(r){ if(r.ok) { document.getElementById('msg').className='msg success'; document.getElementById('msg').textContent='Already logged in. Click below to continue.'; document.getElementById('msg').innerHTML+='<br><a href="/api/dashboard-page/" style="color:var(--orange);">Go to Dashboard</a>'; } })
-            .catch(function(){});
-    }
-})();
-
-function togglePassword() {
-    var input = document.getElementById('password');
-    var icon = document.getElementById('togglePass');
-    if (input.type === 'password') { input.type = 'text'; icon.className = 'fas fa-eye-slash icon-right'; }
-    else { input.type = 'password'; icon.className = 'fas fa-eye icon-right'; }
+function show(msg,type){
+var el=document.getElementById('msg');
+el.textContent=msg;
+el.className='msg '+type;
 }
 
-function showAlert(msg, type) {
-    var el = document.getElementById('alert');
-    el.className = 'alert alert-' + type;
-    el.innerHTML = '<i class="fas fa-' + (type==='error'?'exclamation-circle':'check-circle') + '"></i> ' + msg;
+async function login(){
+var u=document.getElementById('username').value.trim();
+var p=document.getElementById('password').value;
+var btn=document.getElementById('btn');
+if(!u)return show('Enter username','error');
+if(!p)return show('Enter password','error');
+btn.disabled=true;btn.textContent='Signing in...';show('','');
+try{
+var res=await fetch('/api/auth/login/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+var data=await res.json();
+if(data.access){
+localStorage.setItem('token',data.access);
+localStorage.setItem('user',JSON.stringify(data));
+localStorage.setItem('savedUsername',u);
+show('Signed in successfully!','success');
+btn.textContent='Done!';
+document.getElementById('dashboardLink').innerHTML='<a href="/api/dashboard-page/" style="display:inline-block;background:var(--accent);color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:600;margin-top:8px">Open Dashboard</a>';
+document.getElementById('dashboardLink').style.display='block';
+}else{
+show(data.error||'Invalid credentials','error');
+btn.disabled=false;btn.textContent='Sign In';
 }
-
-function showFieldError(fieldId, msg) {
-    var el = document.getElementById(fieldId + 'Error');
-    var input = document.getElementById(fieldId);
-    el.textContent = msg;
-    el.classList.add('show');
-    input.classList.add('error');
+}catch(e){
+show('Cannot connect. Check your internet.','error');
+btn.disabled=false;btn.textContent='Sign In';
 }
-
-function clearErrors() {
-    document.getElementById('alert').className = 'alert';
-    ['username','password'].forEach(function(id){
-        document.getElementById(id+'Error').classList.remove('show');
-        document.getElementById(id).classList.remove('error');
-    });
-}
-
-async function handleLogin(e) {
-    e.preventDefault();
-    clearErrors();
-    
-    var username = document.getElementById('username').value.trim();
-    var password = document.getElementById('password').value;
-    var remember = document.getElementById('rememberMe').checked;
-    var btn = document.getElementById('loginBtn');
-    var valid = true;
-
-    if (!username) { showFieldError('username','Username is required'); valid = false; }
-    else if (username.length < 2) { showFieldError('username','Username is too short'); valid = false; }
-    if (!password) { showFieldError('password','Password is required'); valid = false; }
-    else if (password.length < 4) { showFieldError('password','Password is too short'); valid = false; }
-    if (!valid) return false;
-
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
-
-    var controller = new AbortController();
-    var timeout = setTimeout(function(){ controller.abort(); }, 20000);
-
-    try {
-        var res = await fetch(API + '/auth/login/', {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({username:username, password:password}),
-            signal:controller.signal
-        });
-        clearTimeout(timeout);
-        
-        var data = await res.json();
-        
-        if (data.access) {
-            localStorage.setItem('token', data.access);
-            localStorage.setItem('user', JSON.stringify(data));
-            if (remember) { localStorage.setItem('savedUsername', username); }
-            else { localStorage.removeItem('savedUsername'); }
-            showAlert('Login successful! Redirecting...', 'success');
-            btn.innerHTML = '<i class="fas fa-check"></i> Signed In';
-            btn.innerHTML = 'Done!'; document.getElementById('msg').innerHTML += '<br><a href="/api/dashboard-page/" style="color:var(--orange);font-weight:bold;">Go to Dashboard</a>';
-        } else {
-            showAlert(data.error || data.detail || 'Invalid credentials. Please try again.', 'error');
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
-        }
-    } catch(e) {
-        clearTimeout(timeout);
-        if (e.name === 'AbortError') {
-            showAlert('Request timed out. Server may be waking up, please try again.', 'error');
-        } else {
-            showAlert('Network error. Please check your connection.', 'error');
-        }
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
-    }
-    return false;
 }
 </script>
 </body>
