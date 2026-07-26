@@ -132,20 +132,19 @@ async function submitForm(type){
     var val=document.getElementById(f.nameField).value.trim();
     if(!val){alert(f.nameLabel+' is required');return;}
     try{
-        var res = await fetch('/api'+f.endpoint, {
-            method:'POST',
-            headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-            body:JSON.stringify(f.data())
-        });
-        var data = await res.json();
-        if (res.ok) {
+        var data = await api(f.endpoint, 'POST', f.data());
+        if (data && data.id) {
             document.querySelector('.modal-overlay').remove();
-            alert('Created successfully!');
+            alert('Created successfully! ID: ' + data.id);
             loadSection(f.section);
+        } else if (data && data.error) {
+            alert('Error: ' + data.error);
         } else {
-            alert('Error: ' + (data.error || JSON.stringify(data)));
+            document.querySelector('.modal-overlay').remove();
+            alert('Created!');
+            loadSection(f.section);
         }
-    }catch(e){alert('Network error: '+e.message);}
+    }catch(e){alert('Error: '+e.message);}
 }
 </script>
     <style>
@@ -876,20 +875,19 @@ async function submitForm(type){
     var val=document.getElementById(f.nameField).value.trim();
     if(!val){alert(f.nameLabel+' is required');return;}
     try{
-        var res = await fetch('/api'+f.endpoint, {
-            method:'POST',
-            headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-            body:JSON.stringify(f.data())
-        });
-        var data = await res.json();
-        if (res.ok) {
+        var data = await api(f.endpoint, 'POST', f.data());
+        if (data && data.id) {
             document.querySelector('.modal-overlay').remove();
-            alert('Created successfully!');
+            alert('Created successfully! ID: ' + data.id);
             loadSection(f.section);
+        } else if (data && data.error) {
+            alert('Error: ' + data.error);
         } else {
-            alert('Error: ' + (data.error || JSON.stringify(data)));
+            document.querySelector('.modal-overlay').remove();
+            alert('Created!');
+            loadSection(f.section);
         }
-    }catch(e){alert('Network error: '+e.message);}
+    }catch(e){alert('Error: '+e.message);}
 }
 </script>
 </body>
