@@ -35,8 +35,8 @@ if DATABASE_URL:
     import dj_database_url
     DATABASES = {'default': dj_database_url.parse(DATABASE_URL)}
 else:
-    DB_PATH = '/var/data/db.sqlite3'
-    os.makedirs('/var/data', exist_ok=True)
+    DB_PATH = os.environ.get('RENDER', '') and '/var/data/db.sqlite3' or os.path.join(BASE_DIR, 'db.sqlite3')
+    if os.environ.get('RENDER'): os.makedirs('/var/data', exist_ok=True)
     DATABASES = {'default': {'ENGINE':'django.db.backends.sqlite3','NAME':DB_PATH}}
 
 STATIC_URL = '/static/'

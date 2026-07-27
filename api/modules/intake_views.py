@@ -182,3 +182,29 @@ def quick_workorder(request):
         'vehicle_plate': vehicle.plate,
         'status': wo.status
     })
+import qrcode, io, base64
+from django.http import JsonResponse
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def qr_code(request, srn):
+    """Generate QR code for a work order"""
+    garage = get_user_garage(request.user)
+    if not garage: return Response({'error': 'No garage'}, status=403)
+    
+    try:
+        wo = WorkOrder.objects.get(srn=srn, garage=garage)
+    except WorkOrder.DoesNotExist:
+        return Response({'error': 'Not found'}, status=404)
+    
+    qr = qrcode.QRCode(version=1, box_size=10, border=4)
+    qr.add_data(f"WO:{wo.srn}|Vehicle:{wo.vehicle}|Status:{wo.status}|Cost:{wo.cost_estimate}")
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    
+    buf = io.BytesIO()
+    img.save(buf, format='PNG')
+    buf.seek(0)
+    img_b64 = base64.b64encode(buf.read()).decode()
+    
+    return Response({'srn': wo.srn, 'qr_code': img_b64, 'status': wo.status, 'vehicle': str(wo.vehicle)})

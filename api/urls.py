@@ -20,6 +20,7 @@ router.register('service-history', views.ServiceHistoryVS, basename='servicehist
 router.register('diagnostics', views.DiagnosticRecordVS, basename='diagnostic')
 router.register('invoices', views.InvoiceVS, basename='invoice')
 router.register('notifications', views.NotificationVS, basename='notification')
+router.register('audit-logs', views.AuditLogVS, basename='auditlog')
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -40,6 +41,7 @@ urlpatterns = [
     path('charts/mechanics/', chart_views.mechanics_chart),
     path('charts/all/', chart_views.all_charts),
     path('intake/', intake_views.quick_intake),
+    path('qr/<str:srn>/', intake_views.qr_code),
     path('docs/', docs_views.api_docs),
     path('quick-customer/', intake_views.quick_customer),
     path('quick-vehicle/', intake_views.quick_vehicle),
