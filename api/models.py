@@ -257,3 +257,4 @@ class AuditLog(models.Model):
     class Meta: ordering = ['-created_at']
 
     def __str__(self): return f"[{self.action.upper()}] {self.model_name} - {self.user}"
+
