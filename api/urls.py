@@ -46,4 +46,7 @@ urlpatterns = [
     path('quick-customer/', intake_views.quick_customer),
     path('quick-vehicle/', intake_views.quick_vehicle),
     path('quick-workorder/', intake_views.quick_workorder),
+    path('scan-vehicle/', intake_views.scan_vehicle),
+    path('add-staff/', intake_views.add_staff),
+    path('users/', intake_views.list_users),
 ]
