@@ -255,3 +255,24 @@ def add_staff(request):
         'username': user.username,
         'role': role
     })
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_users(request):
+    """List all users/staff for the garage"""
+    garage = get_user_garage(request.user)
+    if not garage:
+        return Response({'error': 'No garage'}, status=403)
+    
+    roles = UserRole.objects.filter(garage=garage).select_related('user')
+    users = []
+    for r in roles:
+        users.append({
+            'id': r.user.id,
+            'username': r.user.username,
+            'full_name': r.user.get_full_name() or r.user.username,
+            'role': r.role,
+            'is_active': r.user.is_active,
+            'date_joined': r.user.date_joined.strftime('%Y-%m-%d')
+        })
+    return Response(users)
