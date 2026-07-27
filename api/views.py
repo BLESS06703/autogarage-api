@@ -370,3 +370,15 @@ def send_notification(garage, type, title, message, priority='medium', user=None
         priority=priority,
         link=link
     )
+
+class AuditLogVS(viewsets.ReadOnlyModelViewSet):
+    serializer_class = AuditLogSerializer
+    permission_classes = [IsGarageMember]
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser: return AuditLog.objects.all()
+        garage = get_user_garage(user)
+        return AuditLog.objects.filter(garage=garage) if garage else AuditLog.objects.none()
+
+def log_activity(garage, user, action, model_name, object_id, description):
+    AuditLog.objects.create(garage=garage, user=user, action=action, model_name=model_name, object_id=object_id, description=description)

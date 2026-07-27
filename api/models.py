@@ -239,3 +239,21 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"[{self.priority.upper()}] {self.title} - {self.garage.name}"
+
+class AuditLog(models.Model):
+    ACTION_CHOICES = [
+        ('create', 'Created'), ('update', 'Updated'), ('delete', 'Deleted'),
+        ('login', 'Login'), ('logout', 'Logout'), ('view', 'Viewed'),
+    ]
+    garage = models.ForeignKey(Garage, on_delete=models.CASCADE, related_name='audit_logs')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    action = models.CharField(max_length=20, choices=ACTION_CHOICES)
+    model_name = models.CharField(max_length=100)
+    object_id = models.IntegerField(null=True, blank=True)
+    description = models.TextField()
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta: ordering = ['-created_at']
+
+    def __str__(self): return f"[{self.action.upper()}] {self.model_name} - {self.user}"
