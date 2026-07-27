@@ -276,3 +276,17 @@ def list_users(request):
             'date_joined': r.user.date_joined.strftime('%Y-%m-%d')
         })
     return Response(users)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def scan_vehicle(request):
+    garage = get_user_garage(request.user)
+    if not garage: return Response({"error": "No garage"}, status=403)
+    plate = request.data.get("plate", "").strip().upper()
+    if not plate: return Response({"error": "Plate required"}, status=400)
+    try:
+        v = Vehicle.objects.get(plate=plate, garage=garage)
+        return Response({"found": True, "id": v.id, "plate": v.plate, "make": v.make, "model_name": v.model_name, "year": v.year, "mileage": v.mileage, "customer_name": v.customer.full_name, "customer_phone": v.customer.phone})
+    except Vehicle.DoesNotExist:
+        return Response({"found": False, "plate": plate, "message": "Not found"})
+
