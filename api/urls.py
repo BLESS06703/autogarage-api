@@ -40,4 +40,7 @@ urlpatterns = [
     path('charts/mechanics/', chart_views.mechanics_chart),
     path('charts/all/', chart_views.all_charts),
     path('intake/', intake_views.quick_intake),
+    path('quick-customer/', intake_views.quick_customer),
+    path('quick-vehicle/', intake_views.quick_vehicle),
+    path('quick-workorder/', intake_views.quick_workorder),
 ]
