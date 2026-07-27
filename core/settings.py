@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.environ.get('SECRET_KEY', 'blessgarage-secret-2024')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-me-in-production')
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 ALLOWED_HOSTS = ['*', 'autogarage-api-wwj4.onrender.com', '.onrender.com']
 
