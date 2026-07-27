@@ -51,3 +51,5 @@ REST_FRAMEWORK = {
 
 from datetime import timedelta
 SIMPLE_JWT = {'ACCESS_TOKEN_LIFETIME':timedelta(hours=24),'REFRESH_TOKEN_LIFETIME':timedelta(days=7)}
+
+REST_FRAMEWORK['DEFAULT_SCHEMA_CLASS'] = 'rest_framework.schemas.openapi.AutoSchema'

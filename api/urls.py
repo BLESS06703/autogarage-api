@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
-from .modules import auth_views, dashboard_views, report_views, ai_views, chart_views, intake_views
+from .modules import auth_views, dashboard_views, report_views, ai_views, chart_views, intake_views, docs_views, docs_views
 
 router = DefaultRouter()
 router.register('garages', views.GarageVS, basename='garage')
@@ -40,6 +40,7 @@ urlpatterns = [
     path('charts/mechanics/', chart_views.mechanics_chart),
     path('charts/all/', chart_views.all_charts),
     path('intake/', intake_views.quick_intake),
+    path('docs/', docs_views.api_docs),
     path('quick-customer/', intake_views.quick_customer),
     path('quick-vehicle/', intake_views.quick_vehicle),
     path('quick-workorder/', intake_views.quick_workorder),
