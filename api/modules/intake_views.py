@@ -208,3 +208,50 @@ def qr_code(request, srn):
     img_b64 = base64.b64encode(buf.read()).decode()
     
     return Response({'srn': wo.srn, 'qr_code': img_b64, 'status': wo.status, 'vehicle': str(wo.vehicle)})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_staff(request):
+    """Add a mechanic or staff member"""
+    from django.contrib.auth.models import User
+    garage = get_user_garage(request.user)
+    if not garage:
+        return Response({'error': 'No garage'}, status=403)
+    
+    username = request.data.get('username', '').strip()
+    password = request.data.get('password', '').strip()
+    full_name = request.data.get('full_name', '').strip()
+    role = request.data.get('role', 'mechanic').strip()
+    skills = request.data.get('skills', '').strip()
+    phone = request.data.get('phone', '').strip()
+    
+    if not username or not password:
+        return Response({'error': 'Username and password required'}, status=400)
+    
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Username already exists'}, status=400)
+    
+    user = User.objects.create_user(username=username, password=password)
+    if full_name:
+        name_parts = full_name.split(' ', 1)
+        user.first_name = name_parts[0]
+        if len(name_parts) > 1:
+            user.last_name = name_parts[1]
+        user.save()
+    
+    # Assign role
+    UserRole.objects.create(user=user, role=role, garage=garage)
+    
+    # Create mechanic profile if role is mechanic
+    if role == 'mechanic':
+        MechanicProfile.objects.create(
+            user=user, garage=garage,
+            skills=skills, phone=phone, is_available=True
+        )
+    
+    return Response({
+        'message': f'{role.title()} created',
+        'user_id': user.id,
+        'username': user.username,
+        'role': role
+    })
