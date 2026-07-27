@@ -5,3 +5,5 @@ djangorestframework-simplejwt
 gunicorn
 dj-database-url
 psycopg2-binary
+qrcode
+pillow
