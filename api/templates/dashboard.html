@@ -150,18 +150,7 @@ th{font-size:9px}
 </aside>
 <div class="user-bar" id="userBar"><div class="user-avatar" id="userAvatar">U</div><div><div class="user-name" id="userName">User</div><div class="user-garage" id="garageName">Garage</div></div></div>
 <main class="main" id="main-content">
-<div id="debugBar" style="background:#333;color:#fff;padding:8px;font-size:11px;position:fixed;bottom:0;left:0;right:0;z-index:9999;text-align:center;"></div>
-<script>
-var dbg = document.getElementById('debugBar');
-dbg.textContent = 'Token: ' + (localStorage.getItem('token') ? 'YES (' + localStorage.getItem('token').substring(0,20) + '...)' : 'NO');
-if (localStorage.getItem('token')) {
-    dbg.textContent += ' | Calling loadSection...';
-    try { loadSection('dashboard'); dbg.textContent += ' DONE'; }
-    catch(e) { dbg.textContent += ' ERROR: ' + e.message; }
-} else {
-    dbg.textContent += ' | Need login';
-}
-</script></main>
+<div id="debugBar" style="background:#333;color:#fff;padding:8px;font-size:11px;position:fixed;bottom:0;left:0;right:0;z-index:9999;text-align:center;"></div></main>
 <button class="fab" onclick="toggleFab()">+</button>
 <div class="fab-menu" id="fabMenu">
 <button class="fab-item" onclick="toggleFab();openForm('workorder')"><i class="fas fa-clipboard-list"></i>New Work Order</button>
@@ -345,6 +334,18 @@ async function notif(){var list=L(await api('/notifications/'));document.getElem
 async function sett(){document.getElementById('main-content').innerHTML='<div class="page-header"><button class="back-btn" onclick="goSection(\'dashboard\')"><i class="fas fa-arrow-left"></i>Back</button><h1><i class="fas fa-cog"></i> Settings</h1></div><div class="card" style="max-width:400px"><p>AutoGarage Pro v2.0</p><p style="color:var(--green)">Connected</p><p style="color:var(--text-muted)">PostgreSQL · Supabase</p><button class="btn btn-outline" style="width:100%;margin-top:16px" onclick="logout()">Sign Out</button></div>';}
 function logout(){localStorage.removeItem('token');window.location.href='/api/auth/login-page/';}
 if(token){loadSection('dashboard');}else{document.getElementById('main-content').innerHTML='<div style="text-align:center;padding:80px 20px"><h2 style="color:var(--text-main)">Sign In Required</h2><p style="color:var(--text-muted);margin:12px 0 20px">Please log in to access your dashboard.</p><a href="/api/auth/login-page/" class="btn btn-primary">Sign In</a></div>';}
+</script>
+<script>
+var dbg = document.getElementById('debugBar');
+dbg.textContent = 'Token: ' + (localStorage.getItem('token') ? 'YES' : 'NO');
+if (localStorage.getItem('token') && typeof loadSection === 'function') {
+    dbg.textContent += ' | Running...';
+    loadSection('dashboard');
+} else if (!localStorage.getItem('token')) {
+    dbg.textContent += ' | Login required';
+} else {
+    dbg.textContent += ' | ERROR: loadSection not a function';
+}
 </script>
 </body>
 </html>
