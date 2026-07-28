@@ -290,3 +290,4 @@ def scan_vehicle(request):
     except Vehicle.DoesNotExist:
         return Response({"found": False, "plate": plate, "message": "Not found"})
 
+
