@@ -149,7 +149,19 @@ th{font-size:9px}
 </div>
 </aside>
 <div class="user-bar" id="userBar"><div class="user-avatar" id="userAvatar">U</div><div><div class="user-name" id="userName">User</div><div class="user-garage" id="garageName">Garage</div></div></div>
-<main class="main" id="main-content"></main>
+<main class="main" id="main-content">
+<div id="debugBar" style="background:#333;color:#fff;padding:8px;font-size:11px;position:fixed;bottom:0;left:0;right:0;z-index:9999;text-align:center;"></div>
+<script>
+var dbg = document.getElementById('debugBar');
+dbg.textContent = 'Token: ' + (localStorage.getItem('token') ? 'YES (' + localStorage.getItem('token').substring(0,20) + '...)' : 'NO');
+if (localStorage.getItem('token')) {
+    dbg.textContent += ' | Calling loadSection...';
+    try { loadSection('dashboard'); dbg.textContent += ' DONE'; }
+    catch(e) { dbg.textContent += ' ERROR: ' + e.message; }
+} else {
+    dbg.textContent += ' | Need login';
+}
+</script></main>
 <button class="fab" onclick="toggleFab()">+</button>
 <div class="fab-menu" id="fabMenu">
 <button class="fab-item" onclick="toggleFab();openForm('workorder')"><i class="fas fa-clipboard-list"></i>New Work Order</button>
