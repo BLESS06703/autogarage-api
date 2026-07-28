@@ -161,7 +161,7 @@ th{font-size:9px}
 <button class="fab-item" onclick="toggleFab();openForm('invoice')"><i class="fas fa-file-invoice"></i>New Invoice</button>
 </div>
 <script>
-var API='https://autogarage-api-wwj4.onrender.com/api',token=localStorage.getItem('token');
+var API=window.location.hostname.includes('localhost')||window.location.hostname.includes('127.0.0.1')?'http://localhost:8000/api':'https://autogarage-api-wwj4.onrender.com/api',token=localStorage.getItem('token');
 var currentUser=JSON.parse(localStorage.getItem('user')||'{}');
 if(currentUser.username){document.getElementById('userName').textContent=currentUser.username;document.getElementById('userAvatar').textContent=currentUser.username[0].toUpperCase();}
 if(currentUser.garage_name)document.getElementById('garageName').textContent=currentUser.garage_name+(currentUser.role?' - '+currentUser.role:'');
