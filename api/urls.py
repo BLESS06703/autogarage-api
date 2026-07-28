@@ -49,4 +49,6 @@ urlpatterns = [
     path('scan-vehicle/', intake_views.scan_vehicle),
     path('add-staff/', intake_views.add_staff),
     path('users/', intake_views.list_users),
+    path('upload-file/', intake_views.upload_file),
+    path('files/', intake_views.list_files),
 ]

@@ -291,3 +291,72 @@ def scan_vehicle(request):
         return Response({"found": False, "plate": plate, "message": "Not found"})
 
 
+import uuid
+from django.core.files.storage import default_storage
+from django.conf import settings
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def upload_file(request):
+    """Upload a file (vehicle photo, document, etc.)"""
+    garage = get_user_garage(request.user)
+    if not garage:
+        return Response({'error': 'No garage'}, status=403)
+    
+    uploaded = request.FILES.get('file')
+    if not uploaded:
+        return Response({'error': 'No file provided'}, status=400)
+    
+    # Validate file type
+    allowed = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
+    if uploaded.content_type not in allowed:
+        return Response({'error': f'File type {uploaded.content_type} not allowed. Use JPEG, PNG, WebP, or PDF.'}, status=400)
+    
+    # Validate size (max 10MB)
+    if uploaded.size > 10 * 1024 * 1024:
+        return Response({'error': 'File too large. Maximum 10MB.'}, status=400)
+    
+    # Generate unique filename
+    ext = uploaded.name.split('.')[-1] if '.' in uploaded.name else 'file'
+    filename = f"{garage.id}/{uuid.uuid4().hex}.{ext}"
+    
+    # Save file
+    path = default_storage.save(f'uploads/{filename}', uploaded)
+    url = f"{settings.MEDIA_URL}{path}"
+    
+    # Optionally save reference in GarageFile model
+    file_type = 'image' if uploaded.content_type.startswith('image/') else 'document'
+    GarageFile.objects.create(
+        garage=garage,
+        uploaded_by=request.user,
+        filename=uploaded.name,
+        file_type=file_type,
+        size=uploaded.size
+    )
+    
+    return Response({
+        'message': 'File uploaded',
+        'filename': uploaded.name,
+        'url': request.build_absolute_uri(url),
+        'size': uploaded.size,
+        'type': file_type
+    })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_files(request):
+    """List files for the garage"""
+    garage = get_user_garage(request.user)
+    if not garage:
+        return Response({'error': 'No garage'}, status=403)
+    
+    files = GarageFile.objects.filter(garage=garage).order_by('-uploaded_at')[:50]
+    return Response([{
+        'id': f.id,
+        'filename': f.filename,
+        'file_type': f.file_type,
+        'size': f.size,
+        'uploaded_at': f.uploaded_at.strftime('%Y-%m-%d %H:%M'),
+        'uploaded_by': f.uploaded_by.username if f.uploaded_by else None
+    } for f in files])

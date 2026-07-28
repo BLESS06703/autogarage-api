@@ -76,3 +76,30 @@ def notify_payment(sender, instance, created, **kwargs):
             'medium',
             link=f'/payments/'
         )
+from django.core.mail import send_mail
+from django.conf import settings
+
+def send_email_notification(subject, message, recipient_list):
+    """Send email notification — configure SMTP in settings for production"""
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=recipient_list,
+            fail_silently=True
+        )
+    except Exception:
+        pass  # Email is optional — don't break if SMTP not configured
+
+# Add email notification to work order status changes
+@receiver(post_save, sender=WorkOrder)
+def email_workorder_update(sender, instance, **kwargs):
+    if instance.status == 'Completed':
+        customer = instance.vehicle.customer
+        if customer.email:
+            send_email_notification(
+                f'Work Order {instance.srn} Completed',
+                f'Your vehicle {instance.vehicle} is ready for pickup.\nTotal: MWK {instance.cost_estimate}',
+                [customer.email]
+            )

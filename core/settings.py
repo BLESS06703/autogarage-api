@@ -52,3 +52,11 @@ REST_FRAMEWORK = {
 
 from datetime import timedelta
 SIMPLE_JWT = {'ACCESS_TOKEN_LIFETIME':timedelta(hours=24),'REFRESH_TOKEN_LIFETIME':timedelta(days=7)}
+
+# File uploads
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+
+# Email — configure for production
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@autogaragepro.com'

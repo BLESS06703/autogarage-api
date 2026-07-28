@@ -132,6 +132,7 @@ th{font-size:9px}
 <button class="nav-item" data-section="workorders"><i class="fas fa-clipboard-list"></i>Work Orders</button>
 <button class="nav-item" data-section="mechanics"><i class="fas fa-user-cog"></i>Mechanics</button>
 <button class="nav-item" data-section="inventory"><i class="fas fa-boxes"></i>Inventory</button>
+<button class="nav-item" data-section="files"><i class="fas fa-folder"></i>Files</button>
 <div class="nav-section">Finance</div>
 <button class="nav-item" data-section="invoices"><i class="fas fa-file-invoice"></i>Invoices</button>
 <button class="nav-item" data-section="payments"><i class="fas fa-money-bill-wave"></i>Payments</button>
@@ -200,7 +201,7 @@ document.body.appendChild(ov);
 document.getElementById('fbSubmit').addEventListener('click',async function(){var btn=this;btn.disabled=true;btn.textContent='Saving...';try{await f.create();}catch(err){var box=ov.querySelector('.form-error');if(!box){box=document.createElement('div');box.className='form-error';ov.querySelector('.modal').insertBefore(box,ov.querySelector('.form-actions'));}box.textContent=err.message;btn.disabled=false;btn.textContent='Create';}});
 ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
 }
-async function loadSection(s){var m=document.getElementById('main-content');m.innerHTML='<div class="loading-spinner"></div>';try{if(s==='dashboard')await dash();else if(s==='workorders')await wo();else if(s==='customers')await cust();else if(s==='vehicles')await veh();else if(s==='mechanics')await mech();else if(s==='inventory')await inv();else if(s==='appointments')await appt();else if(s==='payments')await pay();else if(s==='invoices')await invc();else if(s==='reports')await rpt();else if(s==='ai')await aid();else if(s==='scanner')await scanner();else if(s==='notifications')await notif();else if(s==='users')await usersPage();else if(s==='help')await helpPage();else if(s==='settings')await sett();}catch(e){m.innerHTML='<div class="empty-state"><p>Error: '+e.message+'</p></div>';}}
+async function loadSection(s){var m=document.getElementById('main-content');m.innerHTML='<div class="loading-spinner"></div>';try{if(s==='dashboard')await dash();else if(s==='workorders')await wo();else if(s==='customers')await cust();else if(s==='vehicles')await veh();else if(s==='mechanics')await mech();else if(s==='inventory')await inv();else if(s==='appointments')await appt();else if(s==='payments')await pay();else if(s==='invoices')await invc();else if(s==='reports')await rpt();else if(s==='ai')await aid();else if(s==='scanner')await scanner();else if(s==='notifications')await notif();else if(s==='users')await usersPage();else if(s==='help')await helpPage();else if(s==='files')await filesPage();else if(s==='settings')await sett();}catch(e){m.innerHTML='<div class="empty-state"><p>Error: '+e.message+'</p></div>';}}
 var _dashCharts={};
 function killChart(id){if(_dashCharts[id]){_dashCharts[id].destroy();delete _dashCharts[id];}}
 async function dash(){
@@ -316,6 +317,52 @@ catch(e){document.getElementById('usersTbody').innerHTML='<tr><td colspan="3"><d
 async function helpPage(){document.getElementById('main-content').innerHTML='<div class="page-header"><button class="back-btn" onclick="goSection(\'dashboard\')"><i class="fas fa-arrow-left"></i>Back</button><h1><i class="fas fa-circle-question"></i> Help</h1></div><div class="card"><div class="empty-state"><p>Need a hand? Reach out to your garage administrator.</p></div></div>';}
 async function notif(){var list=L(await api('/notifications/'));document.getElementById('main-content').innerHTML='<div class="page-header"><button class="back-btn" onclick="goSection(\'dashboard\')"><i class="fas fa-arrow-left"></i>Back</button><h1><i class="fas fa-bell"></i> Notifications</h1></div><div class="card">'+(list.length?list.map(function(n){return'<div style="padding:10px 0;border-bottom:1px solid var(--border-subtle);opacity:'+(n.is_read?0.5:1)+'"><strong>'+n.title+'</strong><div style="font-size:11px;color:var(--text-muted)">'+n.message+'</div></div>';}).join(''):'<div class="empty-state"><p>No notifications</p></div>')+'</div>';}
 async function sett(){document.getElementById('main-content').innerHTML='<div class="page-header"><button class="back-btn" onclick="goSection(\'dashboard\')"><i class="fas fa-arrow-left"></i>Back</button><h1><i class="fas fa-cog"></i> Settings</h1></div><div class="card" style="max-width:400px"><p>AutoGarage Pro v2.0</p><p style="color:var(--green)">Connected</p><p style="color:var(--text-muted)">PostgreSQL · Supabase</p><button class="btn btn-outline" style="width:100%;margin-top:16px" onclick="logout()">Sign Out</button></div>';}
+
+async function deleteItem(type, id) {
+    if (!confirm('Delete this ' + type + '?')) return;
+    try {
+        await api('/' + type + '/' + id + '/', 'DELETE');
+        showToast(type + ' deleted');
+        goSection(type === 'work-orders' ? 'workorders' : type);
+    } catch(e) { showToast('Failed: ' + e.message, 'error'); }
+}
+function showToast(msg, type) {
+    var t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:'+(type==='error'?'var(--red)':'var(--green)')+';color:#fff;padding:10px 20px;border-radius:8px;z-index:9999;font-size:13px';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 3000);
+}
+
+
+async function filesPage(){
+    document.getElementById('main-content').innerHTML='<div class="page-header"><button class="back-btn" onclick="goSection(\'dashboard\')"><i class="fas fa-arrow-left"></i>Back</button><h1><i class="fas fa-folder"></i> Files</h1></div><div class="card"><input type="file" id="fileInput" style="margin-bottom:12px"><button class="btn btn-primary" onclick="uploadFile()">Upload</button><div id="fileList" style="margin-top:14px"><div class="loading-spinner"></div></div></div>';
+    loadFiles();
+}
+async function loadFiles(){
+    try {
+        var list = L(await api('/files/'));
+        var html = list.length ? list.map(function(f){
+            return '<div style="padding:8px 0;border-bottom:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center"><span>'+f.filename+' <span style="color:var(--text-muted);font-size:10px">'+f.file_type+' · '+Math.round(f.size/1024)+'KB</span></span><button class="btn btn-sm" style="color:var(--red)" onclick="deleteItem(\'files\','+f.id+')">Delete</button></div>';
+        }).join('') : '<div class="empty-state"><p>No files uploaded</p></div>';
+        document.getElementById('fileList').innerHTML = html;
+    } catch(e) {
+        document.getElementById('fileList').innerHTML = '<p style="color:var(--red)">Failed to load files</p>';
+    }
+}
+async function uploadFile(){
+    var input = document.getElementById('fileInput');
+    var file = input.files[0];
+    if (!file) { alert('Select a file'); return; }
+    var form = new FormData();
+    form.append('file', file);
+    try {
+        var res = await fetch(API+'/upload-file/', {method:'POST',headers:{'Authorization':'Bearer '+token},body:form});
+        if (res.ok) { loadFiles(); input.value = ''; }
+        else { alert('Upload failed'); }
+    } catch(e) { alert('Upload failed: '+e.message); }
+}
+
 function logout(){localStorage.removeItem('token');window.location.href='/api/auth/login-page/';}
 if(token){loadSection('dashboard');}else{document.getElementById('main-content').innerHTML='<div style="text-align:center;padding:80px 20px"><h2 style="color:var(--text-main)">Sign In Required</h2><p style="color:var(--text-muted);margin:12px 0 20px">Please log in to access your dashboard.</p><a href="/api/auth/login-page/" class="btn btn-primary">Sign In</a></div>';}
 </script>
