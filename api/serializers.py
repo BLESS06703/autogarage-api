@@ -19,10 +19,36 @@ class VehicleSerializer(serializers.ModelSerializer):
         read_only_fields = ['garage']
 
 class WorkOrderSerializer(serializers.ModelSerializer):
+    vehicle_info = serializers.SerializerMethodField()
+    customer_name = serializers.SerializerMethodField()
+
     class Meta:
         model = WorkOrder
-        fields = '__all__'
+        fields = [
+            'id',
+            'status',
+            'issue_description',
+            'cost_estimate',
+            'srn',
+            'created_at',
+            'completed_at',
+            'vehicle',
+            'garage',
+            'mechanic',
+            'vehicle_info',
+            'customer_name',
+        ]
         read_only_fields = ['garage', 'srn']
+
+    def get_vehicle_info(self, obj):
+        if obj.vehicle:
+            return f"{obj.vehicle.make} {obj.vehicle.model_name} - {obj.vehicle.plate}"
+        return None
+
+    def get_customer_name(self, obj):
+        if obj.vehicle and obj.vehicle.customer:
+            return obj.vehicle.customer.full_name
+        return None
 
 class InventorySerializer(serializers.ModelSerializer):
     class Meta:
