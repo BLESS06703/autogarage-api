@@ -53,6 +53,7 @@ class InventoryItem(models.Model):
     quantity = models.IntegerField(default=0)
     min_threshold = models.IntegerField(default=5)
     unit_price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    image = models.ImageField(upload_to='inventory/', blank=True, null=True)
 
 class Payment(models.Model):
     work_order = models.ForeignKey(WorkOrder, on_delete=models.CASCADE)
