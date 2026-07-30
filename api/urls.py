@@ -51,4 +51,9 @@ urlpatterns = [
     path('users/', intake_views.list_users),
     path('upload-file/', intake_views.upload_file),
     path('files/', intake_views.list_files),
+    path('orders/', intake_views.get_orders),
+    path('checkout/', intake_views.checkout),
+    path('remove-from-cart/', intake_views.remove_from_cart),
+    path('add-to-cart/', intake_views.add_to_cart),
+    path('cart/', intake_views.get_cart),
 ]

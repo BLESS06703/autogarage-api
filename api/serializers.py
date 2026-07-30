@@ -134,3 +134,23 @@ class AuditLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = AuditLog
         fields = '__all__'
+
+class CartItemSerializer(serializers.ModelSerializer):
+    part_name = serializers.CharField(source='inventory_item.part_name', read_only=True)
+    class Meta:
+        model = CartItem
+        fields = ['id', 'inventory_item', 'part_name', 'quantity', 'unit_price', 'total_price']
+
+class CartSerializer(serializers.ModelSerializer):
+    items = CartItemSerializer(many=True, read_only=True)
+    customer_name = serializers.CharField(source='customer.full_name', read_only=True)
+    class Meta:
+        model = Cart
+        fields = ['id', 'customer', 'customer_name', 'garage', 'items', 'is_checked_out', 'created_at']
+
+class OrderSerializer(serializers.ModelSerializer):
+    customer_name = serializers.CharField(source='customer.full_name', read_only=True)
+    items = CartItemSerializer(source='cart.items', many=True, read_only=True)
+    class Meta:
+        model = Order
+        fields = '__all__'

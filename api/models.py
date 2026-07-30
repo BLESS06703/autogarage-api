@@ -259,3 +259,29 @@ class AuditLog(models.Model):
 
     def __str__(self): return f"[{self.action.upper()}] {self.model_name} - {self.user}"
 
+
+class Cart(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='cart')
+    garage = models.ForeignKey(Garage, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_checked_out = models.BooleanField(default=False)
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    inventory_item = models.ForeignKey(InventoryItem, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    unit_price = models.DecimalField(max_digits=12, decimal_places=2)
+    total_price = models.DecimalField(max_digits=12, decimal_places=2)
+
+    def save(self, *args, **kwargs):
+        self.total_price = self.quantity * self.unit_price
+        super().save(*args, **kwargs)
+
+class Order(models.Model):
+    cart = models.OneToOneField(Cart, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    garage = models.ForeignKey(Garage, on_delete=models.CASCADE)
+    total_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    payment_method = models.CharField(max_length=50, default='Cash')
+    payment_status = models.CharField(max_length=20, default='pending', choices=[('pending','Pending'),('paid','Paid'),('cancelled','Cancelled')])
+    created_at = models.DateTimeField(auto_now_add=True)

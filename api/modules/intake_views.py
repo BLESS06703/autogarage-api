@@ -360,3 +360,64 @@ def list_files(request):
         'uploaded_at': f.uploaded_at.strftime('%Y-%m-%d %H:%M'),
         'uploaded_by': f.uploaded_by.username if f.uploaded_by else None
     } for f in files])
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_cart(request):
+    garage = get_user_garage(request.user)
+    if not garage: return Response({'error': 'No garage'}, status=403)
+    cart, _ = Cart.objects.get_or_create(customer__garage=garage, is_checked_out=False, defaults={'customer': Customer.objects.filter(garage=garage).first(), 'garage': garage})
+    return Response(CartSerializer(cart).data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_to_cart(request):
+    garage = get_user_garage(request.user)
+    if not garage: return Response({'error': 'No garage'}, status=403)
+    customer_id = request.data.get('customer_id')
+    inventory_id = request.data.get('inventory_id')
+    quantity = int(request.data.get('quantity', 1))
+    if not customer_id or not inventory_id: return Response({'error': 'customer_id and inventory_id required'}, status=400)
+    try:
+        customer = Customer.objects.get(id=customer_id, garage=garage)
+        inv_item = InventoryItem.objects.get(id=inventory_id, garage=garage)
+    except: return Response({'error': 'Not found'}, status=404)
+    cart, _ = Cart.objects.get_or_create(customer=customer, is_checked_out=False, defaults={'garage': garage})
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, inventory_item=inv_item, defaults={'quantity': quantity, 'unit_price': inv_item.unit_price})
+    if not created: cart_item.quantity += quantity; cart_item.save()
+    return Response(CartSerializer(cart).data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def remove_from_cart(request):
+    item_id = request.data.get('item_id')
+    if not item_id: return Response({'error': 'item_id required'}, status=400)
+    CartItem.objects.filter(id=item_id).delete()
+    return Response({'message': 'Removed'})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def checkout(request):
+    garage = get_user_garage(request.user)
+    if not garage: return Response({'error': 'No garage'}, status=403)
+    cart_id = request.data.get('cart_id')
+    payment_method = request.data.get('payment_method', 'Cash')
+    if not cart_id: return Response({'error': 'cart_id required'}, status=400)
+    try: cart = Cart.objects.get(id=cart_id, garage=garage, is_checked_out=False)
+    except: return Response({'error': 'Cart not found'}, status=404)
+    total = sum(float(item.total_price) for item in cart.items.all())
+    order = Order.objects.create(cart=cart, customer=cart.customer, garage=garage, total_amount=total, payment_method=payment_method, payment_status='pending')
+    cart.is_checked_out = True; cart.save()
+    for item in cart.items.all():
+        item.inventory_item.quantity -= item.quantity
+        item.inventory_item.save()
+    Payment.objects.create(work_order=None, amount=total, payment_method=payment_method, transaction_ref=f'ORD-{order.id}')
+    return Response(OrderSerializer(order).data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_orders(request):
+    garage = get_user_garage(request.user)
+    if not garage: return Response({'error': 'No garage'}, status=403)
+    orders = Order.objects.filter(garage=garage).order_by('-created_at')
+    return Response(OrderSerializer(orders, many=True).data)
