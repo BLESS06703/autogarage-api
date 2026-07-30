@@ -366,10 +366,14 @@ def list_files(request):
 def get_cart(request):
     garage = get_user_garage(request.user)
     if not garage: return Response({'error': 'No garage'}, status=403)
-    first_customer = Customer.objects.filter(garage=garage).first()
-    if not first_customer: return Response({'error': 'No customers registered yet'}, status=400)
-    cart, _ = Cart.objects.get_or_create(customer=first_customer, is_checked_out=False, defaults={'garage': garage})
-    return Response(CartSerializer(cart).data)
+    customer_id = request.query_params.get('customer_id')
+    if not customer_id: return Response({'error': 'customer_id required as query param'}, status=400)
+    try:
+        customer = Customer.objects.get(id=customer_id, garage=garage)
+        cart, _ = Cart.objects.get_or_create(customer=customer, is_checked_out=False, defaults={'garage': garage})
+        return Response(CartSerializer(cart).data)
+    except Customer.DoesNotExist:
+        return Response({'error': 'Customer not found'}, status=404)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
