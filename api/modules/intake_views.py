@@ -366,7 +366,9 @@ def list_files(request):
 def get_cart(request):
     garage = get_user_garage(request.user)
     if not garage: return Response({'error': 'No garage'}, status=403)
-    cart, _ = Cart.objects.get_or_create(customer__garage=garage, is_checked_out=False, defaults={'customer': Customer.objects.filter(garage=garage).first(), 'garage': garage})
+    first_customer = Customer.objects.filter(garage=garage).first()
+    if not first_customer: return Response({'error': 'No customers registered yet'}, status=400)
+    cart, _ = Cart.objects.get_or_create(customer=first_customer, is_checked_out=False, defaults={'garage': garage})
     return Response(CartSerializer(cart).data)
 
 @api_view(['POST'])
