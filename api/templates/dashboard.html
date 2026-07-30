@@ -318,6 +318,20 @@ async function helpPage(){document.getElementById('main-content').innerHTML='<di
 async function notif(){var list=L(await api('/notifications/'));document.getElementById('main-content').innerHTML='<div class="page-header"><button class="back-btn" onclick="goSection(\'dashboard\')"><i class="fas fa-arrow-left"></i>Back</button><h1><i class="fas fa-bell"></i> Notifications</h1></div><div class="card">'+(list.length?list.map(function(n){return'<div style="padding:10px 0;border-bottom:1px solid var(--border-subtle);opacity:'+(n.is_read?0.5:1)+'"><strong>'+n.title+'</strong><div style="font-size:11px;color:var(--text-muted)">'+n.message+'</div></div>';}).join(''):'<div class="empty-state"><p>No notifications</p></div>')+'</div>';}
 async function sett(){document.getElementById('main-content').innerHTML='<div class="page-header"><button class="back-btn" onclick="goSection(\'dashboard\')"><i class="fas fa-arrow-left"></i>Back</button><h1><i class="fas fa-cog"></i> Settings</h1></div><div class="card" style="max-width:400px"><p>AutoGarage Pro v2.0</p><p style="color:var(--green)">Connected</p><p style="color:var(--text-muted)">PostgreSQL · Supabase</p><button class="btn btn-outline" style="width:100%;margin-top:16px" onclick="logout()">Sign Out</button></div>';}
 
+
+function editCustomer(id) {
+    var name = prompt("Enter new name:");
+    if (name) api('/customers/'+id+'/', 'PATCH', JSON.stringify({full_name:name})).then(function(){goSection('customers');}).catch(function(e){alert('Failed: '+e.message);});
+}
+function editVehicle(id) {
+    var plate = prompt("Enter new plate:");
+    if (plate) api('/vehicles/'+id+'/', 'PATCH', JSON.stringify({plate:plate})).then(function(){goSection('vehicles');}).catch(function(e){alert('Failed: '+e.message);});
+}
+function editInventory(id) {
+    var qty = prompt("Enter new quantity:");
+    if (qty) api('/inventory/'+id+'/', 'PATCH', JSON.stringify({quantity:parseInt(qty)})).then(function(){goSection('inventory');}).catch(function(e){alert('Failed: '+e.message);});
+}
+
 async function deleteItem(type, id) {
     if (!confirm('Delete this ' + type + '?')) return;
     try {
