@@ -214,6 +214,48 @@ function deleteSelected() {
     api('/'+selectedType.replace('workorder','work-orders')+'/'+selectedId+'/', 'DELETE').then(function(){document.getElementById('actionBar').remove();goSection(selectedType.replace('workorder','workorders'));}).catch(function(e){alert('Delete failed: '+e.message);});
 }
 
+var selectedRow = null;
+var selectedType = '';
+var selectedId = null;
+
+function selectRow(type, id, element) {
+    if (selectedRow) selectedRow.style.background = '';
+    selectedRow = element;
+    selectedType = type;
+    selectedId = id;
+    element.style.background = 'rgba(191,175,175,0.1)';
+    showActionBar();
+}
+
+function showActionBar() {
+    var existing = document.getElementById('actionBar');
+    if (existing) existing.remove();
+    var bar = document.createElement('div');
+    bar.id = 'actionBar';
+    bar.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:12px;padding:8px 16px;display:flex;gap:12px;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,0.5)';
+    bar.innerHTML = '<span style="color:var(--text-muted);font-size:12px">Selected: '+selectedType+' #'+selectedId+'</span><button onclick="editSelected()" style="background:var(--accent-color);color:var(--bg-primary);border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12px">Edit</button><button onclick="deleteSelected()" style="background:var(--red);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12px">Delete</button>';
+    document.body.appendChild(bar);
+}
+
+function editSelected() {
+    if (!selectedId) return;
+    var newVal = prompt('Enter new value for '+selectedType+':');
+    if (newVal) {
+        var body = {};
+        if (selectedType === 'customer') body = {full_name: newVal};
+        else if (selectedType === 'vehicle') body = {plate: newVal};
+        else if (selectedType === 'inventory') body = {part_name: newVal};
+        else if (selectedType === 'workorder') body = {issue_description: newVal};
+        api('/'+selectedType.replace('workorder','work-orders')+'/'+selectedId+'/', 'PATCH', JSON.stringify(body)).then(function(){document.getElementById('actionBar').remove();goSection(selectedType.replace('workorder','workorders'));}).catch(function(e){alert('Edit failed: '+e.message);});
+    }
+}
+
+function deleteSelected() {
+    if (!selectedId) return;
+    if (!confirm('Delete this '+selectedType+'?')) return;
+    api('/'+selectedType.replace('workorder','work-orders')+'/'+selectedId+'/', 'DELETE').then(function(){document.getElementById('actionBar').remove();goSection(selectedType.replace('workorder','workorders'));}).catch(function(e){alert('Delete failed: '+e.message);});
+}
+
 function goSection(s){document.querySelectorAll('.nav-item[data-section]').forEach(function(el){el.classList.toggle('active',el.dataset.section===s);});document.getElementById('sidebar').classList.remove('open');document.getElementById('hamburgerBtn').innerHTML='<i class="fas fa-bars"></i>';loadSection(s);}
 function greetName(){var h=new Date().getHours();return h<12?'Good Morning':h<18?'Good Afternoon':'Good Evening';}
 function todayStr(){return new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
