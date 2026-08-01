@@ -27,6 +27,7 @@ body{background:var(--bg);color:var(--text2);font-family:system-ui,-apple-system
 .btn{padding:9px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:.2s}
 .btn-primary{background:var(--accent);color:var(--bg)}
 .btn-primary:hover{background:#cfbfbf}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
 .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
 .btn-outline:hover{background:rgba(217,217,217,.05)}
 .btn-danger{background:var(--red);color:#fff}
@@ -127,10 +128,18 @@ document.querySelectorAll('.nav-item[data-section]').forEach(function(btn){btn.a
 async function api(p,m,body){m=m||'GET';var opts={method:m,headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}};if(body)opts.body=JSON.stringify(body);var res=await fetch(API+p,opts);if(!res.ok)throw new Error('Request failed ('+res.status+')');return res.json();}
 function L(d){return Array.isArray(d)?d:(d&&d.results?d.results:[]);}
 
+var TYPE_MAP={
+  customer:{endpoint:'customers',section:'customers'},
+  vehicle:{endpoint:'vehicles',section:'vehicles'},
+  inventory:{endpoint:'inventory',section:'inventory'},
+  workorder:{endpoint:'work-orders',section:'workorders'},
+  payment:{endpoint:'payments',section:'payments'}
+};
+
 var selType='',selId=null,selRow=null;
 function selectRow(type,id,row){if(selRow)selRow.style.background='';selRow=row;selType=type;selId=id;row.style.background='rgba(191,175,175,0.15)';document.getElementById('actionLabel').textContent=type+' #'+id;document.getElementById('actionBar').style.display='flex';}
-function editSelected(){if(!selId)return;var v=prompt('Edit '+selType+':');if(!v)return;var body={};if(selType==='customer')body={full_name:v};else if(selType==='vehicle')body={plate:v};else if(selType==='inventory')body={part_name:v};else if(selType==='workorder')body={issue_description:v};else if(selType==='payment')body={payment_method:v};api('/'+selType.replace('workorder','work-orders')+'/'+selId+'/','PATCH',body).then(function(){hideActionBar();goSection(selType.replace('workorder','workorders'));}).catch(function(e){alert('Failed: '+e.message);});}
-function deleteSelected(){if(!selId)return;if(!confirm('Delete this '+selType+'?'))return;api('/'+selType.replace('workorder','work-orders')+'/'+selId+'/','DELETE').then(function(){hideActionBar();goSection(selType.replace('workorder','workorders'));}).catch(function(e){alert('Failed: '+e.message);});}
+function editSelected(){if(!selId)return;var v=prompt('Edit '+selType+':');if(!v)return;var body={};if(selType==='customer')body={full_name:v};else if(selType==='vehicle')body={plate:v};else if(selType==='inventory')body={part_name:v};else if(selType==='workorder')body={issue_description:v};else if(selType==='payment')body={payment_method:v};api('/'+TYPE_MAP[selType].endpoint+'/'+selId+'/','PATCH',body).then(function(){hideActionBar();goSection(TYPE_MAP[selType].section);}).catch(function(e){alert('Failed: '+e.message);});}
+function deleteSelected(){if(!selId)return;if(!confirm('Delete this '+selType+'?'))return;api('/'+TYPE_MAP[selType].endpoint+'/'+selId+'/','DELETE').then(function(){hideActionBar();goSection(TYPE_MAP[selType].section);}).catch(function(e){alert('Failed: '+e.message);});}
 function hideActionBar(){document.getElementById('actionBar').style.display='none';selId=null;selType='';if(selRow)selRow.style.background='';selRow=null;}
 
 function goSection(s){hideActionBar();loadSection(s);}
@@ -144,8 +153,9 @@ workorder:{title:'New Work Order',fields:'<div class="form-group"><label>Vehicle
 };
 var f=forms[type];if(!f)return;
 var ov=document.createElement('div');ov.className='modal-overlay';
-ov.innerHTML='<div class="modal"><div class="modal-title">'+f.title+'</div>'+f.fields+'<div class="form-actions"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="this.closest(\'.modal-overlay\').querySelector(\'button.btn-primary\').disabled=true;'+f.create.toString().replace('function()','(function()')+'()">Create</button></div></div>';
+ov.innerHTML='<div class="modal"><div class="modal-title">'+f.title+'</div>'+f.fields+'<div class="form-actions"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" id="modalCreateBtn">Create</button></div></div>';
 document.body.appendChild(ov);
+document.getElementById('modalCreateBtn').addEventListener('click',function(){this.disabled=true;f.create();});
 ov.addEventListener('click',function(e){if(e.target===ov)closeModal();});
 }
 function closeModal(){var m=document.querySelector('.modal-overlay');if(m)m.remove();}
@@ -185,7 +195,8 @@ async function aid(){document.getElementById('main-content').innerHTML='<div cla
 async function runAI(){var c=document.getElementById('ac').value,v=document.getElementById('av').value,el=document.getElementById('ar');if(!c){el.innerHTML='<p style="color:var(--red)">Enter a code</p>';return;}el.innerHTML='<div class="spinner"></div>';try{var d=await api('/ai/diagnose/','POST',{code:c,vehicle:v});el.innerHTML='<div style="padding:14px;background:var(--bg);border-radius:8px;margin-top:12px;border:1px solid var(--border)"><h3>'+d.title+'</h3><p style="font-size:12px;color:var(--text2);margin:6px 0">Severity: '+d.severity+' · Cost: '+d.estimated_cost+'</p><ol style="padding-left:16px;font-size:13px;line-height:2">'+d.details.map(function(x){return'<li>'+x+'</li>';}).join('')+'</ol></div>';}catch(e){el.innerHTML='<p style="color:var(--red)">'+e.message+'</p>';}}
 
 async function filesPage(){document.getElementById('main-content').innerHTML='<div class="page-header"><button class="back-btn" onclick="goSection(\'dashboard\')"><i class="fas fa-arrow-left"></i>Back</button><h1>Files</h1></div><div class="card"><input type="file" id="fileInput" style="margin-bottom:12px;color:var(--text)"><button class="btn btn-primary" onclick="uploadFile()">Upload</button><div id="fileList" style="margin-top:14px"><div class="spinner"></div></div></div>';loadFiles();}
-async function loadFiles(){try{var list=L(await api('/files/'));var html=list.length?list.map(function(f){return'<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><span>'+f.filename+' <span style="color:var(--text2);font-size:10px">'+Math.round(f.size/1024)+'KB</span></span><button class="btn btn-danger" style="font-size:10px;padding:4px 8px" onclick="deleteSelected()">Delete</button></div>';}).join(''):'<div class="empty">No files uploaded</div>';document.getElementById('fileList').innerHTML=html;}catch(e){document.getElementById('fileList').innerHTML='<div class="empty">Failed to load files</div>';}}
+async function loadFiles(){try{var list=L(await api('/files/'));var html=list.length?list.map(function(f){return'<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><span>'+f.filename+' <span style="color:var(--text2);font-size:10px">'+Math.round(f.size/1024)+'KB</span></span><button class="btn btn-danger" style="font-size:10px;padding:4px 8px" onclick="deleteFile('+f.id+')">Delete</button></div>';}).join(''):'<div class="empty">No files uploaded</div>';document.getElementById('fileList').innerHTML=html;}catch(e){document.getElementById('fileList').innerHTML='<div class="empty">Failed to load files</div>';}}
+async function deleteFile(id){if(!confirm('Delete this file?'))return;try{await api('/files/'+id+'/','DELETE');loadFiles();}catch(e){alert('Failed: '+e.message);}}
 async function uploadFile(){var input=document.getElementById('fileInput');var file=input.files[0];if(!file){alert('Select a file');return;}var form=new FormData();form.append('file',file);try{var res=await fetch(API+'/upload-file/',{method:'POST',headers:{'Authorization':'Bearer '+token},body:form});if(res.ok){loadFiles();input.value='';}else{alert('Upload failed');}}catch(e){alert('Upload failed: '+e.message);}}
 
 async function notif(){var list=L(await api('/notifications/'));document.getElementById('main-content').innerHTML='<div class="page-header"><button class="back-btn" onclick="goSection(\'dashboard\')"><i class="fas fa-arrow-left"></i>Back</button><h1>Notifications</h1></div><div class="card">'+(list.length?list.map(function(n){return'<div style="padding:10px 0;border-bottom:1px solid var(--border);opacity:'+(n.is_read?0.5:1)+'"><strong>'+n.title+'</strong><div style="font-size:11px;color:var(--text2)">'+n.message+'</div></div>';}).join(''):'<div class="empty">No notifications</div>')+'</div>';}
