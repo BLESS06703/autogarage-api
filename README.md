@@ -28,7 +28,7 @@ Workshop management platform built for African garages. Track work orders, inven
 
 ## Quick Start
 
-git clone https://github.com/BLESS-LAB/AutoGarage-Platform.git
+git clone https://github.com/BLESS06703/AutoGarage-Platform.git
 cd AutoGarage-Platform
 pip install -r requirements.txt
 python manage.py migrate
