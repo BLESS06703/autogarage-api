@@ -196,17 +196,20 @@ class AppointmentVS(viewsets.ModelViewSet):
 
 
 # ==================== USER ROLES ====================
-class UserRoleVS(viewsets.ModelViewSet):
+class UserRoleVS(viewsets.ReadOnlyModelViewSet):
+    """Read-only role listing. Role changes must use authorized staff-management logic."""
     serializer_class = UserRoleSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsGarageMember]
 
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser:
             return UserRole.objects.all()
+
         garage = get_user_garage(user)
         if garage:
             return UserRole.objects.filter(garage=garage)
+
         return UserRole.objects.filter(user=user)
 
 

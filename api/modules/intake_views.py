@@ -1,8 +1,37 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 from api.models import Customer, Vehicle, WorkOrder, InventoryItem, UserRole, MechanicProfile
 from api.views import get_user_garage
+
+class CanManageStaff(BasePermission):
+    """
+    Only owners, admins and managers can create/list staff.
+    """
+
+    allowed_roles = ['owner', 'admin', 'manager']
+
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+
+        if request.user.is_superuser:
+            return True
+
+        garage = get_user_garage(request.user)
+
+        if not garage:
+            return False
+
+        try:
+            role = UserRole.objects.get(
+                user=request.user,
+                garage=garage
+            )
+            return role.role in self.allowed_roles
+        except UserRole.DoesNotExist:
+            return False
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -210,7 +239,7 @@ def qr_code(request, srn):
     return Response({'srn': wo.srn, 'qr_code': img_b64, 'status': wo.status, 'vehicle': str(wo.vehicle)})
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([CanManageStaff])
 def add_staff(request):
     """Add a mechanic or staff member"""
     from django.contrib.auth.models import User
@@ -223,6 +252,24 @@ def add_staff(request):
     full_name = request.data.get('full_name', '').strip()
     role = request.data.get('role', 'mechanic').strip()
     skills = request.data.get('skills', '').strip()
+
+    allowed_roles = {
+        'admin',
+        'manager',
+        'mechanic',
+        'receptionist',
+    }
+
+    if role not in allowed_roles:
+        return Response(
+            {
+                'error': (
+                    'Invalid role. Choose from: '
+                    + ', '.join(sorted(allowed_roles))
+                )
+            },
+            status=400
+        )
     phone = request.data.get('phone', '').strip()
     
     if not username or not password:
@@ -257,7 +304,7 @@ def add_staff(request):
     })
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([CanManageStaff])
 def list_users(request):
     """List all users/staff for the garage"""
     garage = get_user_garage(request.user)
@@ -396,9 +443,30 @@ def add_to_cart(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def remove_from_cart(request):
+    garage = get_user_garage(request.user)
+
+    if not garage:
+        return Response({'error': 'No garage'}, status=403)
+
     item_id = request.data.get('item_id')
-    if not item_id: return Response({'error': 'item_id required'}, status=400)
-    CartItem.objects.filter(id=item_id).delete()
+
+    if not item_id:
+        return Response(
+            {'error': 'item_id required'},
+            status=400
+        )
+
+    deleted, _ = CartItem.objects.filter(
+        id=item_id,
+        cart__garage=garage
+    ).delete()
+
+    if not deleted:
+        return Response(
+            {'error': 'Cart item not found'},
+            status=404
+        )
+
     return Response({'message': 'Removed'})
 
 @api_view(['POST'])
